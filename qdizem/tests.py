@@ -28,6 +28,25 @@ class FirstTest(unittest.TestCase):
         self.qdp.run()
         output = self.qdp.get_csv_output()
         self.failUnless(output == outtext)
+    
+    def testAplausos(self):
+        intext = '''O Sr. José Moura Soeiro (BE): — Teste.
+Aplausos do BE.
+Frase teste.
+'''
+        outtext = '''José Moura Soeiro|BE|Teste.
+|BE|*** Aplausos ***
+||Frase teste.
+'''
+
+        self.qdp.open_from_string(intext)
+        self.qdp.run()
+        output = self.qdp.get_csv_output()
+        #print 'Expected:'
+        #print '    ' + outtext
+        #print 'Got:'
+        #print '    ' + output
+        self.failUnless(output == outtext)
 
 if __name__ == '__main__':
     unittest.main()

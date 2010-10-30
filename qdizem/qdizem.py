@@ -68,6 +68,11 @@ class QDParser:
                   party,
                   content.strip())
         self.intervs.append(interv)
+    
+    def next_line(self, line):
+        # Devolve a linha seguinte à linha entregue
+        index = self.lines.index(line)
+        return self.lines[index + 1]
 
     def run(self, mode=None):
         if not mode:
@@ -119,8 +124,13 @@ class QDParser:
                 interv = (speaker, party, content)
                 self.save_interv(interv)
 
-                speaker = previous_speaker
-                party = previous_party
+                if ': — ' in self.next_line(line):
+                    # próxima linha é outra intervenção
+                    speaker = previous_speaker
+                    party = previous_party
+                else:
+                    speaker = ''
+                    party = ''
                 # não gravar na próxima iteração do loop
                 content = ''
                 continue
