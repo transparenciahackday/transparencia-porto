@@ -36,16 +36,16 @@ Frase teste.
 '''
         outtext = '''José Moura Soeiro|BE|Teste.
 |BE|*** Aplausos ***
-Frase teste.        
+||Frase teste.
 '''
 
         self.qdp.open_from_string(intext)
         self.qdp.run()
         output = self.qdp.get_csv_output()
-        print 'Expected:'
-        print '    ' + outtext
-        print 'Got:'
-        print '    ' + output
+        #print 'Expected:'
+        #print '    ' + outtext
+        #print 'Got:'
+        #print '    ' + output
         self.failUnless(output == outtext)
 
 if __name__ == '__main__':
