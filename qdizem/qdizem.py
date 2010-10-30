@@ -21,6 +21,7 @@ Havendo dúvidas, vinde chatear-me: ricardo@hacklaviva.net
 '''
 
 import sys, os
+import datetime
 
 # caractere usado para delimitar os campos no CSV
 DELIMITER = '|'
@@ -28,11 +29,29 @@ DELIMITER = '|'
 EXCERPT = 1
 FILE = 2
 
+MESES = {
+    'JANEIRO': 1,
+    'FEVEREIRO': 2,
+    'MARÇO': 3,
+    'ABRIL': 4,
+    'MAIO': 5,
+    'JUNHO': 6,
+    'JULHO': 7,
+    'AGOSTO': 8,
+    'SETEMBRO': 9,
+    'OUTUBRO': 10,
+    'NOVEMBRO': 11,
+    'DEZEMBRO': 12,
+    }
+
+
+
 class NoFileError(Exception): pass
 class WrongExtensionError(Exception): pass
 
 class QDParser:
     def __init__(self):
+        self.date = None
         self.mode = None
         self.intervs = []
         # usamos esta variável para ignorar todas as linhas iniciais antes do início da
@@ -86,6 +105,22 @@ class QDParser:
         party = None
 
         for line in self.lines:
+            # antes de mais, sacar a data, legislatura e sessão
+            if line.startswith('REUNIÃO PLENÁRIA DE'):
+                # vamos apanhar a data
+                verbose_date = line.split(' ')[3:]
+                day = int(verbose_date[0])
+                month = MESES[verbose_date[2]]
+                year = int(verbose_date[4].strip())
+                self.date = datetime.date(year, month, day)
+            if 'LEGISLATURA' in line:
+                roman_leg = line.split(' ')[0]
+                self.leg = roman_leg
+            if 'SESSÃO LEGISLATIVA' in line:
+                sess = line.split(' ')[0]
+                sess = sess.split('.')[0]
+                self.sess = sess
+            
             if mode == FILE:
                 if line.startswith('O Sr. Presidente:'):
                     self.started = True
@@ -180,11 +215,16 @@ class QDParser:
                 speaker = speaker.replace('O Sr. ', '')
                 speaker = speaker.replace('A Sr.ª ', '')
                 if speaker.find('('):
-                    # há indicação de partido - Deputado XPTO (PXPTO)
-                    # temos de separar
-                    party = speaker.split('(')[-1].strip(')')
-                    speaker = speaker.split('(')[0].strip()
-                
+                    if 'Presidente' in speaker:
+                        # presidente alternativo
+                        party = 'Presidente'
+                        speaker = speaker.split('(')[-1].strip(')')
+                    else:
+                        # há indicação de partido - Deputado XPTO (PXPTO)
+                        # temos de separar
+                        party = speaker.split('(')[-1].strip(')')
+                        speaker = speaker.split('(')[0].strip()
+                    
                 # atenção às newlines, só as queremos se for final de parágrafo
                 # FIXME: isto é um problema no caso de 'Sr.' ou semelhantes
                 if not content.strip().endswith('.'):
@@ -231,3 +271,4 @@ if __name__ == '__main__':
     qdp.open_from_file(sys.argv[1])
     qdp.run()
     qdp.output_csv()
+    print '%s %s - %s' % (qdp.leg, qdp.sess, str(qdp.date))
