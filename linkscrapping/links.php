@@ -3,6 +3,10 @@
 </head><body>
 <?php
 
+/** Gera Links para PDFs da Assembleia
+ *
+ */
+
 $sacar = array(
 	'DAR-I-' => array (
 		"http://arnet/sites/XILEG/DARI/DARIArquivo/2ª Sessão Legislativa" => 30,
