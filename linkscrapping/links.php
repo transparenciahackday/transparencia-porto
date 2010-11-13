@@ -1,10 +1,10 @@
-﻿<html><head><title>AR PDFs</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<html><head><title>AR PDFs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head><body>
 <?php
 
 /** Gera Links para PDFs da Assembleia
- *
+ *  Assegurar que o encoding do ficheiro é UTF-8!!!
  */
  
  
