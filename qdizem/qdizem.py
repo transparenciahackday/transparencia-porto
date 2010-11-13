@@ -44,6 +44,13 @@ MESES = {
     'DEZEMBRO': 12,
     }
 
+NUMEROS_ROMANOS = {
+    'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
+    'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
+    'XI': 11, 'XII': 12, 'XIII': 13, 'XIV': 14, 'XV': 15,
+    'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
+    'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
+    }
 
 
 class NoFileError(Exception): pass
@@ -114,8 +121,9 @@ class QDParser:
                 year = int(verbose_date[4].strip())
                 self.date = datetime.date(year, month, day)
             if 'LEGISLATURA' in line:
+                # converter numeração romana
                 roman_leg = line.split(' ')[0]
-                self.leg = roman_leg
+                self.leg = NUMEROS_ROMANOS[roman_leg]
             if 'SESSÃO LEGISLATIVA' in line:
                 sess = line.split(' ')[0]
                 sess = sess.split('.')[0]
@@ -251,13 +259,8 @@ class QDParser:
             interv = (speaker, party, content)
             self.save_interv(interv)        
 
-        # repor a variavel
+        # repor a variável
         self.started = False
-         
-    def output_csv(self, target=sys.stdout):
-        for speaker, party, content in self.intervs:
-            target.write('%s%s%s%s%s' % (str(speaker), DELIMITER, str(party), DELIMITER, str(content)))
-            target.write('\n')
 
     def get_csv_output(self):
         s = ''
@@ -266,9 +269,23 @@ class QDParser:
             s = s + ('\n')
         return s
 
+
 if __name__ == '__main__':
     qdp = QDParser()
     qdp.open_from_file(sys.argv[1])
     qdp.run()
-    qdp.output_csv()
-    print '%s %s - %s' % (qdp.leg, qdp.sess, str(qdp.date))
+
+    new_filename = 'dar_1_%s_%s_%s.csv' % (qdp.leg, qdp.sess, str(qdp.date))
+    if os.path.exists(new_filename):
+        print 'Output file already exists (%s). Overwriting.' % new_filename
+        os.remove(new_filename)
+    f = open(new_filename, 'w')
+    f.write(qdp.get_csv_output())
+    f.close()
+    print 'CSV criado -> %s!' % new_filename
+    '''
+    print 'Série:               1ª'
+    print 'Legislatura:         %s' % str(qdp.leg)
+    print 'Sessão parlamentar:  %s' % str(qdp.sess)
+    print 'Data:                %s' % str(qdp.date)
+    '''
