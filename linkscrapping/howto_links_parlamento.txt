@@ -1,0 +1,33 @@
+Reverse engineering links para PDFs do DR (parlamento.pt)
+
+
+Todos os links para todos os PDFs da 1ª série do DR presentes no site do Parlamento obedecem ao seguinte formato:
+
+http://app.parlamento.pt/darpages/dardoc.aspx?doc=6148523063446f764c324679626d56304c334e706447567a4c306c59544556484c305242556b6b76524546535355467963585670646d38764d793743716955794d464e6c633350446f32386c4d6a424d5a5764706332786864476c325953394551564a4a4d4445344c6e426b5a673d3d&nome=DARI018.pdf
+
+A princípio pensou-se que aquele longo 'hash' (parâmetro doc) seria um qualquer sistema anti-leech. Ao mesmo tempo, uma análise ao HTML das páginas do parlamento permite-nos encontrar coisas como esta:
+
+<option selected="selected" value="http://arnet/sites/IXLEG/DARI/DARIArquivo">IX Legislatura</option>
+
+Basicamente, passam a localização dos documentos na rede interna do parlamento enquanto parâmetro do formulário: Que preguiça!
+Voltando ao misterioso 'hash'. Tentou-se introduzir instruções de PHP como:
+
+md5("http://arnet/sites/IXLEG/DARI/DARIArquivo") ou sha1("http://arnet/sites/IXLEG/DARI/DARIArquivo"), etc. 
+
+Hipóteses remotas, e nada saiu que se parecesse com aquele hash. No entanto, apercebemo-nos que em diferentes links tal 'hash' apresentava um comprimento diferente, pelo que se presumiu que será afinal uma encriptação qualquer. Mais um long shot, converter hexadecimal em string (com funções aqui - http://ditio.net/2008/11/04/php-string-to-hex-and-hex-to-string-functions/):
+
+aHR0cDovL2FybmV0L3NpdGVzL0lYTEVHL0RBUkkvREFSSUFycXVpdm8vMy7CqiUyMFNlc3PDo28lMjBMZWdpc2xhdGl2YS9EQVJJMDE4LnBkZg==
+
+Parece que não deu em nada, mas o facto de não terem saído quaisquer caracteres ilegíveis é encorajador! E este resultado tem um 'cheiro' definitivamente característico. Vamos lá experimentar:
+
+base64_decode("aHR0cDovL2FybmV0L3NpdGVzL0lYTEVHL0RBUkkvREFSSUFycXVpdm8vMy7CqiUyMFNlc3PDo28lMjBMZWdpc2xhdGl2YS9EQVJJMDE4LnBkZg==")
+
+Bingo!:
+
+http://arnet/sites/IXLEG/DARI/DARIArquivo/3.Âª%20SessÃ£o%20Legislativa/DARI018.pdf
+
+Pondo de parte alguns defeitos de encoding, concluímos que aquele parãmetro doc que é passado para o dardoc.aspx contém o caminho para o ficheiro na rede interna do parlamento, convertido em base64 e depois passado a hexadecimal. Sabendo isto, torna-se trivial criar um script que retire todos os PDFs existentes, basta saber quais os caminhos - que convenientemente, estão como vimos presentes no código HTML dos formulários de acesso aos PDFs.
+
+Conclusão: programação muito preguiçosa por parte dos responsáveis da AR. Nem um salt para impedir este tipo de reverse-engineering. Como também não impede leeching, interregamo-nos o porquê de tudo isto.
+
+PS: Descobri entretanto que o parâmetro 'nome' apenas serve para nomear o PDF enviado para o browser, podendo ser passado qualquer valor.
