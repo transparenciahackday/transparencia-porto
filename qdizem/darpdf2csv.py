@@ -21,9 +21,9 @@ Dúvidas? E-mail ricardo at hacklaviva.net !
 
 import os
 
-SOURCEDIR = './dar-pdf'
+SOURCEDIR = '../../dar-pdf'
 DESTDIR = './dar-csv'
-SCRIPT = './repo/qdizem/qdizem.py'
+SCRIPT = './qdizem.py'
 
 if not os.path.exists(DESTDIR):
     os.mkdir(DESTDIR)
@@ -41,14 +41,14 @@ for root, dirs, files in tree:
                 if not os.path.splitext(file)[-1] == '.pdf' or not file.startswith('DAR'):
                     continue
                 # determina o nome do ficheiro csv
-                target = os.path.join(DESTDIR, dir, file)
+                # target = os.path.join(DESTDIR, dir, file)
                 # meter extensão csv
-                target = os.path.splitext(target)[0] + '.csv'
+                # target = os.path.splitext(target)[0] + '.csv'
                 # apagar ficheiro antigo
-                if os.path.exists(target):
-                    os.remove(target)
+                # if os.path.exists(target):
+                #    os.remove(target)
                 # usa agora uma linha bash para criar o csv com o script de conversão
-                command = 'python %s %s > %s' % (SCRIPT, os.path.join(path, file), target)
-                print command
+                command = 'python %s %s' % (SCRIPT, os.path.join(path, file))
+                # print command
                 os.system(command)
 
