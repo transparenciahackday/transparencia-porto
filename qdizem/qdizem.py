@@ -127,7 +127,7 @@ class QDParser:
             if 'SESSÃO LEGISLATIVA' in line:
                 sess = line.split(' ')[0]
                 sess = sess.split('.')[0]
-                self.sess = sess
+                self.sess = int(sess)
             
             if mode == FILE:
                 if line.startswith('O Sr. Presidente:'):
@@ -275,7 +275,7 @@ if __name__ == '__main__':
     qdp.open_from_file(sys.argv[1])
     qdp.run()
 
-    new_filename = 'dar_1_%s_%s_%s.csv' % (qdp.leg, qdp.sess, str(qdp.date))
+    new_filename = 'dar_1_%02d_%02d_%s.csv' % (qdp.leg, qdp.sess, str(qdp.date))
     if os.path.exists(new_filename):
         print 'Output file already exists (%s). Overwriting.' % new_filename
         os.remove(new_filename)

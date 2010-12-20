@@ -32,6 +32,10 @@ tree = os.walk(SOURCEDIR)
 for root, dirs, files in tree:
     if dirs:
         for dir in dirs:
+            # FIXME: isto está aqui enquanto testo, é preciso tirar
+            # quando for pra parsar tudo
+            if dir != '11leg-1':
+                continue
             # criar o dir na pasta destino caso não exista
             if not os.path.exists(os.path.join(DESTDIR, dir)):
                 os.mkdir(os.path.join(DESTDIR, dir))
