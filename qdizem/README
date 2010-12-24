@@ -2,7 +2,7 @@ DAR Parser v0.1
 ===============
 
 Copyright 2010 Ricardo Lafuente
-Distribuído nos termos da GNU General Public License (GPL) versão 3 ou posterior
+Distribuído nos termos da GNU General Public License (GPL) versão 3 ou posterior.
 
 Propósito
 ---------
@@ -35,15 +35,9 @@ Português:
 
   http://www.parlamento.pt/DAR/Paginas/DAR1Serie.aspx
 
-
-
-
 TODO
 ----
-- Aceitar os ficheiros PDF como argumentos, e convertê-los para texto
-  antes de fazer o parsing
 - Aceitar flags na linha de comandos (por exemplo, --csv ou --text)
-
 
 Bugs
 ----

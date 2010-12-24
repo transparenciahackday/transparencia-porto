@@ -22,7 +22,7 @@ Dúvidas? E-mail ricardo at hacklaviva.net !
 import os
 
 SOURCEDIR = '../../dar-pdf'
-DESTDIR = './dar-csv'
+DESTDIR = '../../datasets/transcricoes/dar-1'
 SCRIPT = './qdizem.py'
 
 if not os.path.exists(DESTDIR):
