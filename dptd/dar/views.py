@@ -1,6 +1,6 @@
 from models import Day, Entry
 from deputados.models import Government, Party
-from django.views.generic.list_detail import object_list, object_detail
+from django.views.generic.list_detail import object_detail
 from django.utils.safestring import mark_safe
 
 COLORS = {'PS': 'd888b5',
@@ -33,13 +33,16 @@ def day_detail(request, object_id):
             texts = " ".join(texts)
             charcount = len(texts)
             party_counts[party] = charcount
-    # sum must be 100
-    total = 0
-    for party in party_counts:
-        total += party_counts[party]
-    factor = 100. / total
-    for party in party_counts:
-        party_counts[party] = party_counts[party] * factor
+    if not party_counts:
+        pass
+    else:
+        # sum must be 100
+        total = 0
+        for party in party_counts:
+            total += party_counts[party]
+        factor = 100. / total
+        for party in party_counts:
+            party_counts[party] = party_counts[party] * factor
     querystring = ''
     labels = []
     colors = []

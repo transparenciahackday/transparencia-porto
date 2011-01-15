@@ -53,102 +53,12 @@
       <img src="{{ speaker_chart_url }}" />
       <img src="{{ mb_chart_url }}" />
 
+      {% for entry in entries %}
       <div class="intervention">
+
+        {% if entry.is_regular %}
         <div class="entry">
           <div class="left">
-            <p class="mp-photo"><img src="/media/mp-photos/2.jpg" alt="" /></p>
-            <h3>Nome Nome</h3>
-            <h4 class="party"><img src="/media/img/logos/be.png" alt="" /> PMMIPP</h4>
-            <p class="circle">Ponta Velha de Cima</p>
-          </div>
-          
-          <div class="right">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tortor tellus, convallis vel placerat sit amet, tincidunt ut nisi. Etiam ut diam dui. Suspendisse potenti. Cras imperdiet augue at risus facilisis et ornare neque suscipit. Morbi non feugiat magna. Praesent at eros tortor, vel lobortis purus. Nulla ultricies fermentum est non porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in massa libero, vitae ullamcorper eros. Ut pulvinar iaculis ligula, id pharetra leo bibendum a. Ut consectetur semper ante, id auctor ligula accumsan mattis. Praesent sodales vulputate velit nec faucibus. Suspendisse purus ante, tincidunt a pulvinar a, posuere sed justo.</p>
-          </div>
-        </div> <!-- /entry-->
-        
-        <div class="entry applause">
-          <div class="left">
-            <p>Bancada Y:</p>
-          </div>
-          
-          <div class="right">
-            <p>
-              <strong>Bancada/Partido W:</strong>
-              <em>Aplausos</em>
-            </p>
-          </div>
-        </div><!-- /entry-->
-      
-      <div class="entry">
-          <div class="left">
-            <h3>Nome Nome</h3>
-          </div>
-          
-          <div class="right">
-            <p>Morbi cursus volutpat interdum. Curabitur pulvinar ultrices consequat. Nam sit amet urna felis, tristique volutpat dui. Praesent felis ante, gravida eu auctor eu, commodo sit amet libero. Aliquam iaculis mauris mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis est sit amet sem iaculis rhoncus. Duis in tortor nisi, quis iaculis sapien. Cras convallis convallis ipsum, at viverra dolor consequat sit amet. Vestibulum tristique rutrum tellus quis eleifend. Aliquam eu sem in nisi vehicula mattis et blandit risus.</p>
-            <p>Suspendisse potenti. Suspendisse sed nisl eget eros lobortis varius at nec leo. Quisque semper libero vel felis suscipit et scelerisque neque cursus. Ut quis arcu arcu. Quisque adipiscing suscipit risus, nec sodales nisi tincidunt sed. Cras in velit vel leo tempor dignissim sit amet eu augue. Donec auctor arcu id enim volutpat quis dictum diam cursus. Nam fermentum turpis vitae tortor porttitor facilisis. Proin nec faucibus lacus. Pellentesque quis metus nulla, nec faucibus nisi. Nullam ultricies volutpat volutpat. Cras ut justo ligula.</p>
-          </div>
-        </div> <!-- /entry-->
-        
-        <div class="entry protests">
-          <div class="left">
-            <p>Bancada Y:</p>
-          </div>
-          
-          <div class="right">
-            <p>
-              <strong>Partido/Bancada X:</strong>
-              <em>Uhhhhh!!! Ohhhh!</em>
-            </p>
-          </div>
-      </div> <!-- /entry-->
-      
-      <div class="entry punchline">
-          <div class="left">
-            <p>Bancada Y:</p>
-          </div>
-          
-          <div class="right">
-            <p>
-              <strong> Fulaninho Sete e Meio:</strong>
-              Meu senhor isso é insuportável! Tão mau como o hálito do Dantas.
-            </p>
-          </div>
-      </div> <!-- /entry-->
-      
-      <div class="entry laughs">
-          <div class="left">
-            <p>Bancada Y:</p>
-          </div>
-          
-          <div class="right">
-            <p>
-              <strong>Bancada Y:</strong>
-              <em>Ah Hahaha!</em>
-            </p>
-          </div>
-      </div> <!-- /entry-->
-      
-      <div class="entry">
-          <div class="left">
-            <h3>Nome Nome</h3>
-          </div>
-          
-          <div class="right">
-            <p>Nullam scelerisque lacus purus, ac rhoncus mauris. Nulla facilisi. Maecenas ut dui suscipit enim pulvinar scelerisque viverra a quam. Donec ut dui orci, vitae hendrerit felis. Fusce at augue enim. Sed mattis, nisl eget malesuada consectetur, justo magna tincidunt ligula, sit amet tempus risus nunc in enim. Nunc scelerisque, ipsum quis tincidunt scelerisque, erat metus mollis velit, in tristique dui neque quis justo.</p>
-            <p>Pellentesque a metus et augue vestibulum posuere. Duis eget lacus ligula, et blandit turpis. Proin ornare augue dolor. Phasellus placerat eros quis lectus dignissim dapibus. Phasellus nulla massa, mattis sagittis mollis vel, scelerisque a nibh. Integer ultricies, turpis non porttitor vulputate, libero lectus pulvinar orci, pulvinar laoreet dui nunc sed ipsum. Suspendisse potenti. </p>
-          </div>
-        </div> <!-- /entry-->
-      
-      </div><!-- /intervention-->
-
-
-      {% for entry in entries %}
-      {% if entry.is_regular %}
-      <div class="entry">
-        <div class="left">
-
           {% if entry.mp %}
             {% with entry.mp as mp %}
             {% if mp.photo %}
@@ -165,74 +75,74 @@
             <p class="circle">{{ mp.current_caucus.constituency }}</p>
             {% endwith %}
           {% else %}
-            <p class="mp-photo"><img src="{{ entry.mp.photo.url }}" alt="{{ entry.mp.shortname }}" /></p>
             {% if entry.speaker %}
             <h3>{{ entry.speaker }}</h3>
             {% else %}
             <h3>{{ entry.party }}</h3>
             {% endif %}
-            <p class="party">{# <img src="/media/img/logos/be.png" alt="" /> #}{{ entry.mp.current_party.abbrev }}</p>
+
+            <p class="party">{{ entry.mp.current_party.abbrev }}</p>
             <p class="circle"></p>
           {% endif %}
-        </div>
-        
-        <div class="right">
-          {# <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tortor tellus, convallis vel placerat sit amet, tincidunt ut nisi. Etiam ut diam dui. Suspendisse potenti. Cras imperdiet augue at risus facilisis et ornare neque suscipit. Morbi non feugiat magna. Praesent at eros tortor, vel lobortis purus. Nulla ultricies fermentum est non porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in massa libero, vitae ullamcorper eros. Ut pulvinar iaculis ligula, id pharetra leo bibendum a. Ut consectetur semper ante, id auctor ligula accumsan mattis. Praesent sodales vulputate velit nec faucibus. Suspendisse purus ante, tincidunt a pulvinar a, posuere sed justo.</p> #}
-          {{ entry.text_as_html }}
-          {# <p class="more">Mais...</p> #}
-        </div>
-      </div>
-      {% else %}
-
-        {% if entry.is_applause %}
-        <div class="intervention mini-intervention">
-          <div class="left">
-            <h3> &nbsp; </h3>
-          </div>
-          
-          <div class="right">
-            <p><em>Aplausos da bancada do {{ entry.party }}</em></p>
-            {# <p class="circle"><img src="/media/img/logos/be.png" alt="" /> Trás-os-Montes da Afurada</p> #}
-          </div>
-        </div>
-        {% endif %}
-
-        {% if entry.is_protest %}
-        <div class="intervention mini-intervention">
-          <div class="left">
-            <h3> &nbsp; </h3>
-          </div>
-          
-          <div class="right">
-            {% if entry.speaker or entry.mp %}
-            <p><em>Protestos de {% if entry.mp %}{{ entry.mp }}{% else %}{{ entry.speaker }}{% endif %} ({{ entry.party }})</em></p>
-            {% else %}
-            <p><em>Protestos da bancada do {{ entry.party }}</em></p>
-            {% endif %}
-            {# <p class="circle"><img src="/media/img/logos/be.png" alt="" /> Trás-os-Montes da Afurada</p> #}
-          </div>
-        </div>
-        {% endif %}
-
-        {% if entry.is_interruption %}
-        <div class="intervention mini-intervention">
-          <div class="left">
-            {% if entry.mp %}
-            <h3>{{ entry.mp.shortname }} ({{ entry.mp.current_party }})</h3>
-            {% else %}
-            <h3>{{ entry.speaker }} ({{ entry.party }})</h3>
-            {% endif %}
           </div>
           
           <div class="right">
             {{ entry.text_as_html }}
-            {# <p class="circle"><img src="/media/img/logos/be.png" alt="" /> Trás-os-Montes da Afurada</p> #}
           </div>
-        </div>
+        </div> <!-- /entry-->
+        
+        {% else %}
+          {% if entry.is_applause %}
+          <div class="entry applause">
+            <div class="left">
+              <p>&nbsp;</p>
+            </div>
+            <div class="right">
+              <p> <em>{{ entry.text }}</em> </p>
+            </div>
+          </div><!-- /entry-->
+          {% endif %}
+
+          {% if entry.is_protest %}
+          <div class="entry protests">
+            <div class="left">
+              <p>&nbsp;</p>
+            </div>
+            <div class="right">
+              <p> <em>{{ entry.text }}</em> </p>
+            </div>
+          </div> <!-- /entry-->
+          {% endif %}
+
+          {% if entry.is_laughter %}
+          <div class="entry laughs">
+              <div class="left">
+                <p>&nbsp;</p>
+              </div>
+              <div class="right">
+                <p>
+                  <em>{{ entry.text }}</em>
+                </p>
+              </div>
+          </div> <!-- /entry-->
+          {% endif %}
+
+          {% if entry.is_interruption %}
+          <div class="entry punchline">
+              <div class="left">
+                <p>&nbsp;</p>
+              </div>
+              
+              <div class="right">
+                <p>
+                <strong>{% if entry.mp %}{{ entry.mp.shortname }}{% else %}{{ entry.speaker}}{% endif %}</strong>
+                  {{ entry.text }}
+                </p>
+              </div>
+          </div> <!-- /entry-->
+          {% endif %}
         {% endif %}
-
-      {% endif%}
-
+      </div><!-- /intervention-->
       {% endfor %}
 
       {% comment %}
