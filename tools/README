@@ -1,0 +1,37 @@
+csvparser.py
+
+Recebe como parametro um ficheiro no formato CSV com separador "|"
+Imprime lista de numero de linhas com diferentes numeros de campos.
+Bom para encontrar campos com muitos ou poucos campos, o que normalmente acontece quando são exportados campos que contem "\n".
+
+Precisa de mais testes...
+
+
+
+new_nomes_femininos.csv
+
+Exportação para CSV da lista de nomes femininos fornecida pela Claudia.
+
+
+
+
+gen_genero.py
+
+Usa new_nomes_femininos.csv e MP.csv para criar genero.csv
+
+
+
+
+genero.csv
+
+É uma lista de todos os membros presentes em MP.csv com um genero calculo com base no primeiro nome.
+
+
+
+
+pic_scrapper.py
+
+Utiliza o id em MP.csv para fazer download das imagens dos membros da A.R.
+As imagens ficam com o nome "<id>.jpg" na pasta "imgs/"
+Note-se que não foi ainda escrita nenhuma verificação sobre a qualidade dos ficheiros obtidos pelo que é necessário manualmente remover algumas imagens.
+Imagens com > 722 bytes podem ser removidas com alguma segurança...
