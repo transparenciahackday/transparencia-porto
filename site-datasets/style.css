@@ -12,7 +12,8 @@ font-size: 85%;
 font-family: 'Kreon', 'Linux Libertne O', Georgia, Times, serif;
 line-height: 1.4;
 color: #1c3b4c;
-background: #bdced8;
+height: 100%;
+background: #bdced8 url(img/bg.png) repeat-x 0 0;
 }
 
 #page {
