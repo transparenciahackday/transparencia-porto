@@ -45,11 +45,20 @@ margin: 0;
 overflow: auto;
 }
 
-#header h1 {
+#header p.logo {
+display: block;
 width: 300px;
-margin-right: 50px;
 float: left;
+height: 0;
+padding-top: 235px;
+margin-right: 50px;
+overflow: hidden;
+background: transparent url(img/parlamento.png) no-repeat 0 0;
+}
+
+#header h1 {
 font-size: 300%;
+margin: 0 0 15px;
 }
 
 #header #intro {
