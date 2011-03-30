@@ -1,3 +1,5 @@
 ./dptd/settings.py
 /dptd/deputados.dot
 /dptd/deputados.png
+*.pyc
+*.zip
