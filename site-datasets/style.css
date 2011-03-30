@@ -85,20 +85,20 @@ float: left;
 #content .box a {
 display: block;
 float: left;
-background: #3b7da2;
-color: #fff;
+background: #9cb5c4;
 margin: 0 0 20px 18px;
 padding: 10px 10px 15px;
 width: 280px;
 min-height: 90px;
--webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, .5);
--moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, .5);
-box-shadow: 2px 2px 2px rgba(0, 0, 0, .5);
+-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
+-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
+box-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
 }
 
 #content .box a:focus,
 #content .box a:hover {
-background: #1c3b4c;
+background: #3a7ba1;
+color: #fff;
 }
 
 #content .clear {
@@ -110,27 +110,27 @@ clear: both;
 margin: 0 0 20px;
 }
 
-#content .box h3 {
+#content .box a h3 {
 font-family: 'Kreon', 'Linux Libertne O', Georgia, Times, serif;
 font-size: 130%;
 font-weight: bold;
 margin: 10px 0;
 border-bottom: 1px dotted #bdced8;
 text-align: center;
+color: #fff;
 }
 
 #content .faqs {
 clear: both;
-margin-top: 15px;
 overflow: auto;
 }
 
 #content .faqs h2 {
-margin: 15px 0 10px;
+margin: 40px 0 10px;
 padding: 0 0 10px;
 font-size: 180%;
 text-align: center;
-border-bottom: 4px solid #fff;
+border-bottom: 1px solid #3b7da2;
 }
 
 #content .faqs dl {
