@@ -15,6 +15,11 @@ LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
 SOURCE_DIR = './html/'
 TARGET_DIR = './txt/'
 
+SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0')
+TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ',
+          'Presidente: ', 'Ex.mo Sr. ', 'Exmo. Sr. '
+          )
+
 MESES = {
     'JANEIRO': 1,
     'FEVEREIRO': 2,
@@ -47,6 +52,11 @@ PROTEST = 'protest'
 LAUGHTER = 'laughter'
 NOTE = 'note'
 OTHER = 'other'
+
+def remove_strings(st, strings_tuple):
+    for s in strings_tuple:
+        st = st.replace(s, '')
+    return st
 
 
 class QDSoupParser:
@@ -228,7 +238,10 @@ class QDSoupParser:
                     speaker = prev_s.speaker
                     party = prev_s.party
         '''
-        s = '[%s] %s (%s): - %s\n\n' % (stype, speaker, party, text)
+        if stype in ['note', 'other']:
+            s = '%s\n\n' % (text)
+        else:
+            s = '[%s] %s (%s): - %s\n\n' % (stype, speaker, party, text)
         return s
 
     def parse_soup(self, soup):
@@ -287,12 +300,15 @@ class QDSoupParser:
         return self.statements
 
     def _extract_metadata(self):
-        lines = self.statements[0].split('\\n')
-        pprint(lines)
+        i = None
+        for s in self.statements:
+            if 'encerrou a sessão' in s:
+                i = self.statements.index(s)
+        # print self.statements[i]
+        lines = self.statements[:i+1]
+        #pprint(lines)
 
         for line in lines:
-            line = line.strip()
-
             looking_for = ('REUNIÃO', 'PLENÁRIA')
             if line.startswith(looking_for):
                 logging.info('QDParser: Session date found!')
@@ -311,33 +327,40 @@ class QDSoupParser:
 
             elif line.startswith('Presidente:'):
                 logging.info('QDParser: President found!')
-                name = line.replace('Presidente: ', '')
-                name = name.replace('Ex.mo Sr. ', '')
+                line = line.strip()
+                name = remove_strings(line, TITLES)
                 self.president = name
 
             elif line.startswith('Secretários: '):
                 logging.info('QDParser: Secretaries found!')
                 line_index = lines.index(line) 
 
-                name = line.replace('Secretários: ', '')
-                name = name.replace('Ex.mos Srs. ', '')
+                name = line.strip()
+                name = remove_strings(name, TITLES)
 
                 names = []
 
-                while name:
-                    names.append(name)
-                    line_index += 1
-                    name = lines[line_index]
-
+                if '\\n' in name.strip(): 
+                    names = name.split('\n')
+                else:
+                    while name and not name.startswith(SUMMARY_STRINGS):
+                        # print name
+                        names.append(name)
+                        line_index += 1
+                        name = lines[line_index]
                 self.secretaries = names
+                if len(self.secretaries) == 1:
+                    self.secretaries = self.secretaries[0].split('\\n')
 
-            elif line.startswith(('SUMÁRIO', 'S U M Á R I O')):
+            elif line.strip().startswith(SUMMARY_STRINGS):
                 logging.info('QDParser: Summary found!')
                 self.summary = ''
-                line_index = lines.index(line) 
-                for line in lines[line_index:]:
+                l_index = lines.index(line) 
+                for line in lines[l_index:]:
                     self.summary += line + '\n'
-                self.summary = self.summary.replace('SUMÁRIO', '').strip()
+                # remove remainder
+                self.summary = self.summary.split('&nbsp;')[0]
+                self.summary = remove_strings(self.summary, SUMMARY_STRINGS).strip('\n')
                 break
                 
         if not self.president: logging.error('President not found') 
@@ -382,6 +405,15 @@ if __name__ == '__main__':
         ext = '.txt'
     outfilename = filename + ext
     outfile = open(outfilename, 'w')
+
+    s1 = 'Data: %s' % str(parser.date)
+    s2 = 'Presidente: %s' % str(parser.president)
+    s3 = 'Secretários: %s' % ", ".join(parser.secretaries)
+    print s1
+    print s2
+    print s3
+
+
     outfile.write(parser.get_txt())
     outfile.close()
     '''
