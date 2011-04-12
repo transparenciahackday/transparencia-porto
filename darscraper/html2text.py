@@ -16,8 +16,8 @@ SOURCE_DIR = './html/'
 TARGET_DIR = './txt/'
 
 SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0')
-TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ',
-          'Presidente: ', 'Ex.mo Sr. ', 'Exmo. Sr. '
+TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. '
+          'Presidente: ', 'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 
           )
 
 MESES = {
@@ -301,12 +301,16 @@ class QDSoupParser:
 
     def _extract_metadata(self):
         i = None
+        pprint(self.statements[:10])
         for s in self.statements:
             if 'encerrou a sessão' in s:
                 i = self.statements.index(s)
-        # print self.statements[i]
-        lines = self.statements[:i+1]
-        #pprint(lines)
+        print i
+        if i == 0:
+            lines = self.statements[0].split('\\n\\n')
+        else:
+            lines = self.statements[:i+1]
+        pprint(lines)
 
         for line in lines:
             looking_for = ('REUNIÃO', 'PLENÁRIA')
