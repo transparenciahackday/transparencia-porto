@@ -58,6 +58,17 @@ def remove_strings(st, strings_tuple):
         st = st.replace(s, '')
     return st
 
+def add_item(s, item):
+    if type(item) == list:
+        logging.warning('List found inside statements. Only strings should be there. Concatenating.')
+        for i in item:
+            add_item(s, i)
+    elif type(item) == str:
+        s += item
+    else:
+        logging.error('Unexpected object inside statements (%s)' % str(type(item)))
+    return s
+
 
 class QDSoupParser:
     def __init__(self):
@@ -92,6 +103,7 @@ class QDSoupParser:
             text = text.replace('O Sr. ', '')
             text = text.replace('A Sr.ª ', '')
             text = text.replace(': -', ': -')
+            text = text.replace(': –', ': -')
             text = text.replace(':.-', ': -')
             text = text.replace(': —', ': -')
             text = text.replace(':.—', ': -')
@@ -106,7 +118,7 @@ class QDSoupParser:
                 # que está mal redigido, vamos lá resolver isto
                 if text.find('\\n'):
                     logging.debug('Composite statement: Found newline.')
-                    texts = text.split('\\n')
+                    texts = text.rsplit('\\n')
                 elif '\xe2\x80\xa6' in text: 
                     logging.debug('Composite statement: Found ellipsis.')
                     # ellipsis
@@ -136,8 +148,9 @@ class QDSoupParser:
                        sts.append(self.parse_paragraph(t, skip_encode=True))
                     return sts
             else:
-                print text
-                raise ValueError
+                speaker = 'O Orador'
+                party = ''
+                text = text.strip()
 
             if speaker.startswith('Presidente'):
                 if '(' in speaker:
@@ -191,7 +204,7 @@ class QDSoupParser:
                     party = party.strip(')')
                     stype = MP_STATEMENT
                 else:
-                    if speaker.count('(') > 1:
+                    if speaker.count('(') > 1 and len(speaker) < 40:
                         logging.error('Too many parenthesis inside speaker.')
         else:
             if text.startswith('Aplausos'):
@@ -296,21 +309,29 @@ class QDSoupParser:
                     assert False
                 first = False
 
+        self.clean_statements()
         self._extract_metadata()
         return self.statements
 
+    def clean_statements(self):
+        for s in self.statements:
+            s = s.strip(' ')
+            # FIXME: Isto não está a fazer a substituição como esperado!
+            s = s.replace(' &nbsp;', '')
+
     def _extract_metadata(self):
         i = None
-        pprint(self.statements[:10])
+        # pprint(self.statements[:10])
+        
         for s in self.statements:
-            if 'encerrou a sessão' in s:
+            if s and 'encerrou a sessão' in s:
                 i = self.statements.index(s)
-        print i
-        if i == 0:
+        # print i
+        if not i:
             lines = self.statements[0].split('\\n\\n')
         else:
             lines = self.statements[:i+1]
-        pprint(lines)
+        # pprint(lines)
 
         for line in lines:
             looking_for = ('REUNIÃO', 'PLENÁRIA')
@@ -372,15 +393,14 @@ class QDSoupParser:
         if not self.secretaries: logging.error('Secretaries not found') 
         if not self.summary: logging.error('Summary not found') 
 
-
-
-
-
-
     def get_txt(self):
         output = ''
         for s in self.statements:
-            output += s
+            if not type(s) == str:
+                add_item(output, s)
+            if s:
+                output += s
+
         return output
 
 
@@ -410,14 +430,13 @@ if __name__ == '__main__':
     outfilename = filename + ext
     outfile = open(outfilename, 'w')
 
-    s1 = 'Data: %s' % str(parser.date)
-    s2 = 'Presidente: %s' % str(parser.president)
-    s3 = 'Secretários: %s' % ", ".join(parser.secretaries)
-    print s1
-    print s2
-    print s3
-
-
+    s1 = 'Data: %s\n' % str(parser.date)
+    s2 = 'Presidente: %s\n' % str(parser.president)
+    s3 = 'Secretários: %s\n' % ", ".join(parser.secretaries)
+    outfile.write(s1)
+    outfile.write(s2)
+    outfile.write(s3)
+    outfile.write('\n--------------\n\n')
     outfile.write(parser.get_txt())
     outfile.close()
     '''
