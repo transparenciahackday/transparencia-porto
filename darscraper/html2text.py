@@ -7,7 +7,7 @@ import string
 import datetime
 import re
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.ERROR)
 from pprint import pprint
 
 LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
@@ -66,7 +66,7 @@ def add_item(s, item):
     elif type(item) == str:
         s += item
     else:
-        logging.error('Unexpected object inside statements (%s)' % str(type(item)))
+        logging.warning('Unexpected object inside statements (%s)' % str(type(item)))
     return s
 
 
@@ -140,8 +140,8 @@ class QDSoupParser:
                 if not len(texts) > 1:
                     if '\xe2\x80\xa6' in text:
                         logging.error('Ellipsis found in unbroken text! Preposterous!')
-                    logging.error('Two statements in one line. Printing offending statement.')
-                    pprint(texts)
+                    logging.warning('Two statements in one line!')
+                    # pprint(texts)
                 else:
                     sts = []
                     for t in texts:
@@ -225,7 +225,7 @@ class QDSoupParser:
                             return None
                     else:
                         #if self.statements and not self.statements[-1].is_interruption():
-                        if self.statements:
+                        if self.statements and self.statements[-1]:
                             self.statements[-1] += ' ' + text
                             return None
                         else:
@@ -315,9 +315,12 @@ class QDSoupParser:
 
     def clean_statements(self):
         for s in self.statements:
-            s = s.strip(' ')
-            # FIXME: Isto não está a fazer a substituição como esperado!
-            s = s.replace(' &nbsp;', '')
+            if type(s) == str:
+                s = s.strip(' ')
+                # FIXME: Isto não está a fazer a substituição como esperado!
+                s = s.replace('&nbsp;', '')
+            else:
+                logging.warning('Non-string statement found (%s)' % str(type(s)))
 
     def _extract_metadata(self):
         i = None
@@ -398,7 +401,7 @@ class QDSoupParser:
         for s in self.statements:
             if not type(s) == str:
                 add_item(output, s)
-            if s:
+            elif s:
                 output += s
 
         return output
