@@ -44,6 +44,7 @@ NUMEROS_ROMANOS = {
     }
 
 MP_STATEMENT = 'mp'
+GOV_STATEMENT = 'gov'
 PRESIDENT_STATEMENT = 'president'
 STATEMENT = 'statement'
 INTERRUPTION = 'interruption'
@@ -51,6 +52,9 @@ APPLAUSE = 'applause'
 PROTEST = 'protest'
 LAUGHTER = 'laughter'
 NOTE = 'note'
+PAUSE = 'pause'
+VOTE = 'vote'
+SECRETARY = 'secretary'
 OTHER = 'other'
 
 def remove_strings(st, strings_tuple):
@@ -91,7 +95,7 @@ class QDSoupParser:
         stype = ''
 
         if not text:
-            return None
+            return
 
         # vamos procurar pelo conjunto de dois pontos e travessão, que
         # é o que indica uma intervenção
@@ -110,6 +114,7 @@ class QDSoupParser:
             text = text.replace(':—', ': -')
             text = text.replace(':-', ': -')
             if text.count(': -') == 1:
+                stype = STATEMENT
                 speaker, text = text.split(': -')
                 text = text.strip(' ')
 
@@ -145,10 +150,12 @@ class QDSoupParser:
                 else:
                     sts = []
                     for t in texts:
-                       sts.append(self.parse_paragraph(t, skip_encode=True))
+                        p = self.parse_paragraph(t, skip_encode=True)
+                        if p:
+                            sts.append(p)
                     return sts
             else:
-                speaker = 'O Orador'
+                speaker = ''
                 party = ''
                 text = text.strip()
 
@@ -171,24 +178,11 @@ class QDSoupParser:
                     name = name.strip(')')
                     speaker = name
                     party = 'Secretário'
-                    
+                    stype = SECRETARY
+            elif 'Vozes' in speaker:
+                stype = INTERRUPTION
             else:
-                if speaker in ('O Orador', 'A Oradora') and len(self.statements) > 1:
-                    # get previous speaker
-                    stype = MP_STATEMENT
-                    # if self.statements[-2]:
-                    #     speaker = self.statements[-2].speaker
-                    #     party = self.statements[-2].party
-                    # elif self.statements[-3]:
-                    #     speaker = self.statements[-3].speaker
-                    #     party = self.statements[-3].party
-                    # elif self.statements[-4]:
-                    #     speaker = self.statements[-4].speaker
-                    #     party = self.statements[-4].party
-                elif 'Vozes' in speaker:
-                    stype = INTERRUPTION
-                else:
-                    stype = STATEMENT
+                stype = STATEMENT
 
                 if speaker.count('(') == 1:
                     try:
@@ -196,7 +190,7 @@ class QDSoupParser:
                     except ValueError:
                         # print speaker
                         if len(speaker) > 200:
-                            print '  Speaker too long, this is often a very bad sign.'
+                            logging.error('Speaker too long, this is often a very bad sign.')
                             speaker = ''
                             party = ''
                         raise
@@ -206,55 +200,69 @@ class QDSoupParser:
                 else:
                     if speaker.count('(') > 1 and len(speaker) < 40:
                         logging.error('Too many parenthesis inside speaker.')
+            if speaker.startswith('Ministr') or (speaker.startswith('Secret') and 'Estado' not in speaker):
+                stype = GOV_STATEMENT
         else:
+            # Não é uma intervenção (não tem ': -'))
             if text.startswith('Aplausos'):
                 stype = APPLAUSE
             elif text.startswith('Protestos'):
                 stype = PROTEST
             elif text.startswith('Risos'):
                 stype = LAUGHTER
+            elif text.startswith('Pausa'):
+                stype = PAUSE
+            elif text.startswith('Submetid'):
+                stype = VOTE
             elif 'assumiu a presidência' in text or text.startswith('Eram ') \
                     or text.startswith('Pausa.'):
                 stype = NOTE
-            else:
-                if first:
-                    # first paragraph of the page can be a continuation of previous
-                    if text[0] in LOWERCASE_LETTERS + ' ':
-                        if self.statements:
-                            self.statements[-1] += text
-                            return None
-                    else:
-                        #if self.statements and not self.statements[-1].is_interruption():
-                        if self.statements and self.statements[-1]:
-                            self.statements[-1] += ' ' + text
-                            return None
-                        else:
-                            stype = OTHER
-                else:
-                    if text[0] in LOWERCASE_LETTERS:
-                        if self.statements[-1]:
-                            self.statements[-1] += text
-                            return None
 
-                stype = OTHER
-        '''
-        if self.statements:
-            if stype == OTHER and not speaker and not party and self.statements[-1]:
-                if self.statements[-1].is_interruption():
-                    if not self.statements[-2].is_interruption():
-                        prev_s = self.statements[-2]
-                    elif not self.statements[-3].is_interruption():
-                        prev_s = self.statements[-3]
-                    else:
-                        prev_s = self.statements[-4]
-                    stype = prev_s.type
-                    speaker = prev_s.speaker
-                    party = prev_s.party
-        '''
-        if stype in ['note', 'other']:
-            s = '%s\n\n' % (text)
+            else:
+                stype = STATEMENT
+
+        if first and stype not in (STATEMENT, MP_STATEMENT):
+            # first paragraph of the page can be a continuation of previous
+            if text[0] in LOWERCASE_LETTERS:
+                self.statements[-1] = self.statements[-1].strip()
+                self.statements[-1] += text + '\n\n'
+                return None
+            else:
+                pass
         else:
-            s = '[%s] %s (%s): - %s\n\n' % (stype, speaker, party, text)
+            #if self.statements and not self.statements[-1].is_interruption():
+            #if self.statements and self.statements[-1]:
+            #    self.statements[-1] += ' ' + text
+            #    return None
+            #else:
+            #    stype = OTHER
+            pass
+
+        # limpar statements órfãos
+        if stype == STATEMENT and not party and not speaker and self.statements:
+            if type(self.statements[-1]) == list:
+                print self.statements[-1]
+            if self.statements[-1].startswith('[mp]'):
+                self.statements[-1] = self.statements[-1].strip()
+                self.statements[-1] += text + '\n\n'
+                return None
+            elif self.statements[-1].startswith('**') and self.statements[-2].startswith('[mp]'):
+                self.statements[-2] = self.statements[-2].strip()
+                self.statements[-2] += text + '\n\n'
+                return None
+
+        if stype in (NOTE, PROTEST, APPLAUSE, LAUGHTER):
+            s = '** %s **\n\n' % (text)
+        else:
+            text = text.replace(' ç ', ' é ')
+            if speaker and not party:
+                s = '[%s] %s: - %s\n\n' % (stype, speaker, text)
+            elif party and not speaker:
+                s = '[%s] (%s): - %s\n\n' % (stype, party, text)
+            elif party and speaker:
+                s = '[%s] %s (%s): - %s\n\n' % (stype, speaker, party, text)
+            else:
+                s = '[%s] - %s\n\n' % (stype, text)
         return s
 
     def parse_soup(self, soup):
@@ -281,11 +289,13 @@ class QDSoupParser:
                                 text = el.strip('\n').strip()
                                 text = text.replace('\n', ' ')
                                 p += text
-
+                            elif el.name == 'br':
+                                # line break
+                                p += '\\n'
+                            elif not el:
+                                pass
                             else:
-                                if el.name == 'br':
-                                    # line break
-                                    p += '\\n'
+                                logging.warning('Unidentified paragraph element found in HTML.')
                         st = self.parse_paragraph(p, first=first)
                         if st:
                             if type(st) == list:
@@ -333,7 +343,11 @@ class QDSoupParser:
         if not i:
             lines = self.statements[0].split('\\n\\n')
         else:
-            lines = self.statements[:i+1]
+            lines = []
+            all_lines = self.statements[:i+1]
+            for item in all_lines:
+                lines.extend(item.split('\\n\\n'))
+
         # pprint(lines)
 
         for line in lines:
@@ -430,7 +444,7 @@ if __name__ == '__main__':
         # sys.exit()
 
         ext = '.txt'
-    outfilename = filename + ext
+    outfilename = filename + ext.replace('html', 'txt')
     outfile = open(outfilename, 'w')
 
     s1 = 'Data: %s\n' % str(parser.date)
