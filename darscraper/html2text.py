@@ -7,7 +7,7 @@ import string
 import datetime
 import re
 import logging
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.WARNING)
 from pprint import pprint
 
 LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
@@ -15,9 +15,9 @@ LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
 SOURCE_DIR = './html/'
 TARGET_DIR = './txt/'
 
-SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0')
-TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. '
-          'Presidente: ', 'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 
+SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0', 'SUMARIO')
+TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. ', 'Ex.mos. Srs. '
+          'Presidente: ', 'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 'Ex.mo. Sr. '
           )
 
 MESES = {
@@ -251,8 +251,12 @@ class QDSoupParser:
                 self.statements[-2] += text + '\n\n'
                 return None
 
+
+
         if stype in (NOTE, PROTEST, APPLAUSE, LAUGHTER):
             s = '** %s **\n\n' % (text)
+        elif text == '&nbsp;':
+            return None
         else:
             text = text.replace(' ç ', ' é ')
             if speaker and not party:
@@ -292,10 +296,14 @@ class QDSoupParser:
                             elif el.name == 'br':
                                 # line break
                                 p += '\\n'
+                            elif el.name == 'sup':
+                                text = el.contents[0].strip(' \n')
+                                p += text
                             elif not el:
                                 pass
                             else:
                                 logging.warning('Unidentified paragraph element found in HTML.')
+                                logging.warning('-> %s' % el)
                         st = self.parse_paragraph(p, first=first)
                         if st:
                             if type(st) == list:
@@ -337,8 +345,9 @@ class QDSoupParser:
         # pprint(self.statements[:10])
         
         for s in self.statements:
-            if s and 'encerrou a sessão' in s:
+            if s and ('encerrou a sessão' in s or 'encerrada a sessão' in s):
                 i = self.statements.index(s)
+                break
         # print i
         if not i:
             lines = self.statements[0].split('\\n\\n')
@@ -351,7 +360,9 @@ class QDSoupParser:
         # pprint(lines)
 
         for line in lines:
-            looking_for = ('REUNIÃO', 'PLENÁRIA')
+            orig_line = str(line)
+            line = line.replace('[statement] - ', '').strip()
+            looking_for = ('REUNIÃO', 'REUNIAO', 'PLENÁRIA')
             if line.startswith(looking_for):
                 logging.info('QDParser: Session date found!')
                 try:
@@ -366,16 +377,32 @@ class QDSoupParser:
                     print line
                     raise
 
-
             elif line.startswith('Presidente:'):
-                logging.info('QDParser: President found!')
-                line = line.strip()
-                name = remove_strings(line, TITLES)
-                self.president = name
+                if 'Secret' in line:
+                    # info presidente e secretários no mesmo parágrafo, derp
+                    print
+                    logging.info('QDParser: President found!')
+                    logging.info('QDParser: Secretaries found!')
+                    line = line.strip()
+                    names = remove_strings(line, TITLES)
+                    names = names.split('\\n')
+                    pres = names.pop(0)
+                    self.president = pres.replace('Presidente: ', '')
+                    print self.president
+                    secs = names
+                    secs[0] = secs[0].replace('Ex.mos. Srs. ', '')
+                    self.secretaries = secs
+
+                    print self.secretaries
+                else:
+                    logging.info('QDParser: President found!')
+                    line = line.strip()
+                    name = remove_strings(line, TITLES)
+                    self.president = name
 
             elif line.startswith('Secretários: '):
                 logging.info('QDParser: Secretaries found!')
-                line_index = lines.index(line) 
+                line_index = lines.index(orig_line) 
 
                 name = line.strip()
                 name = remove_strings(name, TITLES)
@@ -386,7 +413,8 @@ class QDSoupParser:
                     names = name.split('\n')
                 else:
                     while name and not name.startswith(SUMMARY_STRINGS):
-                        # print name
+                        print name
+                        print line_index
                         names.append(name)
                         line_index += 1
                         name = lines[line_index]
@@ -397,7 +425,7 @@ class QDSoupParser:
             elif line.strip().startswith(SUMMARY_STRINGS):
                 logging.info('QDParser: Summary found!')
                 self.summary = ''
-                l_index = lines.index(line) 
+                l_index = lines.index(orig_line) 
                 for line in lines[l_index:]:
                     self.summary += line + '\n'
                 # remove remainder
