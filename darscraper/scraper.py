@@ -52,7 +52,7 @@ def get_page(leg, sess, num, pag):
 
 def get_diary(leg, sess, num):
     errors = False
-    filename = 'dar_%02d_%02d_%03d.txt' % (leg, sess, num)
+    filename = 'dar_%02d_%02d_%03d.html' % (leg, sess, num)
     target = os.path.join(TARGET_DIR, filename)
     if os.path.exists(target):
         print "File %s already exists. Not scraping this one." % (target)
@@ -85,17 +85,17 @@ if __name__ == '__main__':
     #    print 'I need 3 arguments: <leg> <sess> <num>'
     #    sys.exit()
 
-
-    leg = int(sys.argv[1])
-    sess = int(sys.argv[2])
-    # num = int(sys.argv[3])
-    #for num in range(1,200):
-    #    get_diary(leg, sess, num)
-
     from taskqueue import Queue, Task
     q = Queue()
-    for sess in range(1, SESSIONS[leg]):
+
+    leg = int(sys.argv[1])
+    if len(sys.argv) == 3:
+        sess = int(sys.argv[2])
         for i in range(1, 200):
             q.append(Task(get_diary, args=(leg, sess, i)))
+    else:
+        for s in range(1, SESSIONS[leg]):
+            for i in range(1, 200):
+                q.append(Task(get_diary, args=(leg, s, i)))
     q.wait()
     q.die()
