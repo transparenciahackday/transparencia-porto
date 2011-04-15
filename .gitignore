@@ -3,3 +3,8 @@
 /dptd/deputados.png
 *.pyc
 *.zip
+darscraper/csv
+darscraper/txt
+darscraper/txt-1
+*.swp
+darscraper/scraped
