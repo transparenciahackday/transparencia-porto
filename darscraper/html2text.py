@@ -370,7 +370,7 @@ class QDSoupParser:
                     t = line.strip()
                     verbose_date = line.split(' ')[3:]
                     day = int(verbose_date[0])
-                    month = MESES[verbose_date[2]]
+                    month = MESES[verbose_date[2].upper()]
                     year = int(verbose_date[4].strip())
                     self.date = datetime.date(year, month, day)
                 except ValueError:
