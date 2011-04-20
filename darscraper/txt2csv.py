@@ -1,8 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-SOURCE_DIR = './txt-1/'
+import sys, os
+import datetime
+import logging
+logging.basicConfig(level=logging.WARNING)
+
+SOURCE_DIR = './txt/'
 TARGET_DIR = './csv/'
 
 MP_STATEMENT = 'mp'
+GOV_STATEMENT = 'gov'
 PRESIDENT_STATEMENT = 'president'
 STATEMENT = 'statement'
 INTERRUPTION = 'interruption'
@@ -10,15 +18,24 @@ APPLAUSE = 'applause'
 PROTEST = 'protest'
 LAUGHTER = 'laughter'
 NOTE = 'note'
+PAUSE = 'pause'
+VOTE = 'vote'
+SECRETARY = 'secretary'
 OTHER = 'other'
 
+REAL_STATEMENTS = (MP_STATEMENT, GOV_STATEMENT, PRESIDENT_STATEMENT, INTERRUPTION, SECRETARY)
+
 class Session:
-    def __init__(self, date, statements):
+    def __init__(self, date=None):
         self.date = date
-        self.statements = statements
+        self.statements = []
         self.time_start = None
         self.time_end = None
-        self.summary = None
+        
+        self.president = ''
+        self.secretaries = []
+        self.summary = ''
+    
         self.interruptions = []
         self.rollcall = RollCall()
 
@@ -42,6 +59,11 @@ class Session:
         output.append('Deputados ausentes: %s\n' % self.rollcall.absent_mps)
         output.append('Deputados atrasados: %s\n' % self.rollcall.late_mps)
         return output
+
+    def flush_statements(self):
+        for s in self.statements:
+            del s
+        self.statements = []
 
 class Statement:
     def __init__ (self, speaker='', party='', text='', stype=''):
@@ -73,61 +95,99 @@ class RollCall:
     def add_late(self, name):
         self.late.append(name)
         
-class QDPostProcessor:
-    def __init__(self, parser):
-        self.session = None
-        self.parser = parser
-        # copy the statement list
-        self.statements = list(parser.statements)
-        # TODO: interrupções? 
-        # formato ((timestop, timestart), (timestop, timestart))
-        self.interruptions = ()
-        self.date = None
+class QDTextParser:
+    def __init__(self, lines):
+        self.session = Session()
+        # self.lines deve ser uma lista de linhas extraídas de um ficheiro com
+        # o readlines()
+        self.lines = lines
 
-    def get_date(self):
-        if not self.statements:
-            raise ValueError('File not parsed yet, cannot retrieve date.')
-        i = 0
-        for s in self.statements:
-            if i<10: print s
-            i += 1
-            if type(s) == type([]):
-                logging.error('List found inside statement list')
-                continue
-            looking_for = ('REUNIÃO PLENÁRIA DE', 'REUNIAO PLENÁRIA DE', 'PLENÁRIA DE')
-            if s.text.strip().startswith(looking_for):
-                logging.info('QDPostProcessor: Session date found!')
-                try:
-                    # vamos apanhar a data
-                    t = s.text.strip()
-                    verbose_date = s.text.split(' ')[3:]
-                    day = int(verbose_date[0])
-                    month = MESES[verbose_date[2]]
-                    year = int(verbose_date[4].strip())
-                    self.date = datetime.date(year, month, day)
-                    return self.date
-                except ValueError:
-                    print s 
-                    raise
-            else:
-                pass
-        if not self.date:
-            logging.error('QDPostProcessor.get_date: Session date not found!')
+    def _get_metadata(self):
+        datestring = self.lines[0].replace('Data: ', '').strip()
+        year, month, day = [int(x) for x in datestring.split('-')]
+        self.session.date = datetime.date(year, month, day)
+         
+        self.session.president = self.lines[1].replace('Presidente: ', '') 
+        self.session.secretaries = self.lines[2].replace('Secretários: ', '').split(', ') 
 
-    def get_summary(self):
-        summary = ''
-        return summary
+        # remover as linhas iniciais, já não vamos precisar
+        del self.lines[:6]
 
-    def get_times(self):
+    def _get_statements(self):
+        #from pprint import pprint
+        #pprint(lines)
+        for line in self.lines:
+            if line == '\n':
+                del line
+
+        for line in self.lines:
+            speaker = ''
+            party = ''
+            # Cada linha vem no formato
+            if line != '\n':
+                if line.startswith('**'):
+                    text = line.replace('**', '').strip()
+                    if text.startswith('Aplausos'):
+                        stype = APPLAUSE
+                    elif text.startswith('Protestos'):
+                        stype = PROTEST
+                    elif text.startswith('Risos'):
+                        stype = LAUGHTER
+                    elif text.startswith('Pausa'):
+                        stype = PAUSE
+                    elif text.startswith('Submetid'):
+                        stype = VOTE
+                    elif 'assumiu a presidência' in text or text.startswith('Eram ') \
+                            or text.startswith('Pausa.'):
+                        stype = NOTE
+
+                elif ': - ' in line:
+                    words = line.split(' ')
+                    stype = words[0].strip('[]')
+                    del words[0]
+                    # refazer a linha sem o tag
+                    line = ' '.join(words)
+
+                    if stype in REAL_STATEMENTS:
+                        speaker, text = line.split(': - ', 1)
+                        if '(' in speaker:
+                            try:
+                                speaker, party = speaker.split('(')
+                            except ValueError:
+                                print speaker
+                                raise
+                            party = party.strip('()')
+                        else:
+                            party = ''
+                    else:
+                        speaker = party = ''
+                        text = line
+                else:
+                    words = line.split(' ')
+                    stype = words[0].strip('[]')
+                    del words[0]
+                    line = ' '.join(words)
+                    text = line
+                    speaker = ''
+                    party = ''
+                text = text.strip('\n ')
+                speaker = speaker.strip(' ')
+                party = party.strip(' ')
+                s = Statement(speaker=speaker, party=party, text=text, stype=stype)
+                self.session.statements.append(s)
+
+    def _get_times(self):
         time_start = None
         time_end = None
         return time_start, time_end
 
-    def get_rollcall(self):
+    def _get_rollcall(self):
         rc = RollCall()
         return rc
 
     def retag_statements(self):
+        pass
+    '''
         speaker = None
         for s in self.statements:
             if speaker:
@@ -137,7 +197,6 @@ class QDPostProcessor:
                     speaker = speaker[:199]
                 # Estamos a meio de uma intervenção, por isso os statements
                 # antes de o presidente dar a palavra a outro são interrupções
-            '''
             if s.is_president() and 'em a palavra' in s.text:
                 # assinalar a anterior como fim da intervenção
                 prev_s = self.statements[self.statements.index(s)-1]
@@ -154,12 +213,11 @@ class QDPostProcessor:
                 speaker = next_s.speaker
                 next_s.type = 'start'
                 # TODO: Verificar também se o presidente disse o nome do deputado
-            '''
 
         # detectar início e fim de cada intervenção
         # speaker - president ; tem a palavra
         # ver até o Presidente falar e o orador seguinte não ser o anterior
-
+    '''
     def prune_statements(self):
         # remover as primeiras linhas (título, lista de presenças,
         # sumário) até ao Presidente falar:
@@ -190,10 +248,33 @@ class QDPostProcessor:
         del self.statements[last_time_statement_index:]
 
     def run(self):
-        d = self.get_date()
-        time_start, time_end = self.get_times()
-        self.retag_statements()
-        self.prune_statements()
-        self.session = Session(date=d, statements=self.statements)
-        return self.session
+        del self.session
+        self.session = Session()
+        self._get_metadata()
+        self._get_statements()
+
+    def flush(self):
+        self.session.flush_statements()
+        self.session = Session()
+
+
+if __name__ == '__main__':
+    files = sys.argv[1:]
+    for f in files:
+        outfilename = os.path.join(TARGET_DIR, os.path.split(f)[-1].replace('.txt', '.csv'))
+        print f
+
+        if os.path.exists(outfilename):
+            logging.error('File exists already. Not overwriting.')
+            continue
+
+        file_contents = open(f, 'r')
+        contents = file_contents.readlines()
+        file_contents.close()
+        textparser = QDTextParser(contents)
+        textparser.run()
+        csv_contents = textparser.session.get_statements_csv()
+        outfile = open(outfilename, 'w')
+        outfile.write(csv_contents)
+        outfile.close()
 
