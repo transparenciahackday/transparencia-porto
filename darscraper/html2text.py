@@ -106,8 +106,6 @@ class QDSoupParser:
         regex = re.compile(r'.*:[ .]?[-—] ?.*')
         regex_part = re.compile(r':[ .]?[-—] ?')
         if regex.match(text):
-            text = text.replace('O Sr. ', '', 1)
-            text = text.replace('A Sr.ª ', '', 1)
             text = text.replace(': -', ': -')
             text = text.replace(': –', ': -')
             text = text.replace(':.-', ': -')
@@ -116,6 +114,8 @@ class QDSoupParser:
             text = text.replace(':—', ': -')
             text = text.replace(':-', ': -')
             if text.count(': -') == 1:
+                text = text.replace('O Sr. ', '', 1)
+                text = text.replace('A Sr.ª ', '', 1)
                 stype = STATEMENT
                 speaker, text = text.split(': -')
                 text = text.strip(' ')
