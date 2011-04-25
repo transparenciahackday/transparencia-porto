@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
+logging.basicConfig(level=logging.WARNING)
+
 from BeautifulSoup import BeautifulSoup, NavigableString
 import os
 import string
 import datetime
 import re
-import logging
-logging.basicConfig(level=logging.WARNING)
 from pprint import pprint
 
 LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
@@ -101,11 +102,12 @@ class QDSoupParser:
         # é o que indica uma intervenção
         # usamos regexes porque existem vários erros de redacção, mas elas
         # têm problemas com Unicode, por isso não usamos o sub
+
         regex = re.compile(r'.*:[ .]?[-—] ?.*')
         regex_part = re.compile(r':[ .]?[-—] ?')
         if regex.match(text):
-            text = text.replace('O Sr. ', '')
-            text = text.replace('A Sr.ª ', '')
+            text = text.replace('O Sr. ', '', 1)
+            text = text.replace('A Sr.ª ', '', 1)
             text = text.replace(': -', ': -')
             text = text.replace(': –', ': -')
             text = text.replace(':.-', ': -')
@@ -121,14 +123,21 @@ class QDSoupParser:
             elif text.count(': -') > 1:
                 # Se encontrou vários separadores de intervenção, quer dizer
                 # que está mal redigido, vamos lá resolver isto
-                if text.find('\\n'):
+                logging.debug('** Two markers: %s' % text)
+                if '… O Sr.' in text or '… A Sr.' in text:
+                    logging.debug('Composite statement: Found possible second entry without opening newline.')
+                    texts = text.rsplit('…') 
+                    texts[0] += '…' 
+                elif text.find('\\n\\n'):
+                    logging.debug('Composite statement: Found double newline.')
+                    texts = text.rsplit('\\n\\n')
+                elif text.find('\\n'):
                     logging.debug('Composite statement: Found newline.')
                     texts = text.rsplit('\\n')
                 elif '\xe2\x80\xa6' in text: 
                     logging.debug('Composite statement: Found ellipsis.')
                     # ellipsis
                     texts = text.rsplit('\xe2\x80\xa6'.decode('utf-8'), 1)
-                    #texts[0] += '\xe2\x80\xa6'.decode('utf-8')
                 elif '  ' in text:
                     logging.info('Composite statement: Found double space.')
                     texts = text.split('  ')
@@ -140,13 +149,14 @@ class QDSoupParser:
                         logging.debug('Composite statement: Found ellipsis in second run.')
                         # ellipsis
                         texts = text.rsplit('\xe2\x80\xa6', 1)
-                        #texts[0] += '\xe2\x80\xa6'.decode('utf-8')
 
                 if not len(texts) > 1:
-                    if '\xe2\x80\xa6' in text:
+                    if '\\n\\n' in text:
+                        texts = text.rsplit('\\n\\n')
+                    elif '\xe2\x80\xa6' in text:
                         logging.error('Ellipsis found in unbroken text! Preposterous!')
+                    
                     logging.warning('Two statements in one line!')
-                    # pprint(texts)
                 else:
                     sts = []
                     for t in texts:
@@ -159,12 +169,12 @@ class QDSoupParser:
                 party = ''
                 text = text.strip()
 
-            if speaker.startswith('Presidente'):
+            if speaker.startswith('Presidente') or party is 'Presidente':
                 if '(' in speaker:
                     try:
                         party, speaker = speaker.split('(')
                     except ValueError:
-                        print speaker
+                        #print speaker
                         raise
                     speaker = speaker.strip(')')
                     party = party.strip()
@@ -172,6 +182,7 @@ class QDSoupParser:
                     speaker = 'Presidente'
                     party = 'Presidente'
                 stype = PRESIDENT_STATEMENT
+
             elif 'Secretári' in speaker and not 'Estado' in speaker:
                 if '(' in speaker:
                     post, name = speaker.split('(')
@@ -179,8 +190,10 @@ class QDSoupParser:
                     speaker = name
                     party = 'Secretário'
                     stype = SECRETARY
+
             elif 'Vozes' in speaker:
                 stype = INTERRUPTION
+
             else:
                 stype = STATEMENT
 
@@ -221,12 +234,14 @@ class QDSoupParser:
             else:
                 stype = STATEMENT
 
-        if first and stype not in (STATEMENT, MP_STATEMENT):
+        if first and stype not in (MP_STATEMENT,):
             # first paragraph of the page can be a continuation of previous
-            if text[0] in LOWERCASE_LETTERS:
-                self.statements[-1] = self.statements[-1].strip()
-                self.statements[-1] += text + '\n\n'
-                return None
+            if self.statements:
+                if self.statements[-1].strip()[-1] not in '?!.':
+                    # print text[:20]
+                    self.statements[-1] = self.statements[-1].strip()
+                    self.statements[-1] += text + '\n\n'
+                    return None
             else:
                 pass
         else:
@@ -238,18 +253,32 @@ class QDSoupParser:
             #    stype = OTHER
             pass
 
+        # normalizar newlines
+        if '\n\n' not in text:
+            sentences = text.split('\\n')
+            for s in sentences:
+                # se acabar com ponto (e não uma abreviatura) e não for a última, acrescentar newline
+                if s.endswith('.') and not s.endswith(('Srs.', 'O Sr.')) and not sentences.index(s) > len(sentences):
+                    sentences[sentences.index(s)] += '\\n'
+            text = " ".join(sentences)
+            # retirar espaços a seguir às newlines
+            text = text.replace('\\n ', '\\n')
+            text = text.strip('\\n')
+
         # limpar statements órfãos
         if stype == STATEMENT and not party and not speaker and self.statements:
             if type(self.statements[-1]) == list:
-                print self.statements[-1]
+                # print self.statements[-1]
+                logging.warning('List found inside statements while looking for orphans.')
+                pass
             if self.statements[-1].startswith('[mp]'):
                 self.statements[-1] = self.statements[-1].strip()
                 self.statements[-1] += text + '\n\n'
                 return None
-            elif self.statements[-1].startswith('**') and self.statements[-2].startswith('[mp]'):
-                self.statements[-2] = self.statements[-2].strip()
-                self.statements[-2] += text + '\n\n'
-                return None
+            #elif self.statements[-1].startswith('**') and self.statements[-2].startswith('[mp]'):
+            #    self.statements[-2] = self.statements[-2].strip()
+            #    self.statements[-2] += text + '\n\n'
+            #    return None
 
 
 
@@ -274,7 +303,6 @@ class QDSoupParser:
         self.statements = []
         started = False
         for page in soup.findAll('body'):
-            output += '\n===============================\n'
             # exclude the first paragraph, but not in the first page
             first = True
             if started:
@@ -327,18 +355,46 @@ class QDSoupParser:
                     assert False
                 first = False
 
-        self.clean_statements()
-        self._extract_metadata()
         return self.statements
 
     def clean_statements(self):
+        
         for s in self.statements:
+            index = self.statements.index(s)
+            prev_s = self.statements[index-1] if index else ''
+            # print 'Statement: %s' % s.strip()
+            # print 'Previous:  %s' % prev_s.strip()
+
             if type(s) == str:
                 s = s.strip(' ')
                 # FIXME: Isto não está a fazer a substituição como esperado!
                 s = s.replace('&nbsp;', '')
             else:
                 logging.warning('Non-string statement found (%s)' % str(type(s)))
+
+            if prev_s.endswith('\n\n') and '**' not in prev_s and s.startswith('[statement]'):
+                logging.debug('Found double newline, joining with previous.')
+                # frase incompleta, juntar à anterior
+                if prev_s.strip('\n ')[-1] in LOWERCASE_LETTERS or prev_s.strip('\n ').endswith(('Sr.','Sra.','Srs.', 'Sras.', '—')):
+                    self.statements[index-1] = self.statements[index-1].strip('\n') + ' '
+                else:
+                    self.statements[index-1] = self.statements[index-1].strip('\n') + '\\n'
+                self.statements[index-1] += s.replace('[statement] - ', '')
+                self.statements.pop(self.statements.index(s))
+            else:
+                s = s.strip('\n ')
+
+            '''
+            elif prev_s.endswith(LOWERCASE_LETTERS + '\n') and s.startswith('[statement]'):
+                print 'INCOMPLETE 2' 
+                # frase incompleta, juntar à anterior
+                if prev_s.strip('\n ')[-1] not in LOWERCASE_LETTERS:
+                    prev_s = prev_s.strip('\n')
+                prev_s += s.replace('[statement] - ', '')
+                self.statements.pop(self.statements.index(s))
+            '''
+            # print
+
 
     def _extract_metadata(self):
         i = None
@@ -374,13 +430,13 @@ class QDSoupParser:
                     year = int(verbose_date[4].strip())
                     self.date = datetime.date(year, month, day)
                 except ValueError:
-                    print line
+                    # print line
                     raise
 
             elif line.startswith('Presidente:'):
                 if 'Secret' in line:
                     # info presidente e secretários no mesmo parágrafo, derp
-                    print
+                    # print
                     logging.info('QDParser: President found!')
                     logging.info('QDParser: Secretaries found!')
                     line = line.strip()
@@ -388,12 +444,12 @@ class QDSoupParser:
                     names = names.split('\\n')
                     pres = names.pop(0)
                     self.president = pres.replace('Presidente: ', '')
-                    print self.president
+                    # print self.president
                     secs = names
                     secs[0] = secs[0].replace('Ex.mos. Srs. ', '')
                     self.secretaries = secs
 
-                    print self.secretaries
+                    # print self.secretaries
                 else:
                     logging.info('QDParser: President found!')
                     line = line.strip()
@@ -413,8 +469,8 @@ class QDSoupParser:
                     names = name.split('\n')
                 else:
                     while name and not name.startswith(SUMMARY_STRINGS):
-                        print name
-                        print line_index
+                        # print name
+                        # print line_index
                         names.append(name)
                         line_index += 1
                         name = lines[line_index]
@@ -448,6 +504,12 @@ class QDSoupParser:
 
         return output
 
+    def run(self, soup):
+        self.parse_soup(soup)
+        self.clean_statements()
+        self.clean_statements()
+        self.clean_statements()
+        self._extract_metadata()
 
 if __name__ == '__main__':
     import sys
@@ -460,15 +522,15 @@ if __name__ == '__main__':
     parser = QDSoupParser()
 
     try:
-        parser.parse_soup(soup)
+        parser.run(soup)
     except:
-        print '  Parsing error in file %s.' % (f)
+        logging.error('Parsing error in file %s.' % (f))
         raise
 
     if parser.date:
         filename += '_' + str(parser.date)
     else:
-        print '  Session date not found.'
+        logging.error('Session date not found.')
         # sys.exit()
 
         ext = '.txt'
