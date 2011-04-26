@@ -280,14 +280,17 @@ class QDSoupParser:
             #    self.statements[-2] += text + '\n\n'
             #    return None
 
+        # limpar caracteres defeituosos (erros OCR)
+        if '«' not in text:
+            text = text.replace('»', '…')
+        text = text.replace(' ç ', ' é ')
 
-
+        # terminado
         if stype in (NOTE, PROTEST, APPLAUSE, LAUGHTER):
             s = '** %s **\n\n' % (text)
         elif text == '&nbsp;':
             return None
         else:
-            text = text.replace(' ç ', ' é ')
             if speaker and not party:
                 s = '[%s] %s: - %s\n\n' % (stype, speaker, text)
             elif party and not speaker:
