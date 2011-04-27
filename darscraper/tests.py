@@ -77,7 +77,7 @@ class TestHTMLParsing(unittest.TestCase):
         '''pm.html: Detecção e catalogação de intervenções do PM.'''
         self._test_file('pm')
 
-    def test_pm(self):
+    def test_pontuacao(self):
         '''pontuacao.html: Detecção de pontuação sem espaço a seguir.'''
         self._test_file('pontuacao')
 
