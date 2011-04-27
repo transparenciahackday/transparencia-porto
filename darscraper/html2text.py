@@ -258,7 +258,7 @@ class QDSoupParser:
             sentences = text.split('\\n')
             for s in sentences:
                 # se acabar com ponto (e não uma abreviatura) e não for a última, acrescentar newline
-                if s.endswith('.') and not s.endswith(('Srs.', 'O Sr.')) and not sentences.index(s) > len(sentences):
+                if s.endswith(('.', '!', '?')) and not s.endswith(('Srs.', 'O Sr.')) and not sentences.index(s) > len(sentences):
                     sentences[sentences.index(s)] += '\\n'
             text = " ".join(sentences)
             # retirar espaços a seguir às newlines
@@ -283,6 +283,11 @@ class QDSoupParser:
         # limpar caracteres defeituosos (erros OCR)
         if '«' not in text:
             text = text.replace('»', '…')
+        if text.startswith('»'):
+            text = '…' + text.strip('»')
+        if text.endswith('»'):
+            text = + text.strip('»') + '…' 
+
         text = text.replace(' ç ', ' é ')
 
         # terminado
