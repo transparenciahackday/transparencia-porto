@@ -1,0 +1,4 @@
+[statement] Primeiro-Ministro: - Calou! Eu é que falo!
+
+[mp] João Semedo (BE): - Vou interromper o gajo, eh eh!\n[statement] PrimeiroMinistro: - Não me chateie!\nAgora tomem lá mais outra linha que é pra aprenderem.\n[statement] Primeiro Ministro: - E ainda mais outra.\nE esta é a última.
+
