@@ -9,6 +9,10 @@ import os
 import string
 import datetime
 import re
+
+import locale
+locale.setlocale(locale.LC_ALL, 'pt_PT.UTF8')
+
 from pprint import pprint
 
 LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
@@ -58,6 +62,26 @@ VOTE = 'vote'
 SECRETARY = 'secretary'
 OTHER = 'other'
 
+# Regexes para detecção de erros de OCR
+
+# o carácter 'é' às vezes é lido como 'ç', temos de substituir onde não bater certo
+# presumimos que se não for seguido por vogal, é erro de OCR
+re_cedilha = r'ç(?P<char>[^(aeiouãâáàéèêíìóòõôúù)])'
+# o mesmo para o carácter 'ú', que é mal lido como 'õ'
+# se não for seguido de um e ('õe'), presumimos que é erro
+re_otil = r'õ(?P<char>[^(e)])'
+# acrescentar espaços à frente da pontuação onde faltam
+# procura exemplos como ".Á", ",é" mas não ".R." (pode ser uma sigla)
+re_pontuacao = r'(?P<pont>[.,?!])(?P<char>[A-Za-zÁÀÉÍÓÚ][^.])'
+
+re_c = re.compile(re_cedilha, re.LOCALE|re.UNICODE|re.MULTILINE)
+re_ot = re.compile(re_otil, re.LOCALE|re.UNICODE|re.MULTILINE)
+re_pont = re.compile(re_pontuacao, re.LOCALE|re.UNICODE|re.MULTILINE)
+
+# marcador de intervenção
+re_intervencao = r'.*:[ .]?[-—] ?.*'
+re_interv = re.compile(re_intervencao, re.LOCALE|re.UNICODE|re.MULTILINE)
+
 def remove_strings(st, strings_tuple):
     for s in strings_tuple:
         st = st.replace(s, '')
@@ -100,12 +124,12 @@ class QDSoupParser:
 
         # vamos procurar pelo conjunto de dois pontos e travessão, que
         # é o que indica uma intervenção
-        # usamos regexes porque existem vários erros de redacção, mas elas
-        # têm problemas com Unicode, por isso não usamos o sub
 
-        regex = re.compile(r'.*:[ .]?[-—] ?.*')
-        regex_part = re.compile(r':[ .]?[-—] ?')
-        if regex.match(text):
+        # regex_part = re.compile(r':[ .]?[-—] ?')
+        if re_interv.match(text):
+            # TODO: o comando comentado devia substituir todos os replaces a seguir, mas por alguma
+            # razão não está a dar, por isso de momento caguei neste problema
+            # re.sub(re_interv, ': -', text)
             text = text.replace(': -', ': -')
             text = text.replace(': –', ': -')
             text = text.replace(':.-', ': -')
@@ -237,11 +261,20 @@ class QDSoupParser:
         if first and stype not in (MP_STATEMENT,):
             # first paragraph of the page can be a continuation of previous
             if self.statements:
-                if self.statements[-1].strip()[-1] not in '?!.':
-                    # print text[:20]
-                    self.statements[-1] = self.statements[-1].strip()
-                    self.statements[-1] += text + '\n\n'
-                    return None
+                if type(self.statements[-1]) == str:
+                    if self.statements[-1].strip()[-1] not in '?!.':
+                        # print text[:20]
+                        self.statements[-1] = self.statements[-1].strip()
+                        self.statements[-1] += text + '\n\n'
+                        return None
+                # FIXME: Check para listas, isto pode dar merda
+                elif type(self.statements[-1]) == list:
+                    if self.statements[-1][-1].strip()[-1] not in '?!.':
+                        # print text[:20]
+                        self.statements[-1][-1] = self.statements[-1][-1].strip()
+                        self.statements[-1][-1] += text + '\n\n'
+                        return None
+
             else:
                 pass
         else:
@@ -286,9 +319,16 @@ class QDSoupParser:
         if text.startswith('»'):
             text = '…' + text.strip('»')
         if text.endswith('»'):
-            text = + text.strip('»') + '…' 
+            text = text.strip('»') + '…' 
 
         text = text.replace(' ç ', ' é ')
+
+        # aplicar regexes para alguns erros OCR
+        # as regexes estão definidas no início deste ficheiro
+        
+        text = re.sub(re_c, 'é\g<char>', text)
+        text = re.sub(re_ot, 'ú\g<char>', text)
+        text = re.sub(re_pontuacao, '\g<pont> \g<char>', text)
 
         # terminado
         if stype in (NOTE, PROTEST, APPLAUSE, LAUGHTER):
@@ -366,6 +406,22 @@ class QDSoupParser:
         return self.statements
 
     def clean_statements(self):
+
+        # remover listas
+        cleaned_statements = []
+        for s in self.statements:
+            if type(s) == list:
+                for item in s:
+                    if type(item) == list:
+                        for subitem in item:
+                            cleaned_statements.append(subitem)
+                    else:
+                        cleaned_statements.append(item)
+            elif type(s) == str:
+                cleaned_statements.append(s)
+            else:
+                logging.warning('Non-string, non-list statement found (%s)' % str(type(s)))
+        self.statements = cleaned_statements
         
         for s in self.statements:
             index = self.statements.index(s)
@@ -373,12 +429,13 @@ class QDSoupParser:
             # print 'Statement: %s' % s.strip()
             # print 'Previous:  %s' % prev_s.strip()
 
-            if type(s) == str:
-                s = s.strip(' ')
-                # FIXME: Isto não está a fazer a substituição como esperado!
-                s = s.replace('&nbsp;', '')
-            else:
-                logging.warning('Non-string statement found (%s)' % str(type(s)))
+            if type(prev_s) == list:
+                print 'LIST FOUND'
+                print s
+
+            s = s.strip(' ')
+            # FIXME: Isto não está a fazer a substituição como esperado!
+            s = s.replace('&nbsp;', '')
 
             if prev_s.endswith('\n\n') and '**' not in prev_s and s.startswith('[statement]'):
                 logging.debug('Found double newline, joining with previous.')
@@ -388,7 +445,7 @@ class QDSoupParser:
                 else:
                     self.statements[index-1] = self.statements[index-1].strip('\n') + '\\n'
                 self.statements[index-1] += s.replace('[statement] - ', '')
-                self.statements.pop(self.statements.index(s))
+                self.statements.pop(index)
             else:
                 s = s.strip('\n ')
 
@@ -408,22 +465,80 @@ class QDSoupParser:
         i = None
         # pprint(self.statements[:10])
         
-        for s in self.statements:
-            if s and ('encerrou a sessão' in s or 'encerrada a sessão' in s):
-                i = self.statements.index(s)
+        first_statement = self.statements.pop(0)
+        first_real_statement = self.statements.pop(0)
+        while not first_real_statement.startswith(('[president]','[mp]')):
+            first_statement += first_real_statement
+            first_real_statement = self.statements.pop(0)
+        self.statements.insert(0, first_real_statement)
+        last_statement = self.statements.pop(-1)
+
+        pprint(first_statement)
+        introlines = first_statement.split('\\n')
+
+        pres_line_index = 0
+        for line in introlines:
+            if (line.startswith('O Sr. Pres') and not 'encerrou' in line and not 'declarou' in line) or line.startswith('[president]'):
+                pres_line_index = introlines.index(line)
                 break
-        # print i
-        if not i:
-            lines = self.statements[0].split('\\n\\n')
+        if pres_line_index:
+            beginning_statements = introlines[pres_line_index:]
+            introlines = introlines[:pres_line_index]
         else:
-            lines = []
-            all_lines = self.statements[:i+1]
-            for item in all_lines:
-                lines.extend(item.split('\\n\\n'))
+            raise TypeError('No president first statement found')
+        
+        print '--- BEGINNING STATEMENTS ---'
+        pprint(beginning_statements)
+        print '--- INTRO ---'
+        pprint(introlines)
 
-        # pprint(lines)
+        i = 0
 
-        for line in lines:
+        for s in beginning_statements:
+            self.statements.insert(i, s)
+            i += 1
+
+        print '--- FIRST STATEMENTS ---'
+        pprint(self.statements[:10])
+
+
+
+        # for s in self.statements:
+        #    if s and ('encerrou a sessão' in s or 'encerrada a sessão' in s):
+        #        i = self.statements.index(s)
+        #        break
+        # print i
+
+        lines = intro.split('\\n')
+
+        intro = lines[0].split('  ')
+        summary_index = lines[0].find('SUM')
+        if not summary_index:
+            summary_index = lines[0].find('S U M')
+        if not summary_index:
+            logging.critical('Summary index not found!!')
+
+        # TODO: Apanhar final do sumário!!
+        lines[0] = lines[0][summary_index:]
+        self.summary = '\\n'.join(lines)
+
+        '''
+        print
+        print '--- INTRO ---'
+        pprint(intro)
+        print
+        print '--- SUMMARY ---'
+        pprint(lines)
+        print
+        '''
+        # else:
+        #    lines = []
+        #    all_lines = self.statements[:i+1]
+        #    for item in all_lines:
+        #        lines.extend(item.split('\\n\\n'))
+
+
+        for line in intro:
             orig_line = str(line)
             line = line.replace('[statement] - ', '').strip()
             looking_for = ('REUNIÃO', 'REUNIAO', 'PLENÁRIA')
@@ -466,7 +581,7 @@ class QDSoupParser:
 
             elif line.startswith('Secretários: '):
                 logging.info('QDParser: Secretaries found!')
-                line_index = lines.index(orig_line) 
+                line_index = intro.index(orig_line) 
 
                 name = line.strip()
                 name = remove_strings(name, TITLES)
@@ -481,21 +596,23 @@ class QDSoupParser:
                         # print line_index
                         names.append(name)
                         line_index += 1
-                        name = lines[line_index]
+                        name = intro[line_index]
                 self.secretaries = names
                 if len(self.secretaries) == 1:
                     self.secretaries = self.secretaries[0].split('\\n')
 
+            '''
             elif line.strip().startswith(SUMMARY_STRINGS):
                 logging.info('QDParser: Summary found!')
                 self.summary = ''
-                l_index = lines.index(orig_line) 
-                for line in lines[l_index:]:
+                l_index = intro.index(orig_line) 
+                for line in intro[l_index:]:
                     self.summary += line + '\n'
                 # remove remainder
                 self.summary = self.summary.split('&nbsp;')[0]
                 self.summary = remove_strings(self.summary, SUMMARY_STRINGS).strip('\n')
                 break
+            '''
                 
         if not self.president: logging.error('President not found') 
         if not self.date: logging.error('Session date not found') 
