@@ -27,7 +27,7 @@ class TestHTMLParsing(unittest.TestCase):
     def setUp(self):
         self.parser = html2text.QDSoupParser()
 
-    def _test_file(self, name):
+    def _test_file(self, name, get_metadata=False):
         infile = os.path.join(TESTFILE_DIR, name) + '.html'
         controlfile = os.path.join(TESTFILE_DIR, name) + '.txt'
         outfile = os.path.join(TESTFILE_DIR, name) + '-out.txt'
@@ -39,6 +39,8 @@ class TestHTMLParsing(unittest.TestCase):
         self.parser.clean_statements()
         self.parser.clean_statements()
         self.parser.clean_statements()
+        if get_metadata:
+            self.parser._extract_metadata()
 
         txt = self.parser.get_txt()
 
@@ -80,6 +82,10 @@ class TestHTMLParsing(unittest.TestCase):
     def test_pontuacao(self):
         '''pontuacao.html: Detecção de pontuação sem espaço a seguir.'''
         self._test_file('pontuacao')
+        
+    def test_intro(self):
+        '''metadata.html: Processamento da introdução (sumário, info da sessão), aparar as linhas.'''
+        self._test_file('metadata', get_metadata=True)
 
 class TestTextParsing(unittest.TestCase):
     pass
