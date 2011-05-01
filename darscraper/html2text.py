@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import logging
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.DEBUG)
 
 from BeautifulSoup import BeautifulSoup, NavigableString
 import os
 import string
 import datetime
 import re
+import string
 
 import locale
 locale.setlocale(locale.LC_ALL, 'pt_PT.UTF8')
@@ -50,6 +51,7 @@ NUMEROS_ROMANOS = {
 
 MP_STATEMENT = 'mp'
 GOV_STATEMENT = 'gov'
+PM_STATEMENT = 'pm'
 PRESIDENT_STATEMENT = 'president'
 STATEMENT = 'statement'
 INTERRUPTION = 'interruption'
@@ -72,11 +74,15 @@ re_cedilha = r'ç(?P<char>[^(aeiouãâáàéèêíìóòõôúù)])'
 re_otil = r'õ(?P<char>[^(e)])'
 # acrescentar espaços à frente da pontuação onde faltam
 # procura exemplos como ".Á", ",é" mas não ".R." (pode ser uma sigla)
-re_pontuacao = r'(?P<pont>[.,?!])(?P<char>[A-Za-zÁÀÉÍÓÚ][^.])'
+# no entanto omitimos ".a", por causa de "Sr.as"
+re_pontuacao = r'(?P<pont>[.,?!])(?P<char>[A-Zb-zÁÀÉÍÓÚ][^.])'
+# nomes próprios portugueses
+re_nome = r" ?[A-ZdÁ][a-z\-ç'(é )]+\b|Álvaro"
 
 re_c = re.compile(re_cedilha, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_ot = re.compile(re_otil, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_pont = re.compile(re_pontuacao, re.LOCALE|re.UNICODE|re.MULTILINE)
+re_n = re.compile(re_nome, re.LOCALE|re.UNICODE|re.MULTILINE)
 
 # marcador de intervenção
 re_intervencao = r'.*:[ .]?[-—] ?.*'
@@ -98,6 +104,24 @@ def add_item(s, item):
         logging.warning('Unexpected object inside statements (%s)' % str(type(item)))
     return s
 
+def strip_accents(s):
+    import unicodedata
+    new_s = str(s)
+    new_s = new_s.decode('UTF-8')
+    new_s = ''.join((c for c in unicodedata.normalize('NFD', new_s) if unicodedata.category(c) != 'Mn'))
+    return new_s.encode('UTF-8')
+
+def is_full_name(s):
+    # Devolve True se a cadeia for um nome de pessoa
+    s = s.strip('\n ')
+    stripped_s = strip_accents(s)
+    non_matches = re.split(re_n, stripped_s)
+
+    for item in non_matches:
+        if item.strip():
+            return False
+    return True
+    
 
 class QDSoupParser:
     def __init__(self):
@@ -108,6 +132,65 @@ class QDSoupParser:
         self.president = None
         self.secretaries = []
         self.statements = []
+
+    def parse_soup(self, soup):
+        output = ''
+        self.statements = []
+        started = False
+        for page in soup.findAll('body'):
+            # exclude the first paragraph, but not in the first page
+            first = True
+            if started:
+                paras = page.findAll('p')[1:]
+            else:
+                paras = page.findAll('p')
+                started = True
+
+            for para in paras:
+                if para.contents:
+                    if len(para.contents) > 1:
+                        p = ''
+                        for el in para.contents:
+                            if type(el) == NavigableString:
+                                # text
+                                text = el.strip('\n').strip()
+                                text = text.replace('\n', ' ')
+                                p += text
+                            elif el.name == 'br':
+                                # line break
+                                p += '\\n'
+                            elif el.name == 'sup':
+                                text = el.contents[0].strip(' \n')
+                                p += text
+                            elif not el:
+                                pass
+                            else:
+                                logging.warning('Unidentified paragraph element found in HTML.')
+                                logging.warning('-> %s' % el)
+                        st = self.parse_paragraph(p, first=first)
+                        if st:
+                            if type(st) == list:
+                                for s in st:
+                                    self.statements.append(s)
+                            else:
+                                self.statements.append(st)
+
+                    else:
+                        el = para.contents[0]
+                        p = el.strip('\n').strip()
+                        p = p.replace('\n', ' ')
+                        st = self.parse_paragraph(p, first=first)
+                        if st:
+                            if type(st) == list:
+                                for s in st:
+                                    self.statements.append(s)
+                            else:
+                                self.statements.append(st)
+                else:
+                    assert False
+                first = False
+
+        return self.statements
 
     def parse_paragraph(self, p, first=False, skip_encode=False):
         if skip_encode:
@@ -239,6 +322,10 @@ class QDSoupParser:
                         logging.error('Too many parenthesis inside speaker.')
             if speaker.startswith('Ministr') or (speaker.startswith('Secret') and 'Estado' not in speaker):
                 stype = GOV_STATEMENT
+            if speaker.startswith('Primeiro'):
+                speaker = 'Primeiro-Ministro'
+                party = ''
+                stype = PM_STATEMENT
         else:
             # Não é uma intervenção (não tem ': -'))
             if text.startswith('Aplausos'):
@@ -263,9 +350,13 @@ class QDSoupParser:
             if self.statements:
                 if type(self.statements[-1]) == str:
                     if self.statements[-1].strip()[-1] not in '?!.':
-                        # print text[:20]
                         self.statements[-1] = self.statements[-1].strip()
-                        self.statements[-1] += text + '\n\n'
+                        if text[0].startswith(tuple(string.uppercase)):
+                            logging.debug('Concatenating with added newline. Check if this is OK.')
+                            self.statements[-1] += '\\n' + text + '\\n\n'
+                        else:
+                            # print text[:20]
+                            self.statements[-1] += text + '\\n\\n'
                         return None
                 # FIXME: Check para listas, isto pode dar merda
                 elif type(self.statements[-1]) == list:
@@ -325,7 +416,6 @@ class QDSoupParser:
 
         # aplicar regexes para alguns erros OCR
         # as regexes estão definidas no início deste ficheiro
-        
         text = re.sub(re_c, 'é\g<char>', text)
         text = re.sub(re_ot, 'ú\g<char>', text)
         text = re.sub(re_pontuacao, '\g<pont> \g<char>', text)
@@ -341,73 +431,15 @@ class QDSoupParser:
             elif party and not speaker:
                 s = '[%s] (%s): - %s\n\n' % (stype, party, text)
             elif party and speaker:
-                s = '[%s] %s (%s): - %s\n\n' % (stype, speaker, party, text)
+                if party == speaker:
+                    s = '[%s] %s: - %s\n\n' % (stype, speaker, text)
+                else:
+                    s = '[%s] %s (%s): - %s\n\n' % (stype, speaker, party, text)
             else:
                 s = '[%s] - %s\n\n' % (stype, text)
         return s
 
-    def parse_soup(self, soup):
-        output = ''
-        self.statements = []
-        started = False
-        for page in soup.findAll('body'):
-            # exclude the first paragraph, but not in the first page
-            first = True
-            if started:
-                paras = page.findAll('p')[1:]
-            else:
-                paras = page.findAll('p')
-                started = True
-
-            for para in paras:
-                if para.contents:
-                    if len(para.contents) > 1:
-                        p = ''
-                        for el in para.contents:
-                            if type(el) == NavigableString:
-                                # text
-                                text = el.strip('\n').strip()
-                                text = text.replace('\n', ' ')
-                                p += text
-                            elif el.name == 'br':
-                                # line break
-                                p += '\\n'
-                            elif el.name == 'sup':
-                                text = el.contents[0].strip(' \n')
-                                p += text
-                            elif not el:
-                                pass
-                            else:
-                                logging.warning('Unidentified paragraph element found in HTML.')
-                                logging.warning('-> %s' % el)
-                        st = self.parse_paragraph(p, first=first)
-                        if st:
-                            if type(st) == list:
-                                for s in st:
-                                    self.statements.append(s)
-                            else:
-                                self.statements.append(st)
-
-                    else:
-                        el = para.contents[0]
-                        p = el.strip('\n').strip()
-                        p = p.replace('\n', ' ')
-                        st = self.parse_paragraph(p, first=first)
-                        if st:
-                            if type(st) == list:
-                                for s in st:
-                                    self.statements.append(s)
-                            else:
-                                self.statements.append(st)
-                else:
-                    assert False
-                first = False
-
-        return self.statements
-
     def clean_statements(self):
-
-        # remover listas
         cleaned_statements = []
         for s in self.statements:
             if type(s) == list:
@@ -438,7 +470,7 @@ class QDSoupParser:
             s = s.replace('&nbsp;', '')
 
             if prev_s.endswith('\n\n') and '**' not in prev_s and s.startswith('[statement]'):
-                logging.debug('Found double newline, joining with previous.')
+                # logging.debug('Found double newline, joining with previous.')
                 # frase incompleta, juntar à anterior
                 if prev_s.strip('\n ')[-1] in LOWERCASE_LETTERS or prev_s.strip('\n ').endswith(('Sr.','Sra.','Srs.', 'Sras.', '—')):
                     self.statements[index-1] = self.statements[index-1].strip('\n') + ' '
@@ -449,67 +481,165 @@ class QDSoupParser:
             else:
                 s = s.strip('\n ')
 
-            '''
-            elif prev_s.endswith(LOWERCASE_LETTERS + '\n') and s.startswith('[statement]'):
-                print 'INCOMPLETE 2' 
-                # frase incompleta, juntar à anterior
-                if prev_s.strip('\n ')[-1] not in LOWERCASE_LETTERS:
-                    prev_s = prev_s.strip('\n')
-                prev_s += s.replace('[statement] - ', '')
-                self.statements.pop(self.statements.index(s))
-            '''
-            # print
+            # elif prev_s.endswith(LOWERCASE_LETTERS + '\n') and s.startswith('[statement]'):
+            #     print 'INCOMPLETE 2' 
+            #     # frase incompleta, juntar à anterior
+            #     if prev_s.strip('\n ')[-1] not in LOWERCASE_LETTERS:
+            #         prev_s = prev_s.strip('\n')
+            #     prev_s += s.replace('[statement] - ', '')
+            #     self.statements.pop(self.statements.index(s))
 
 
+    def _trim_ending(self):
+        # a transcrição acaba quando o presidente encerra a sessão
+        # TODO: analisar declarações de voto e outras infos mencionadas
+        # após o encerramento
+        i = 0
+        for s in reversed(self.statements):
+           if s and ('encerrou a sessão' in s or 'encerrada a sessão' in s):
+               if '\\n' in s:
+                   lines = s.split('\\n')
+                   for line in lines:
+                       if 'encerrada a sessão' in line or 'encerrou a sessão' in line:
+                           orig_s = s
+                           lineindex = lines.index(line)
+                           lines = lines[:lineindex+1]
+                           s = '\\n'.join(lines)
+                           self.statements[self.statements.index(orig_s)] = s + '\n\n'
+                           break
+               else:
+                   i = self.statements.index(s)
+                   print 'End index: %d' % i
+                   self.statements = self.statements[:i+1]
+                   break
+
+            
     def _extract_metadata(self):
         i = None
         # pprint(self.statements[:10])
         
         first_statement = self.statements.pop(0)
+
         first_real_statement = self.statements.pop(0)
+
         while not first_real_statement.startswith(('[president]','[mp]')):
             first_statement += first_real_statement
             first_real_statement = self.statements.pop(0)
-        self.statements.insert(0, first_real_statement)
-        last_statement = self.statements.pop(-1)
 
-        pprint(first_statement)
+        last_statement = self.statements[-1]
+
         introlines = first_statement.split('\\n')
 
-        pres_line_index = 0
-        for line in introlines:
-            if (line.startswith('O Sr. Pres') and not 'encerrou' in line and not 'declarou' in line) or line.startswith('[president]'):
-                pres_line_index = introlines.index(line)
+        # print first_real_statement
+        # print string.count(first_real_statement, '\\n')
+
+        opening_statements = []
+        orphan_statements_in_intro = False
+       
+        for l in introlines:
+            if 'temos qu' in l:
+                orphan_statements_in_intro = True
+                index = introlines.index(l)
+                opening_statements = introlines[index:]
+                introlines = introlines[:index]
                 break
-        if pres_line_index:
-            beginning_statements = introlines[pres_line_index:]
-            introlines = introlines[:pres_line_index]
+        if not opening_statements:
+            if 'temos qu' in first_real_statement:
+                opening_statements = first_real_statement.split('\\n')
+            else:
+                raise ValueError('Could not split first statement from introlines. Check for quorum line.')
+
+        # print self.statements[:5]
+
+        # processar opening_statements e remover linhas de chamada!
+        items_to_remove = []
+        for line in opening_statements:
+            # procurar e remover nomes próprios e partidos
+            if line.endswith('):') or (line.startswith(('Partido', 'Bloco')) and line.endswith(')')) or is_full_name(line):
+                items_to_remove.append(line)
+            if line.startswith('\n'):
+                opening_statements[opening_statements.index(line)] = line.strip('\n') + '\n\n'
+        for line in items_to_remove:
+            try:
+                opening_statements.remove(line)
+            except ValueError:
+                if line.strip('\n '):
+                    # print line
+                    raise
+
+        # determinar hora de início
+        for line in opening_statements:
+            if line.strip().startswith('Eram') and 'horas' in line:
+                opening_statements.remove(line)
+                break
+
+        # retirar linha dos deputados presentes
+        for line in opening_statements:
+            if 'Deputados presentes' in line:
+                opening_statements.remove(line)
+                break
+
+
+        # pprint(opening_statements)
+
+        lines_to_remove = []
+        for line in opening_statements:
+            prev_line = opening_statements[opening_statements.index(line)]
+            if line.strip('\n ') and not line.startswith('[') and not line == '\\n':
+                if not prev_line.startswith('[president]'):
+                    opening_statements[opening_statements.index(line)] = '[president] ' + line + '\n\n'
+                else:
+                    prev_line += '\n%s' % line
+                    line = ''
+            elif not line.strip('\n ') or line == '\\n':
+                lines_to_remove.append(line)
+        for line in lines_to_remove:
+            opening_statements.remove(line)
+
+
+        if orphan_statements_in_intro:
+            self.statements.insert(0, first_real_statement)
+            for s in reversed(opening_statements):
+                # TODO: ver se a linha tem tag!
+                self.statements.insert(0, s)
         else:
-            raise TypeError('No president first statement found')
-        
-        print '--- BEGINNING STATEMENTS ---'
-        pprint(beginning_statements)
-        print '--- INTRO ---'
-        pprint(introlines)
-
-        i = 0
-
-        for s in beginning_statements:
-            self.statements.insert(i, s)
-            i += 1
-
-        print '--- FIRST STATEMENTS ---'
-        pprint(self.statements[:10])
+            self.statements.pop(0)
+            self.statements.insert(0, ''.join(opening_statements))
 
 
 
-        # for s in self.statements:
-        #    if s and ('encerrou a sessão' in s or 'encerrada a sessão' in s):
-        #        i = self.statements.index(s)
-        #        break
-        # print i
+    
+        # print first_real_statement
+        # if not first_real_statement.startswith('[president]'):
+        #     pres_line_index = 0
+        #     for line in introlines:
+        #         # print line.strip(' ')
+        #         # print
+        #         if (line.strip(' ').startswith('O Sr. Pres') and not 'encerrou' in line and not 'declarou' in line) or line.startswith('[president]'):
+        #             pres_line_index = introlines.index(line)
+        #             break
+        #     if pres_line_index:
+        #         beginning_statements = introlines[pres_line_index:]
+        #         introlines = introlines[:pres_line_index]
+        #     else:
+        #         raise TypeError('No president first statement found')
+        # 
+        #     print '--- BEGINNING STATEMENTS ---'
+        #     pprint(beginning_statements)
+        #     print '--- INTRO ---'
+        #     pprint(introlines)
 
-        lines = intro.split('\\n')
+        #     i = 0
+
+        #     for s in beginning_statements:
+        #         self.statements.insert(i, s)
+        #         i += 1
+
+        #     first_real_statement = self.statements[0]
+
+
+
+        lines = introlines
 
         intro = lines[0].split('  ')
         summary_index = lines[0].find('SUM')
@@ -618,6 +748,8 @@ class QDSoupParser:
         if not self.date: logging.error('Session date not found') 
         if not self.secretaries: logging.error('Secretaries not found') 
         if not self.summary: logging.error('Summary not found') 
+
+        self._trim_ending()
 
     def get_txt(self):
         output = ''

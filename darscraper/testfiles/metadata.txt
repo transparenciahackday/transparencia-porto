@@ -1,11 +1,12 @@
+[president] Srs. Deputados, temos quórum, pelo que está aberta a sessão.
 
-[president] Presidente (Presidente): - Srs. Deputados, temos quórum, pelo que está aberta a sessão.\n Eram 15 horas e 10 minutos.\nSr.as e Srs. Deputados, a Sr.ª Secretária vai proceder à leitura do expediente.
+[president] Sr.as e Srs. Deputados, a Sr.ª Secretária vai proceder à leitura do expediente.
 
 [secretary] Celeste Correia (Secretário): - Expediente.
 
-[president] Presidente (Presidente): - Sr.as e Srs. Deputados, vamos dar início às declarações políticas.\nO primeiro orador inscrito é o Sr. Deputado Pedro Soares, a quem concedo de imediato a palavra.
+[president] Presidente: - Sr.as e Srs. Deputados, vamos dar início às declarações políticas.\nO primeiro orador inscrito é o Sr. Deputado Pedro Soares, a quem concedo de imediato a palavra.
 
 [mp] Pedro Soares (BE): - Sr. Presidente, Sr.as e Srs. Deputados: Segundo o Presidente do Grupo Parlamentar do PS, Deputado Francisco de Assis, estamos a viver uma emergência nacional, porventura mesmo uma perturbação constitucional, certamente um atentado insidioso: estará em curso a tentativa de «decapitação» do Governo.\nHá um alvo, o Primeiro-Ministro, há uma conspiração e há conspiradores.
 
-[president] Presidente (Presidente): - Nada mais havendo a tratar, está encerrada a sessão.\n Eram 18 horas e 54 minutos.
+[president] Presidente: - Nada mais havendo a tratar, está encerrada a sessão.
 

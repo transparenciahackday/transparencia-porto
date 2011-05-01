@@ -41,6 +41,8 @@ class TestHTMLParsing(unittest.TestCase):
         self.parser.clean_statements()
         if get_metadata:
             self.parser._extract_metadata()
+        else:
+            self.parser._trim_ending()
 
         txt = self.parser.get_txt()
 
