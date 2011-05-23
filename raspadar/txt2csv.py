@@ -43,6 +43,8 @@ class Session:
         output = ''
         for s in self.statements:
             if s:
+                print s
+                #output += s.as_csv.decode('utf-8') + '\n'
                 output += s.as_csv + '\n'
             else:
                 print 'Empty statement found.'
@@ -274,6 +276,7 @@ if __name__ == '__main__':
         textparser = QDTextParser(contents)
         textparser.run()
         csv_contents = textparser.session.get_statements_csv()
+        import codecs
         outfile = open(outfilename, 'w')
         outfile.write(csv_contents)
         outfile.close()

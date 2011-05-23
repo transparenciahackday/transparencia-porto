@@ -351,9 +351,9 @@ class QDSoupParser:
                 if type(self.statements[-1]) == str:
                     if self.statements[-1].strip()[-1] not in '?!.':
                         self.statements[-1] = self.statements[-1].strip()
-                        if text[0].startswith(tuple(string.uppercase)):
-                            logging.debug('Concatenating with added newline. Check if this is OK.')
-                            self.statements[-1] += '\\n' + text + '\\n\n'
+                        if text[0].startswith(tuple(string.uppercase)) and not self.statements[-1].endswith('Sr.'):
+                            # logging.debug('Concatenating with added newline. Check if this is OK.')
+                            self.statements[-1] += '\\n' + text + '\\n\\n'
                         else:
                             # print text[:20]
                             self.statements[-1] += text + '\\n\\n'
@@ -421,8 +421,8 @@ class QDSoupParser:
         text = re.sub(re_pontuacao, '\g<pont> \g<char>', text)
 
         # terminado
-        if stype in (NOTE, PROTEST, APPLAUSE, LAUGHTER):
-            s = '** %s **\n\n' % (text)
+        if stype in (NOTE, PAUSE, VOTE, PROTEST, APPLAUSE, LAUGHTER):
+            s = '[%s] %s\n\n' % (stype, text)
         elif text == '&nbsp;':
             return None
         else:
