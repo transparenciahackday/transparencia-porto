@@ -6,7 +6,7 @@ import os, sys
 import re
 import urllib, urllib2
 
-TARGET_DIR = '../../datasets/transcricoes/html'
+TARGET_DIR = './scraped/'
 BASE_URL = 'http://80.251.167.40/page.aspx?cid=r3.dar&diary='
 BASE_INDEX_URL = 'http://80.251.167.40/diary.aspx?cid=r3.dar&'
 GET_COOKIE_URL = 'http://80.251.167.40/catalog.aspx?cid=r3.dar'

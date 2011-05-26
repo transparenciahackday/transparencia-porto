@@ -45,20 +45,7 @@ NUMEROS_ROMANOS = {
     'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
     }
 
-MP_STATEMENT = 'mp'
-GOV_STATEMENT = 'gov'
-PM_STATEMENT = 'pm'
-PRESIDENT_STATEMENT = 'president'
-STATEMENT = 'statement'
-INTERRUPTION = 'interruption'
-APPLAUSE = 'applause'
-PROTEST = 'protest'
-LAUGHTER = 'laughter'
-NOTE = 'note'
-PAUSE = 'pause'
-VOTE = 'vote'
-SECRETARY = 'secretary'
-OTHER = 'other'
+
 
 ### Regexes para detecção de erros de OCR ###
 
@@ -83,7 +70,6 @@ re_pont = re.compile(re_pontuacao, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_n = re.compile(re_nome, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_d = re.compile(re_data, re.LOCALE|re.UNICODE|re.MULTILINE)
 
-
 # marcador de intervenção
 re_intervencao = r'.*:[ .]?[-—] ?.*'
 re_interv = re.compile(re_intervencao, re.LOCALE|re.UNICODE|re.MULTILINE)
@@ -98,7 +84,7 @@ def add_item(s, item):
         logging.warning('List found inside statements. Only strings should be there. Concatenating.')
         for i in item:
             add_item(s, i)
-    elif type(item) == str:
+    elif type(item) in (str, unicode):
         s += item
     else:
         logging.warning('Unexpected object inside statements (%s)' % str(type(item)))
@@ -106,10 +92,19 @@ def add_item(s, item):
 
 def strip_accents(s):
     import unicodedata
-    new_s = str(s)
-    new_s = new_s.decode('UTF-8')
-    new_s = ''.join((c for c in unicodedata.normalize('NFD', new_s) if unicodedata.category(c) != 'Mn'))
-    return new_s.encode('UTF-8')
+    if not type(s) == unicode:
+        new_s = str(s)
+        new_s = new_s.decode('UTF-8')
+        new_s = ''.join((c for c in unicodedata.normalize('NFD', new_s) if unicodedata.category(c) != 'Mn'))
+        return new_s.encode('UTF-8')
+    else:
+        s = re.sub(re.compile(ur'(\xc3\xa0)|(\xc3\xa1)|(\xc3\xa3)|(\xc3\xa2)', re.LOCALE|re.UNICODE), 'a', s)
+        s = re.sub(re.compile(ur'(\xc3\xa7)', re.LOCALE|re.UNICODE), 'c', s)
+        s = re.sub(re.compile(ur'(\xc3\xa9)|(\xc3\xa8)|(\xc3\xaa)', re.LOCALE|re.UNICODE), 'e', s)
+        s = re.sub(re.compile(ur'(\xc3\xad)|(\xc3\xac)', re.LOCALE|re.UNICODE), 'i', s)
+        s = re.sub(re.compile(ur'(\xc3\xb3)|(\xc3\xb2)|(\xc3\xb4)|(\xc3\xb5)', re.LOCALE|re.UNICODE), 'o', s)
+        s = re.sub(re.compile(ur'(\xc3\xba)|(\xc3\xb9)', re.LOCALE|re.UNICODE), 'u', s)
+        return s
 
 def is_full_name(s):
     # Devolve True se a cadeia for um nome de pessoa
@@ -122,30 +117,6 @@ def is_full_name(s):
             return False
     return True
     
-
-def parse_file(infile, outfile):
-    f = infile
-    html = open(f, 'r')
-    soup = BeautifulSoup(html)
-    parser = QDSoupParser()
-    try:
-        parser.run(soup)
-    except:
-        logging.error('Parsing error in file %s.' % (f))
-        raise
-
-    # Apanhar data, só a data (o resto vem no txt2taggedtxt)
-    # if parser.date:
-        # outfile += '_' + str(parser.date)
-    # else:
-        # logging.error('Session date not found.')
-        # sys.exit()
-
-        ext = '.txt'
-    outfile = open(outfile, 'w')
-    outfile.write(parser.get_txt())
-    outfile.close()
-
 class QDSoupParser:
     def __init__(self):
         self.date = None
@@ -232,6 +203,18 @@ class QDSoupParser:
         text = text.replace('&nbsp;', '')
         self.paragraphs.append(text)
 
+    def correct_ocr(self):
+        if not self.paragraphs:
+            return
+        for text in self.paragraphs:
+            # aplicar regexes para alguns erros OCR
+            # as regexes estão definidas no início deste ficheiro
+            text = text.replace(' ç ', ' é ')
+            text = text.replace('&nbsp;', '')
+            text = re.sub(re_c, 'é\g<char>', text)
+            text = re.sub(re_ot, 'ú\g<char>', text)
+            text = re.sub(re_pontuacao, '\g<pont> \g<char>', text)
+
     def get_date(self):
         for p in self.paragraphs:
             pass
@@ -252,6 +235,29 @@ class QDSoupParser:
 
     def run(self, soup):
         self.parse_soup(soup)
+
+def parse_file(infile, outfile):
+    f = infile
+    html = open(f, 'r')
+    soup = BeautifulSoup(html)
+    parser = QDSoupParser()
+    try:
+        parser.run(soup)
+        parser.correct_ocr()
+    except:
+        logging.error('Parsing error in file %s.' % (f))
+        raise
+
+    # Apanhar data, só a data (o resto vem no txt2taggedtxt)
+    # if parser.date:
+        # outfile += '_' + str(parser.date)
+    # else:
+        # logging.error('Session date not found.')
+        # sys.exit()
+
+    outfile = open(outfile, 'w')
+    outfile.write(parser.get_txt())
+    outfile.close()
 
 if __name__ == '__main__':
     import sys
