@@ -28,7 +28,8 @@ LAUGHTER = 'riso'
 NOTE = 'nota'
 PAUSE = 'pausa'
 VOTE = 'voto'
-SECRETARY = 'int-sec'
+SECRETARY_STATEMENT = 'secretario'
+TIME = 'hora'
 OTHER = 'outro'
 
 INTRO = 'intro'
@@ -36,6 +37,7 @@ SUMMARY = 'sumario'
 ROLLCALL_PRESENT = 'chamada-presentes'
 ROLLCALL_ABSENT = 'chamada-ausentes'
 ROLLCALL_LATE = 'chamada-atrasados'
+SECTION = 'seccao'
 
 MP_START = 'mp-inicio'
 MP_CONT = 'mp-cont'
@@ -43,16 +45,20 @@ MP_ASIDE = 'mp-aparte'
 OTHER_START = 'outro-inicio'
 OTHER_CONT = 'outro-cont'
 
+PRESIDENT_ASIDE = 'presidente-aparte'
 PRESIDENT_NEWSPEAKER = 'presidente-temapalavra'
 PRESIDENT_ROLLCALL = 'presidente-chamada'
+PRESIDENT_OPEN = 'presidente-aberta'
+PRESIDENT_CLOSE = 'presidente-encerrada'
 PRESIDENT_SUSPEND = 'presidente-suspensa'
 PRESIDENT_REOPEN = 'presidente-reaberta'
+PRESIDENT_SWITCH = 'presidente-troca'
 
 ORPHAN = 'orfao'
 
 ### Regexes ###
 
-re_hora = r'Eram (?P<hours>[0-9]{1,2} horas e (?P<minutes>)[0-9]{1,2} minutos.)'
+re_hora = (re.compile(ur'^Eram (?P<hours>[0-9]{1,2}) horas e (?P<minutes>[0-9]{1,2}) minutos.$', re.UNICODE), '')
 # Separador entre orador e intervenção (algumas gralhas e inconsistências obrigam-nos
 # a ser relativamente permissivos ao definir a expressão)
 # Importa notar que esta regex é unicode, por causa dos hífens (o Python não os vai
@@ -61,11 +67,15 @@ re_separador = (re.compile(ur'\:[ \.]?[\–\–\—\-]', re.LOCALE|re.UNICODE), 
 
 re_titulo = (re.compile(r'O Sr\.|A Sr\.(ª)?'), '')
 
+re_palavra = (re.compile(ur'tem(,[\w ^,]+,)? a palavra', re.UNICODE), '')
+
+re_concluir = (re.compile(ur'(tempo esgotou-se)|([Tt]em de concluir)', re.UNICODE), '')
+
 re_president = (re.compile(r'O Sr\.|A Sr\.(ª)? Presidente\ ?(?P<nome>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])'), '')
 
-re_cont = (re.compile(ur'O Orador|A Oradora(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
+re_cont = (re.compile(ur'O Orador|A Oradora(?P<sep>\:[ \.]?[\–\–\—\-\-])', re.UNICODE), '')
 
-re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ ?(?P<nome>[\w ]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
+re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ (?P<nome>[\w ]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
 # re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ ?(?P<nome>[\w ]+)\ (?P<partido>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
 
 
@@ -96,19 +106,20 @@ class RaspadarTagger:
 
     def parse_statement(self, p, cont=False):
         if cont:
-            p = re.sub(re_cont[0], re_cont[1], p, 1).strip()
+            p = re.sub(re_cont[0], re_cont[1], p, 1)
+            p = re.sub(re_separador[0], '', p, 1).strip()
             output = '[%s] %s' % (MP_CONT, p)
         else:
-            p = re.sub(re_titulo[0], re_titulo[1], p, 1).strip()
+            p = re.sub(re_titulo[0], re_titulo[1], p, 1).strip(u'ª \n')
             if p.startswith('Presidente'):
-                self.parse_president(p)
+                return self.parse_president(p)
             # TODO: Regex para Secretári[oa]( \()|(:)
-            if p.startswith('Secretári'):
-                self.parse_president(p)
+            elif p.startswith(u'Secretári'):
+                return self.parse_secretary(p)
             else: 
                 output = '[%s] %s' % (STATEMENT, p)
-                self.contents.append(output)
-                return output
+        self.contents.append(output)
+        return output
 
     def parse_president(self, p):
         # extrair nome do/a presidente, caso lá esteja
@@ -117,13 +128,27 @@ class RaspadarTagger:
             name = m.group('nome')
         # retirar todo o nome e separador 
         p = re.sub(re_president[0], re_president[1], p, 1).strip()
-        output = '[%s] %s' % (PRESIDENT_STATEMENT, p)
+        if u'encerrada a sessão' in p:
+            stype = PRESIDENT_CLOSE
+        elif u'quórum' in p and 'aberta' in p:
+            stype = PRESIDENT_OPEN
+        elif re.search(re_palavra[0], p):
+            stype = PRESIDENT_NEWSPEAKER
+        elif re.search(re_concluir[0], p):
+            stype = PRESIDENT_ASIDE
+        else:
+            stype = PRESIDENT_STATEMENT
+
+        output = '[%s] %s' % (stype, p)
         # TODO: name -> speaker?
         self.contents.append(output)
         return output
 
     def parse_secretary(self, p):
-        pass
+        if 'Estado' in p[:p.find('(')]:
+            self.parse_government(p)
+        else:
+            output = '[%s] %s' % (SECRETARY_STATEMENT, p)
 
     def parse_government(self, p):
         pass
@@ -139,6 +164,12 @@ class RaspadarTagger:
             output = '[%s] %s' % (INTERRUPTION, p)
         elif p.startswith((u'SUMÁR', u'S U M Á R')):
             output = '[%s] %s' % (SUMMARY, p)
+        elif re.match(re_hora[0], p):
+            output = '[%s] %s' % (TIME, p)
+        elif p.endswith('ORDEM DO DIA'):
+            output = '[%s] %s' % (SECTION, p)
+        elif p.startswith(('Entretanto, assumiu', 'Entretanto, reassumiu')):
+            output = '[%s] %s' % (PRESIDENT_SWITCH, p)
         else:
             output = '[%s] %s' % (ORPHAN, p)
         self.contents.append(output)
