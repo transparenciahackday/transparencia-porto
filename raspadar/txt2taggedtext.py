@@ -67,21 +67,23 @@ re_separador = (re.compile(ur'\:[ \.]?[\–\–\—\-]', re.LOCALE|re.UNICODE), 
 
 re_titulo = (re.compile(r'O Sr\.|A Sr\.(ª)?'), '')
 
-re_palavra = (re.compile(ur'tem(,[\w ^,]+,)? a palavra', re.UNICODE), '')
+re_palavra = (re.compile(ur'([Dd]ou|[tT]em)(,[\w ^,]+,)? a palavra', re.UNICODE), '')
 
-re_concluir = (re.compile(ur'(tempo esgotou-se)|([Tt]em de concluir)', re.UNICODE), '')
+re_concluir = (re.compile(ur'(tempo esgotou-se)|([tem de concluir)|(queira terminar)', re.UNICODE|re.IGNORECASE), '')
 
 re_president = (re.compile(r'O Sr\.|A Sr\.(ª)? Presidente\ ?(?P<nome>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])'), '')
 
 re_cont = (re.compile(ur'O Orador|A Oradora(?P<sep>\:[ \.]?[\–\–\—\-\-])', re.UNICODE), '')
 
-re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ (?P<nome>[\w ]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
-# re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ ?(?P<nome>[\w ]+)\ (?P<partido>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
+re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ (?P<nome>[\w -]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
+# re_interv = (re.compile(ur'^(?P<titulo>O Sr\.|A Sr\.(ª)?)\ ?(?P<nome>[\w ]+)\ (?P<partido>\([\w ]+\))?(?P<se>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
 
 
 class RaspadarTagger:
     def __init__(self):
         self.contents = []
+            # cache para registar cargos de governo e nomes
+        self.gov_posts = {}
 
     def parse_txt_file(self, txtfile):
         buffer = open(txtfile, 'r').read()
@@ -145,10 +147,12 @@ class RaspadarTagger:
         return output
 
     def parse_secretary(self, p):
-        if 'Estado' in p[:p.find('(')]:
+        if 'Estado' in p[:p.find(':')]:
             self.parse_government(p)
         else:
             output = '[%s] %s' % (SECRETARY_STATEMENT, p)
+        self.contents.append(output)
+        return output
 
     def parse_government(self, p):
         pass
