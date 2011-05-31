@@ -25,6 +25,7 @@ else:
     deps_activos_list=getpage(URL_DEPS_ACTIVOS)
     s['depsactivos']=deps_activos_list
     s.sync()
+    s.close()
 
 soup=BeautifulSoup(deps_activos_list)
 max=0
@@ -39,15 +40,15 @@ for dep in deps:
 max*=1.05
 print 'Testing up to %d' % max
 
-s['bios']={}
+#s['bios']={}
 #for i in range(max):
 for i in range(100,110):
-    soup=BeautifullSoup(uo.read())
-    print soup
+    soup=BeautifulSoup(getpage(FORMATTER_URL_BIO_DEP % i))
+    print soup.find('span',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText')).text
+    print '##########'
 
-
-s.sync()
-s.close()
+#s.sync()
+#s.close()
 
 
 
