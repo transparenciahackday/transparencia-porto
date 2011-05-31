@@ -156,6 +156,20 @@ class QDSoupParser:
                             elif el.name == 'sup':
                                 text = el.contents[0].strip(' \n')
                                 p += text
+                            elif el.name == 'hr':
+                                pass
+                            elif el.name == 'remove':
+                                print el
+                                print el.contents
+                                for c in el.contents:
+                                    if type(c) == NavigableString:
+                                        # text
+                                        text = c.strip('\n').strip()
+                                        text = text.replace('\n', ' ').strip()
+                                        p += ' ' + text
+                                    elif c.name == '\n':
+                                        p += '\n'
+
                             elif not el:
                                 continue
                             else:
