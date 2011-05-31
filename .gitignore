@@ -10,3 +10,4 @@ darscraper/txt-1
 *.swp
 darscraper/scraped
 darscraper/testfiles/*out*
+tools/*.db
