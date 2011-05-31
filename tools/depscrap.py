@@ -6,14 +6,11 @@ import csv
 import os
 import shelve
 import sys
-from taskqueue import Queue
-from taskqueue import Task
 
 def getpage(url):
     return urllib.urlopen(url).read()
 
 s=shelve.open('cache.shelve')
-q=Queue()
 
 URL_DEPS_ACTIVOS='http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
 FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
@@ -45,19 +42,10 @@ print 'Testing up to %d' % max
 s['bios']={}
 #for i in range(max):
 for i in range(100,110):
-    q.append(Task(getpage, (FORMATTER_URL_BIO_DEP % i,)))
-
-while not q.is_empty():
-    uo=q.pop
-    if uo.getcode() != 200:
-        break
-    
     soup=BeautifullSoup(uo.read())
-    print soup ### omg omg omg, need to commit
+    print soup
 
 
-q.wait()
-q.die()
 s.sync()
 s.close()
 
