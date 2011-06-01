@@ -133,11 +133,20 @@ class QDSoupParser:
         started = False
         for page in soup.findAll('body'):
             # exclude the first paragraph, but not in the first page
-            if started:
-                paras = page.findAll('p')[1:]
-            else:
-                paras = page.findAll('p')
-                started = True
+            #if started:
+            paras = page.findAll('p')
+            #else:
+            #    paras = page.findAll('p')
+            started = True
+
+            t = u''
+            if paras:
+                if paras[0].contents:
+                    header = paras[0].contents[0]
+                    t += header
+                    if type(header) == NavigableString:
+                        if '|' in header or header.isupper() or u'NÚMERO' in header or u'SÉRIE' in header:
+                            del paras[0]
 
             first = True
             for para in paras:
@@ -153,14 +162,12 @@ class QDSoupParser:
                             elif el.name == 'br':
                                 # line break
                                 p += '\n'
-                            elif el.name == 'sup':
+                            elif el.name in ('sup', 'sub'):
                                 text = el.contents[0].strip(' \n')
                                 p += text
-                            elif el.name == 'hr':
+                            elif el.name in ('hr', 'u'):
                                 pass
                             elif el.name == 'remove':
-                                print el
-                                print el.contents
                                 for c in el.contents:
                                     if type(c) == NavigableString:
                                         # text
@@ -184,7 +191,7 @@ class QDSoupParser:
                             continue
                         self.parse_paragraph(p, first=first)
                 else:
-                    assert False
+                    pass    
                 first = False
 
     def parse_paragraph(self, p, first=False, skip_encode=False):
@@ -316,7 +323,7 @@ if __name__ == '__main__':
         print 'Input and output must be both filenames or both directory names.'
         print 'Input - File: %s. Dir: %s.' % (str(os.path.isfile(input)), str(os.path.isdir(input)))
         print 'Output - File: %s. Dir: %s.' % (str(os.path.isfile(input)), str(os.path.isdir(input)))
-        sys.exit()
+        # sys.exit()
     # há input e não output? gravar como txt no mesmo dir
     if not output:
         if not input:
@@ -347,8 +354,14 @@ if __name__ == '__main__':
                 # sem output -> grava o txt no mesmo dir
                 inputs[f] = os.path.join(input, os.path.basename(f).replace('.html', '.txt'))
         for i in inputs:
-            if verbose: print '  %s -> %s' % (i, inputs[i])
-            parse_file(i, inputs[i])
+            if os.path.exists(inputs[i]):
+                print 'File %s exists, not overwriting.' % inputs[i]
+            else:
+                if verbose: print '  %s -> %s' % (i, inputs[i])
+                parse_file(i, inputs[i])
     else:
-        parse_file(input, output)
+        if os.path.exists(output):
+            print 'File %s exists, not overwriting.' % output
+        else:
+            parse_file(input, output)
 
