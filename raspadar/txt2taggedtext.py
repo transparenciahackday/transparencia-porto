@@ -17,23 +17,23 @@ from html2text import add_item
 
 ### Constantes ###
 
-MP_STATEMENT = 'int_dep'
-GOV_STATEMENT = 'int_gov'
-PM_STATEMENT = 'gov_pm'
-MINISTER_STATEMENT = 'gov_ministro'
-STATE_SECRETARY_STATEMENT = 'gov_secretario'
+MP_STATEMENT = 'deputado_intervencao'
+GOV_STATEMENT = 'governo_intervencao'
+PM_STATEMENT = 'pm_intervencao'
+MINISTER_STATEMENT = 'ministro_intervencao'
+STATE_SECRETARY_STATEMENT = 'secestado_intervencao'
 PRESIDENT_STATEMENT = 'presidente'
+SECRETARY_STATEMENT = 'secretario'
 STATEMENT = 'intervencao'
 
-MP_INTERRUPTION = 'interrupcao_deputado'
-INTERRUPTION = 'interrupcao'
+MP_INTERRUPTION = 'deputado_interrupcao'
+INTERRUPTION = 'vozes_aparte'
 APPLAUSE = 'aplauso'
 PROTEST = 'protesto'
 LAUGHTER = 'riso'
 NOTE = 'nota'
 PAUSE = 'pausa'
 VOTE = 'voto'
-SECRETARY_STATEMENT = 'secretario'
 TIME = 'hora'
 OTHER = 'outro'
 
@@ -48,8 +48,8 @@ SECTION = 'seccao'
 END = 'fim'
 
 MP_START = 'mp_inicio'
-MP_CONT = 'mp_cont'
-MP_ASIDE = 'mp_aparte'
+MP_CONT = 'continuacao'
+MP_ASIDE = 'deputado_aparte'
 OTHER_START = 'outro_inicio'
 OTHER_CONT = 'outro_cont'
 
@@ -72,24 +72,25 @@ re_hora = (re.compile(ur'^Eram (?P<hours>[0-9]{1,2}) horas e (?P<minutes>[0-9]{1
 # Importa notar que esta regex é unicode, por causa dos hífens (o Python não os vai
 # encontrar de outra forma)
 re_separador = (re.compile(ur'\:?[ \.]?[\–\–\—\-] ', re.LOCALE|re.UNICODE), ': -')
+re_mauseparador = (re.compile(ur'\)\:?[ \.]?[\–\–\—\-](?P<firstword>[A-Z])', re.LOCALE|re.UNICODE), '): - \g<firstword>')
 
-re_titulo = (re.compile(ur'O Sr\.|A Sr\.(ª)?'), '')
+re_titulo = (re.compile(ur'O Sr[\.:]|A Sr\.?(ª)?'), '')
 
 re_ministro = (re.compile(ur'^Ministr'), '')
 re_secestado = (re.compile(ur'^Secretári[oa] de Estado.*:'), '')
 
 re_palavra = (re.compile(ur'(dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|faça favor', re.UNICODE|re.IGNORECASE), '')
 
-re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o seu tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)', re.UNICODE|re.IGNORECASE), '')
+re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o seu tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)', re.UNICODE|re.IGNORECASE), '')
 
-re_president = (re.compile(ur'O Sr\.?|A Sr\.?(ª)? Presidente\ ?(?P<nome>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])'), '')
+re_president = (re.compile(ur'O Sr\.?|A Sr\.?ª? Presidente\ ?(?P<nome>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])'), '')
 
 re_cont = (re.compile(ur'O Orador|A Oradora(?P<sep>\:[ \.]?[\–\–\—\-\-])', re.UNICODE), '')
 
 re_voto = (re.compile(ur'^Submetid[oa]s? à votação', re.UNICODE), '')
 
-re_interv = (re.compile(ur'^(?P<titulo>(O )?Sr\.?|A Sr\.?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:?[ \.]?[\–\–\—\-]? )', re.UNICODE), '')
-re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr\.?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-]? )', re.UNICODE), '')
+re_interv = (re.compile(ur'^(?P<titulo>(O )?Sr[\.:]?|A Sr[\.:]?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:?[ \.]?[\–\–\—\-]? ?)', re.UNICODE), '')
+re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr(\.)?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-]? ?)', re.UNICODE), '')
 
 re_interv_simples = (re.compile(ur'^(?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?\ ?(?P<sep>\:?[ \.]?[\–\–\—\-]? )', re.UNICODE), '')
 
@@ -109,8 +110,10 @@ def get_speaker(p):
     try:
         speaker, text = re.split(re_separador[0], text, 1)
     except ValueError:
-        print p
-        raise
+        print 'Não consegui determinar o speaker. Vai vazio.'
+        print '   ' + p
+        print
+        return ''
     return speaker
 
 def get_text(p):
@@ -148,8 +151,15 @@ class RaspadarTagger:
 
     def parse_paragraph(self, p):
         p = p.decode('utf-8')
+        p = p.strip(' \n')
         if not p:
             return
+        # FIXME: monkeypatch aqui: É preciso rectificar os separadores. Isto devia
+        # acontecer no html2txt, mas não tenho tempo agora para re-processar
+        # os HTML's. Desculpem lá.
+        if re.search(re_mauseparador[0], p):
+            p = re.sub(re_mauseparador[0], re_mauseparador[1], p, count=1) 
+
         # corresponde à regex de intervenção?
         if re.search(re_interv[0], p):
             # é intervenção
@@ -165,7 +175,7 @@ class RaspadarTagger:
         if cont:
             p = re.sub(re_cont[0], re_cont[1], p, 1)
             p = re.sub(re_separador[0], '', p, 1).strip()
-            output = '[%s] %s' % (MP_CONT, p)
+            stype = MP_CONT
         else:
             if not (re.match(re_titulo[0], p) and re.search(re_separador[0], p)):
                 stype = ORPHAN
@@ -186,7 +196,7 @@ class RaspadarTagger:
         # encontrar intervenções onde não há quebra de linha
         # TODO: este check tem de ser feito no parse_paragraph
         if re.search(re_interv_semquebra[0], output):
-            print '### Encontrei uma condensada: ###'
+            # print '### Encontrei uma condensada: ###'
             result = re.split(re_interv_semquebra[0], output)
             new_p = ''
             for part in result[1:]:
@@ -196,9 +206,9 @@ class RaspadarTagger:
                     else:
                         new_p += part
             # arrumar a primeira parte
-            print 'Primeira:  ' + result[0]
-            print 'Segunda:   ' + new_p
-            print
+            # print 'Primeira:  ' + result[0]
+            # print 'Segunda:   ' + new_p
+            # print
             self.contents.append(result[0])
             # processar a segunda
             self.parse_statement(new_p)
@@ -213,7 +223,7 @@ class RaspadarTagger:
             name = m.group('nome')
         # retirar todo o nome e separador 
         p = re.sub(re_president[0], re_president[1], p, 1).strip()
-        if u'encerrada a sessão' in p or 'encerrada a reunião':
+        if u'encerrada a sessão' in p or u'encerrada a reunião' in p:
             stype = PRESIDENT_CLOSE
         elif (u'quórum' in p or 'quorum' in p) and 'aberta' in p:
             stype = PRESIDENT_OPEN
@@ -256,7 +266,7 @@ class RaspadarTagger:
             # procurar o nome associado ao cargo que já registámos da primeira vez
             # que esta pessoa falou
             post = speaker.strip()
-            speaker = self.gov_posts[speaker].strip()
+            speaker = self.gov_posts[speaker.strip()].strip()
 
         if post.startswith('Primeiro'):
             stype = PM_STATEMENT
@@ -281,6 +291,8 @@ class RaspadarTagger:
         return output
 
     def parse_other(self, p):
+        # TODO: Era altamente fazer um tuple regex -> tipo, e aqui ter só um loopzinho
+        # em vez deste esparguete todo
         if p.startswith('Aplauso'):
             output = '[%s] %s' % (APPLAUSE, p)
             stype = APPLAUSE
@@ -303,14 +315,14 @@ class RaspadarTagger:
         elif p == 'Pausa.':
             stype = PAUSE
         elif (u'Série' in p and u'Número' in p) or \
-              u'LEGISLATURA' in p or \
-              u'PLENÁRIA' in p or u'COMISSÃO' in p:
+              u'LEGISLATURA' in p or u'LEGISLATIVA' in p or \
+              u'PLENÁRIA' in p or u'COMISSÃO' in p or u'DIÁRIO' in p:
             stype = INTRO
-        elif p.startswith(u'Deputados presentes à'):
+        elif p.startswith((u'Deputados presentes à', u'Srs. Deputados presentes à', u'Estavam presentes os seguintes')):
             stype = ROLLCALL_PRESENT
         elif (u'Deputados não presentes' in p and u'missões internacionais' in p):
             stype = ROLLCALL_MISSION
-        elif u'Deputados que faltaram' in p:
+        elif u'Deputados que faltaram' in p or u'Faltaram à' in p:
             stype = ROLLCALL_ABSENT
         elif u'Deputados que entraram' in p:
             stype = ROLLCALL_LATE
@@ -335,41 +347,53 @@ class RaspadarTagger:
                     continue
                 self.contents[self.contents.index(p) + 1] = change_type(new_p, stype)
 
-        for p in self.contents:
+        new_contents = []
+        while 1:
+            p = self.contents[0]
             if get_type(p) == PRESIDENT_NEWSPEAKER:
-                next_p = self.contents[self.contents.index(p) + 1]
+                next_p = self.contents[1]
                 if not get_type(next_p) in (MP_STATEMENT, MINISTER_STATEMENT, PM_STATEMENT, STATE_SECRETARY_STATEMENT, SECRETARY_STATEMENT):
-                    print 'A seguir a tem a palavra, não tenho o que esperava. Raios.'
+                    print 'A seguir a tem a palavra, não tenho o que esperava. É melhor conferir.'
                     print next_p
                 speaker = get_speaker(next_p)
                 lookahead = 2
                 while 1:
                     try:
-                        next_p = self.contents[self.contents.index(p) + lookahead]
+                        next_p = self.contents[lookahead]
                     except IndexError:
-                        print 'Cheguei ao fim enquanto procurava órfãos de uma intervenção.'
-                        print next_p
+                        print 'Cheguei ao fim enquanto procurava órfãos de uma intervenção. Intervenção inicial:'
+                        print p
                         break
 
-                    if get_type(next_p) in (PRESIDENT_STATEMENT, PRESIDENT_NEWSPEAKER):
+                    if get_type(next_p) in (PRESIDENT_STATEMENT, PRESIDENT_NEWSPEAKER, PRESIDENT_CLOSE):
                         # intervenção do presidente = a anterior terminou
+                        # print '  Acabou a intervenção:'
+                        # print '    ' + p
+                        # print '  Porque encontrei:'
+                        # print '    ' + next_p
+                        # print
                         break
                     elif get_type(next_p) in (MP_STATEMENT, MINISTER_STATEMENT, PM_STATEMENT, STATE_SECRETARY_STATEMENT):
                         if not speaker == get_speaker(next_p):
                             # outro deputado fala durante uma intervenção = aparte
-                            self.contents[self.contents.index(p) + lookahead] = change_type(next_p, MP_ASIDE) 
+                            self.contents[lookahead] = change_type(next_p, MP_ASIDE) 
                         else:
                             # mesmo deputado = continuação
-                            self.contents[self.contents.index(p) + lookahead] = change_type(next_p, MP_CONT) 
+                            self.contents[lookahead] = change_type(next_p, MP_CONT) 
 
                     elif get_type(next_p) in (MP_CONT, ORPHAN):
                         # continuação: adicionar orador original
                         # também partimos do princípio que órfãos no meio de intervenções = continuação
                         text = get_text(next_p)
                         new_text = '[%s] %s: - %s' % (MP_CONT, speaker, text)
-                        self.contents[self.contents.index(p) + lookahead] = new_text
+                        self.contents[lookahead] = new_text
 
+                    
                     lookahead += 1
+            new_contents.append(self.contents.pop(0))
+            if len(self.contents) == 0:
+                break
+        self.contents = list(new_contents)
 
         for p in self.contents:
             if get_type(p) == ORPHAN:
@@ -473,8 +497,16 @@ if __name__ == '__main__':
                 # sem output -> grava o txt no mesmo dir
                 inputs[f] = os.path.join(input, os.path.basename(f).replace('.txt', '.tag.txt'))
         for i in inputs:
+            if os.path.exists(inputs[i]):
+                print 'File %s exists, not overwriting.' % inputs[i]
             if verbose: print '  %s -> %s' % (i, inputs[i])
-            parse_file(i, inputs[i])
+            try:
+                parse_file(i, inputs[i])
+            except:
+                logfile = open('broken.log', 'a')
+                logfile.write(i + '\n')
+                logfile.close()
+                
     else:
         parse_file(input, output)
 
