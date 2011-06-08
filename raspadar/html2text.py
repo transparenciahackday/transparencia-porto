@@ -45,6 +45,7 @@ NUMEROS_ROMANOS = {
     'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
     }
 
+REPLACES_FILE = '/home/rlafuente/code/transparencia/datasets/transcricoes/replaces.txt'
 
 
 ### Regexes para detecção de erros de OCR ###
@@ -62,13 +63,12 @@ re_pontuacao = r'(?P<pont>[.,?!])(?P<char>[A-Zb-zÁÀÉÍÓÚ][^.])'
 # nomes próprios portugueses
 re_nome = r" ?[A-ZdÁ][a-z\-ç'(é )]+\b|Álvaro"
 # data da sessão
-re_data = r'REUNIÃO PLENÁRIA DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Z]+) DE (?P<year>[0-9]{4})'
+re_data = (re.compile(r'REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
 
 re_c = re.compile(re_cedilha, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_ot = re.compile(re_otil, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_pont = re.compile(re_pontuacao, re.LOCALE|re.UNICODE|re.MULTILINE)
 re_n = re.compile(re_nome, re.LOCALE|re.UNICODE|re.MULTILINE)
-re_d = re.compile(re_data, re.LOCALE|re.UNICODE|re.MULTILINE)
 
 # marcador de intervenção
 re_intervencao = r'.*:[ .]?[-—] ?.*'
@@ -166,6 +166,7 @@ class QDSoupParser:
                                 text = el.contents[0].strip(' \n')
                                 p += text
                             elif el.name in ('hr', 'u'):
+                                # TODO: a hr deve quebrar o parágrafo e começar outro
                                 pass
                             elif el.name == 'remove':
                                 for c in el.contents:
@@ -225,9 +226,13 @@ class QDSoupParser:
         self.paragraphs.append(text)
 
     def correct_ocr(self):
+        new_paras = []
         if not self.paragraphs:
             return
-        for text in self.paragraphs:
+        while 1:
+            if not self.paragraphs:
+                break
+            text = self.paragraphs[0]
             # aplicar regexes para alguns erros OCR
             # as regexes estão definidas no início deste ficheiro
             text = text.replace(' ç ', ' é ')
@@ -235,12 +240,36 @@ class QDSoupParser:
             text = re.sub(re_c, 'é\g<char>', text)
             text = re.sub(re_ot, 'ú\g<char>', text)
             text = re.sub(re_pontuacao, '\g<pont> \g<char>', text)
+            new_paras.append(text)
+            self.paragraphs.pop(0)
+        self.paragraphs = list(new_paras)
 
+    def correct_inconsistencies(self):
+        for line in open(REPLACES_FILE, 'r').readlines():
+            s, new_s = line.split('|')
+            s = s.strip(' \n')
+            new_s = new_s.strip(' \n')
+            for para in self.paragraphs:
+                if s in para:
+                    i = self.paragraphs.index(para)
+                    self.paragraphs[i] = para.replace(s, new_s)
+                    print self.paragraphs[i] 
     def get_date(self):
         for p in self.paragraphs:
-            pass
+            if re.search(re_data[0], p):
+                m = re.search(re_data[0], p)
+                #print m
+                #print m.groups()
+                #print m.group('day')
+                day = int(m.group('day'))
+                month = MESES[m.group('month').upper()]
+                year = int(m.group('year'))
+                self.date = datetime.date(year, month, day)
             # if matches date RE
             # save the date, else raise error
+        if not self.date:
+            raise RuntimeError('Session date not found')
+        return self.date
 
     def get_txt(self):
         output = ''
@@ -256,6 +285,9 @@ class QDSoupParser:
 
     def run(self, soup):
         self.parse_soup(soup)
+        self.get_date()
+        self.correct_ocr()
+        self.correct_inconsistencies()
 
 def parse_file(infile, outfile):
     f = infile
@@ -264,18 +296,11 @@ def parse_file(infile, outfile):
     parser = QDSoupParser()
     try:
         parser.run(soup)
-        parser.correct_ocr()
     except:
         logging.error('Parsing error in file %s.' % (f))
         raise
 
-    # Apanhar data, só a data (o resto vem no txt2taggedtxt)
-    # if parser.date:
-        # outfile += '_' + str(parser.date)
-    # else:
-        # logging.error('Session date not found.')
-        # sys.exit()
-
+    outfile = outfile.split('.')[0] + '_' + str(parser.date) + '.' + outfile.split('.')[1]
     outfile = open(outfile, 'w')
     outfile.write(parser.get_txt())
     outfile.close()
@@ -287,12 +312,12 @@ if __name__ == '__main__':
     # analisar o ficheiro config
     parser = SafeConfigParser()
     parser.read('raspadar.conf')
-    default_input = os.path.abspath(parser.get('html2txt', 'sourcedir'))
-    default_output = os.path.abspath(parser.get('html2txt', 'targetdir'))
+    default_input = os.path.abspath(parser.get('txt2taggedtext', 'sourcedir'))
+    default_output = os.path.abspath(parser.get('txt2taggedtext', 'targetdir'))
 
     # analisar as opções da linha de comandos
     import optparse
-    print 'ARGV      :', sys.argv[1:]
+    # print 'ARGV      :', sys.argv[1:]
     parser = optparse.OptionParser()
     parser.add_option('-i', '--input', 
                       dest="input", 
@@ -310,10 +335,23 @@ if __name__ == '__main__':
                       action="store_true",
                       help='Print verbose information',
                       )
+    parser.add_option('-p', '--picky',
+                      dest="picky",
+                      default=False,
+                      action="store_true",
+                      help='Stop batch processing in case an error is found',
+                      )
+    parser.add_option('-f', '--force',
+                      dest="force",
+                      default=False,
+                      action="store_true",
+                      help='Process file even if the output file already exists',
+                      )
     options, remainder = parser.parse_args()
     input = options.input
     verbose = options.verbose
     output = options.output
+    picky = options.picky
 
     # verificar se input existe
     if not os.path.exists(input):
@@ -323,7 +361,7 @@ if __name__ == '__main__':
         print 'Input and output must be both filenames or both directory names.'
         print 'Input - File: %s. Dir: %s.' % (str(os.path.isfile(input)), str(os.path.isdir(input)))
         print 'Output - File: %s. Dir: %s.' % (str(os.path.isfile(input)), str(os.path.isdir(input)))
-        # sys.exit()
+        sys.exit()
     # há input e não output? gravar como txt no mesmo dir
     if not output:
         if not input:
@@ -336,7 +374,7 @@ if __name__ == '__main__':
         else:
             if os.path.isfile(input):
                 # input é ficheiro, output é o mesmo mas com extensão .txt
-                output = input.replace('.html', '.txt')
+                output = input.replace('.txt', '.tag.txt')
             else:
                 # input é directório, output vai pra lá também
                 output = input
@@ -345,6 +383,8 @@ if __name__ == '__main__':
         input = default_input
 
     if os.path.isdir(input):
+        successes = []
+        failures = []
         import glob
         inputs = {}
         for f in glob.glob(os.path.join(input, '*.html')):
@@ -354,14 +394,26 @@ if __name__ == '__main__':
                 # sem output -> grava o txt no mesmo dir
                 inputs[f] = os.path.join(input, os.path.basename(f).replace('.html', '.txt'))
         for i in inputs:
-            if os.path.exists(inputs[i]):
+            if os.path.exists(inputs[i]) and not options.force:
                 print 'File %s exists, not overwriting.' % inputs[i]
-            else:
-                if verbose: print '  %s -> %s' % (i, inputs[i])
+                continue
+            if verbose: print '  %s -> %s' % (i, inputs[i])
+            try:
                 parse_file(i, inputs[i])
+                successes.append(i)
+            except:
+                logfile = open('broken-txt2tag.log', 'a')
+                logfile.write(i + '\n')
+                logfile.close()
+                if picky:
+                    sys.exit()
+                failures.append(i)
+        if verbose:
+            print '----------------------------------'
+            print 'Successfully parsed:   %d files' % len(successes)
+            print 'Failed:                %d files' % len(failures)
+            print '----------------------------------'
+                
     else:
-        if os.path.exists(output):
-            print 'File %s exists, not overwriting.' % output
-        else:
-            parse_file(input, output)
+        parse_file(input, output)
 
