@@ -72,16 +72,16 @@ re_hora = (re.compile(ur'^Eram (?P<hours>[0-9]{1,2}) horas e (?P<minutes>[0-9]{1
 # Importa notar que esta regex é unicode, por causa dos hífens (o Python não os vai
 # encontrar de outra forma)
 re_separador = (re.compile(ur'\:?[ \.]?[\–\–\—\-] ', re.LOCALE|re.UNICODE), ': -')
-re_mauseparador = (re.compile(ur'\)\:?[ \.]?[\–\–\—\-](?P<firstword>[A-Z])', re.LOCALE|re.UNICODE), '): - \g<firstword>')
+re_mauseparador = (re.compile(ur'(?P<prevchar>[\)a-z])\:[ \.][\–\–\—\-](?P<firstword>[\w\»])', re.LOCALE|re.UNICODE), '\g<prevchar>: - \g<firstword>')
 
 re_titulo = (re.compile(ur'O Sr[\.:]|A Sr\.?(ª)?'), '')
 
 re_ministro = (re.compile(ur'^Ministr'), '')
 re_secestado = (re.compile(ur'^Secretári[oa] de Estado.*:'), '')
 
-re_palavra = (re.compile(ur'(dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|faça favor', re.UNICODE|re.IGNORECASE), '')
+re_palavra = (re.compile(ur'(dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|faça favor[^ de terminar]', re.UNICODE|re.IGNORECASE), '')
 
-re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o seu tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)', re.UNICODE|re.IGNORECASE), '')
+re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o seu tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)|(deixem ouvir o orador)|(faça favor de prosseguir a sua)|(poder prosseguir a sua intervenção)', re.UNICODE|re.IGNORECASE), '')
 
 re_president = (re.compile(ur'O Sr\.?|A Sr\.?ª? Presidente\ ?(?P<nome>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])'), '')
 
@@ -89,8 +89,8 @@ re_cont = (re.compile(ur'O Orador|A Oradora(?P<sep>\:[ \.]?[\–\–\—\-\-])',
 
 re_voto = (re.compile(ur'^Submetid[oa]s? à votação', re.UNICODE), '')
 
-re_interv = (re.compile(ur'^(?P<titulo>(O )?Sr[\.:]?|A Sr[\.:]?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:?[ \.]?[\–\–\—\-]? ?)', re.UNICODE), '')
-re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr(\.)?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-]? ?)', re.UNICODE), '')
+re_interv = (re.compile(ur'^(?P<titulo>O Sr[\.:]?|A Sr[\.:]?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:?[ \.]?[\–\–\—\-]? ?)', re.UNICODE), '')
+re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr(\.)?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
 
 re_interv_simples = (re.compile(ur'^(?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?\ ?(?P<sep>\:?[ \.]?[\–\–\—\-]? )', re.UNICODE), '')
 
@@ -113,6 +113,7 @@ def get_speaker(p):
         print 'Não consegui determinar o speaker. Vai vazio.'
         print '   ' + p
         print
+        raise
         return ''
     return speaker
 
@@ -211,7 +212,14 @@ class RaspadarTagger:
             # print
             self.contents.append(result[0])
             # processar a segunda
-            self.parse_statement(new_p)
+            try:
+                self.parse_statement(new_p)
+            except RuntimeError:
+                # loop infinito, vamos mostrar o que se passa
+                print 'Loop infinito ao processar uma linha com mais do que uma intervenção.'
+                print u'1ª:   ' + result[0]
+                print u'2ª:   ' + new_p
+                sys.exit()
             return
         self.contents.append(output)
         return output
@@ -262,11 +270,16 @@ class RaspadarTagger:
         if '(' in speaker:
             post, speaker = speaker.strip(')').split('(')
             self.gov_posts[post.strip()] = speaker.strip()
+            # pprint(self.gov_posts)
+            # print
         else:
             # procurar o nome associado ao cargo que já registámos da primeira vez
             # que esta pessoa falou
+            # print p
             post = speaker.strip()
             speaker = self.gov_posts[speaker.strip()].strip()
+            # pprint(self.gov_posts)
+            # print
 
         if post.startswith('Primeiro'):
             stype = PM_STATEMENT
@@ -337,6 +350,7 @@ class RaspadarTagger:
 
     def process_orphans(self):
         orphan_types = tuple(['[%s]' % t for t in (SUMMARY, ROLLCALL_PRESENT, ROLLCALL_ABSENT, ROLLCALL_LATE, ROLLCALL_MISSION)])
+
         for p in self.contents:
             if p.startswith(orphan_types):
                 stype, remainder = p.split(' ', 1)
@@ -350,11 +364,32 @@ class RaspadarTagger:
         new_contents = []
         while 1:
             p = self.contents[0]
+            
+            if len(self.contents) > 1:
+                if get_type(self.contents[1]) == MP_CONT and get_type(p) == PRESIDENT_STATEMENT:
+                    # declaração do presidente seguida de uma continuação - significa
+                    # que a do presidente é um aparte
+                    p = change_type(p, PRESIDENT_ASIDE)
+                if new_contents:
+                    prev_p = new_contents[-1]
+                    if get_type(p) == ORPHAN and get_type(prev_p) == MP_STATEMENT:
+                        p = change_type(p, MP_CONT)
+
+            MAIN_INTERVENTION_TYPES = (MP_STATEMENT, MINISTER_STATEMENT, PM_STATEMENT, STATE_SECRETARY_STATEMENT, SECRETARY_STATEMENT) 
+
             if get_type(p) == PRESIDENT_NEWSPEAKER:
                 next_p = self.contents[1]
-                if not get_type(next_p) in (MP_STATEMENT, MINISTER_STATEMENT, PM_STATEMENT, STATE_SECRETARY_STATEMENT, SECRETARY_STATEMENT):
+                if get_type(next_p) in (LAUGHTER, APPLAUSE, PAUSE, INTERRUPTION):
+                    for c in self.contents[1:]:
+                        if get_type(c) in MAIN_INTERVENTION_TYPES:
+                            next_p = self.contents[self.contents.index(c)]
+                    # next_p = self.contents[2]
+                elif not get_type(next_p) in MAIN_INTERVENTION_TYPES:
                     print 'A seguir a tem a palavra, não tenho o que esperava. É melhor conferir.'
-                    print next_p
+                    print 'Tem a palavra:  %s' % p
+                    print 'Seguinte:    :  %s' % next_p
+                    raise TypeError
+
                 speaker = get_speaker(next_p)
                 lookahead = 2
                 while 1:
@@ -387,7 +422,6 @@ class RaspadarTagger:
                         text = get_text(next_p)
                         new_text = '[%s] %s: - %s' % (MP_CONT, speaker, text)
                         self.contents[lookahead] = new_text
-
                     
                     lookahead += 1
             new_contents.append(self.contents.pop(0))
@@ -453,10 +487,23 @@ if __name__ == '__main__':
                       action="store_true",
                       help='Print verbose information',
                       )
+    parser.add_option('-p', '--picky',
+                      dest="picky",
+                      default=False,
+                      action="store_true",
+                      help='Stop batch processing in case an error is found',
+                      )
+    parser.add_option('-f', '--force',
+                      dest="force",
+                      default=False,
+                      action="store_true",
+                      help='Process file even if the output file already exists',
+                      )
     options, remainder = parser.parse_args()
     input = options.input
     verbose = options.verbose
     output = options.output
+    picky = options.picky
 
     # verificar se input existe
     if not os.path.exists(input):
@@ -488,6 +535,8 @@ if __name__ == '__main__':
         input = default_input
 
     if os.path.isdir(input):
+        successes = []
+        failures = []
         import glob
         inputs = {}
         for f in glob.glob(os.path.join(input, '*.txt')):
@@ -497,15 +546,25 @@ if __name__ == '__main__':
                 # sem output -> grava o txt no mesmo dir
                 inputs[f] = os.path.join(input, os.path.basename(f).replace('.txt', '.tag.txt'))
         for i in inputs:
-            if os.path.exists(inputs[i]):
+            if os.path.exists(inputs[i]) and not options.force:
                 print 'File %s exists, not overwriting.' % inputs[i]
+                continue
             if verbose: print '  %s -> %s' % (i, inputs[i])
             try:
                 parse_file(i, inputs[i])
+                successes.append(i)
             except:
-                logfile = open('broken.log', 'a')
-                logfile.write(i + '\n')
-                logfile.close()
+                outfile = open(inputs[i], 'w')
+                outfile.close()
+                if picky:
+                    sys.exit()
+                failures.append(i)
+        if verbose:
+            totalcount = len(successes) + len(failures)
+            print '----------------------------------'
+            print 'Successfully parsed:   %d files (%f%%)' % (len(successes), int(len(successes)/totalcount))
+            print 'Failed:                %d files (%f%%)' % (len(failures), int(len(failures)/totalcount))
+            print '----------------------------------'
                 
     else:
         parse_file(input, output)
