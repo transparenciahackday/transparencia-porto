@@ -4,9 +4,8 @@ from BeautifulSoup import BeautifulSoup
 #from BeautifulSoup import BeautifulStoneSoup
 from datetime import datetime as dt
 from json import dumps
-import os
-import shelve
-import sys
+#import os
+#import sys
 from hashlib import sha1
 
 def hash(str):
@@ -15,32 +14,19 @@ def hash(str):
     return hash.hexdigest()
 
 def getpage(url):
-    try:
-        page= s[hash(url)]
-    except:
-        page= urllib.urlopen(url).read()
-        s[hash(url)]=page
-        s.sync()
+    page = urllib.urlopen(url).read()
     return page
 
-s=shelve.open('cache.shelve')
-
 DATASETS='../../datasets/'
+#DATASETS='./'
 
 URL_DEPS_ACTIVOS='http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
 FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
 
 print 'Pulling active Deps to calculate a max range of IDs to brute force...'
 
-if s.has_key('depsactivos'):
-    print 'using cached page'
-    deps_activos_list=s['depsactivos']
-else:
-    print 'fetching new page'
-    deps_activos_list=getpage(URL_DEPS_ACTIVOS)
-    s['depsactivos']=deps_activos_list
-    s.sync()
-    s.close()
+
+deps_activos_list=getpage(URL_DEPS_ACTIVOS)
 
 soup=BeautifulSoup(deps_activos_list)
 max=0
@@ -58,8 +44,8 @@ print 'Testing up to %d' % max
 deprows=[]
 
 for i in range(0, max):
-    print i
     #for i in range(100,103):
+    print i
     soup=BeautifulSoup(getpage(FORMATTER_URL_BIO_DEP % i))
     name=soup.find('span',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText'))
     if name:
@@ -67,13 +53,9 @@ for i in range(0, max):
                         'name': name.text,
                         'date': dt.utcnow().isoformat()})
 
-depsfp=open(DATASETS+'deputados.json', 'w')
-depsfp.write(dumps(deprows))
+depsfp=open(DATASETS+'deputados.json', 'w+')
+depsfp.write(dumps(deprows, encoding='utf-8', indent=1))
 depsfp.close()
-
-s.sync()
-s.close()
-
 
 
 
