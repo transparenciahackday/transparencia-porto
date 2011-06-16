@@ -41,26 +41,29 @@ for dep in deps:
 max=int(max*1.05)
 print 'Testing up to %d' % max
 
-deprows=[]
+deprows={}
 
 for i in range(0, max):
     #for i in range(100,103):
     print i
-    soup=BeautifulSoup(getpage(FORMATTER_URL_BIO_DEP % i))
+    url=FORMATTER_URL_BIO_DEP % i
+    soup=BeautifulSoup(getpage(url))
     name=soup.find('span',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText'))
+    short=soup.find('span',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
+    birthdate=soup.find('span',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
     if name:
-        deprows.append({'id': i,
-                        'name': name.text,
-                        'date': dt.utcnow().isoformat()})
-
+        deprows[i]= {'id': i,
+                     'name': name.text,
+                     'url': url,
+                     'date': dt.utcnow().isoformat()}
+        if short:
+            deprows[i]['short']=short.text
+        if birthdate:
+            deprows[i]['birthdate']=birthdate.text
+            
 depsfp=open(DATASETS+'deputados.json', 'w+')
 depsfp.write(dumps(deprows, encoding='utf-8', indent=1))
 depsfp.close()
-
-
-
-
-
 
 
 
