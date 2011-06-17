@@ -4,7 +4,7 @@ from BeautifulSoup import BeautifulSoup
 #from BeautifulSoup import BeautifulStoneSoup
 from datetime import datetime as dt
 from json import dumps
-#import os
+import os
 #import sys
 from hashlib import sha1
 
@@ -13,8 +13,23 @@ def hash(str):
     hash.update(str)
     return hash.hexdigest()
 
+def file_get_contents(file):
+    return open(file).read()
+def file_put_contents(file, contents):
+    open(file, 'w+').write(contents)
+
 def getpage(url):
-    page = urllib.urlopen(url).read()
+    if not os.path.exists('cache'):
+        print 'New folder cache/.'
+        os.mkdir('cache')
+    url_hash=hash(url)
+    cache_file='cache/'+url_hash
+    
+    if os.path.exists(cache_file):
+        page=file_get_contents(cache_file)
+    else:
+        page = urllib.urlopen(url).read()
+        file_put_contents(cache_file, page)
     return page
 
 DATASETS='../../datasets/'
