@@ -60,6 +60,8 @@ for i in range(0, max):
     jobs=soup.find('div',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos')) # ;)
     #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes
     coms=soup.find('div',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
+    #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs
+    legs=soup.find('table',dict(id= 'ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
     if name:
         deprows[i]= {'id': i,
                      'name': name.text,
@@ -89,13 +91,17 @@ for i in range(0, max):
             deprows[i]['coms']=[]
             for each in coms.findAll('tr')[1:]:
                 deprows[i]['coms'].append(each.text)
+        if legs:
+            deprows[i]['legs']=[]
+            for each in legs.findAll('tr')[1:]:
+                leg=each.findAll('td')
+                deprows[i]['legs'].append({'desc': leg[0].text, 'circulo': leg[3].text, 'grupo': leg[4].text})
 
 depsfp=open(DATASETS+'deputados.json', 'w+')
 depsfp.write(dumps(deprows, encoding='utf-8', indent=1, sort_keys=True))
 depsfp.close()
 
-for e in deprows:
-    print deprows[e]
+#print dumps(deprows, encoding='utf-8', indent=1, sort_keys=True)
 
 
 
