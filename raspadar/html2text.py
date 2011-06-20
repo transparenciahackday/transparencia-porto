@@ -15,7 +15,7 @@ locale.setlocale(locale.LC_ALL, 'pt_PT.UTF8')
 
 from pprint import pprint
 
-LOWERCASE_LETTERS = string.lowercase + 'áàãâéèêíìóòõôúùç'
+LOWERCASE_LETTERS = unicode(string.lowercase) + u'áàãâéèêíìóòõôúùç'
 
 SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0', 'SUMARIO')
 TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. ', 'Ex.mos. Srs. '
@@ -47,27 +47,45 @@ NUMEROS_ROMANOS = {
 
 REPLACES_FILE = '/home/rlafuente/code/transparencia/datasets/transcricoes/replaces.txt'
 
+REPLACES = [
+        # o carácter 'é' às vezes é lido como 'ç', temos de substituir onde não bater certo
+        # presumimos que se não for seguido por certas vogais, é erro de OCR
+        (re.compile(ur'ç(?P<char>[^(aouãâáàóòõôúù)])', re.UNICODE), u'é\g<char>'),
+        # o mesmo para o carácter 'ú', que é mal lido como 'õ'
+        # se não for seguido de um e ('õe'), presumimos que é erro
+        (re.compile(ur'õ(?P<char>[^(e)])', re.UNICODE), u'ú\g<char>'),
+        # acrescentar espaços à frente da pontuação onde faltam
+        # procura exemplos como ".Á", ",é" mas não ".R." (pode ser uma sigla)
+        # no entanto omitimos ".a", por causa de "Sr.as"
+        (re.compile(ur'(?P<pont>[.,?!])(?P<char>[A-Zb-zÁÀÉÍÓÚ][^\.])', re.UNICODE), u'\g<pont> \g<char>'),
+
+        # gralhas
+        (re.compile(ur'deeuros', re.UNICODE), 'de euros'),
+        (re.compile(ur'sms', re.UNICODE), 'SMS'),
+        (re.compile(ur'Mubarack', re.UNICODE), 'Mubarak'),
+        (re.compile(ur'Bourgiba', re.UNICODE), 'Bourguiba'),
+        (re.compile(ur'Merkl', re.UNICODE), 'Merkel'),
+        (re.compile(ur'háde', re.UNICODE), u'há de'),
+        (re.compile(ur'digolhe', re.UNICODE), 'digo-lhe'),
+        (re.compile(ur'peco-lhe', re.UNICODE), u'peço-lhe'),
+        (re.compile(ur'dizerlhe', re.UNICODE), 'dizer-lhe'),
+        (re.compile(ur'DecretoLei', re.UNICODE), 'Decreto-Lei'),
+        # erros específicos de determinadas transcrições
+        # XI legislatura
+        (re.compile(ur'O S. Agostinho Lopes', re.UNICODE), 'O Sr. Agostinho Lopes'),
+        (re.compile(ur'Deputado falou: - ', re.UNICODE), 'Deputado falou - '),
+        (re.compile(ur'^Sr. Pedro Mota Soares', re.UNICODE), 'O Sr. Pedro Mota Soares'),
+        (re.compile(ur'da Justiça. O Sr. Secretário de Estado', re.UNICODE), u'da Justiça.\n\nO Sr. Secretário de Estado'),
+    ]
 
 ### Regexes para detecção de erros de OCR ###
 
-# o carácter 'é' às vezes é lido como 'ç', temos de substituir onde não bater certo
-# presumimos que se não for seguido por certas vogais, é erro de OCR
-re_cedilha = r'ç(?P<char>[^(aouãâáàóòõôúù)])'
-# o mesmo para o carácter 'ú', que é mal lido como 'õ'
-# se não for seguido de um e ('õe'), presumimos que é erro
-re_otil = r'õ(?P<char>[^(e)])'
-# acrescentar espaços à frente da pontuação onde faltam
-# procura exemplos como ".Á", ",é" mas não ".R." (pode ser uma sigla)
-# no entanto omitimos ".a", por causa de "Sr.as"
-re_pontuacao = r'(?P<pont>[.,?!])(?P<char>[A-Zb-zÁÀÉÍÓÚ][^.])'
 # nomes próprios portugueses
 re_nome = r" ?[A-ZdÁ][a-z\-ç'(é )]+\b|Álvaro"
 # data da sessão
-re_data = (re.compile(r'REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
+re_data = (re.compile(ur'REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
 
-re_c = re.compile(re_cedilha, re.LOCALE|re.UNICODE|re.MULTILINE)
-re_ot = re.compile(re_otil, re.LOCALE|re.UNICODE|re.MULTILINE)
-re_pont = re.compile(re_pontuacao, re.LOCALE|re.UNICODE|re.MULTILINE)
+
 re_n = re.compile(re_nome, re.LOCALE|re.UNICODE|re.MULTILINE)
 
 # marcador de intervenção
@@ -196,12 +214,15 @@ class QDSoupParser:
                 first = False
 
     def parse_paragraph(self, p, first=False, skip_encode=False):
+        '''
         if skip_encode:
             text = p
         else:
             text = p.encode('utf-8')
+        '''
+        text = p.strip(' \n')
 
-        text = text.strip(' \n')
+        text = self.correct_inconsistencies(text)
 
         if first:
             # primeiro parágrafo da página, pode ser continuação do anterior.
@@ -222,8 +243,19 @@ class QDSoupParser:
                         else:
                             self.paragraphs[-1] = prev_para + ' ' + text
                         return
-        text = text.replace('&nbsp;', '')
-        self.paragraphs.append(text)
+
+        if 'BREAK' in text:
+            print text
+
+        # separar parágrafos que têm duas newlines
+        if '\n\n' in text:
+            paras = text.split('\n\n')
+            # pprint(paras)
+            for p in paras:
+                self.paragraphs.append(p)
+        else:
+            self.paragraphs.append(text)
+
 
     def correct_ocr(self):
         new_paras = []
@@ -235,25 +267,28 @@ class QDSoupParser:
             text = self.paragraphs[0]
             # aplicar regexes para alguns erros OCR
             # as regexes estão definidas no início deste ficheiro
-            text = text.replace(' ç ', ' é ')
+            text = text.replace(u' ç ', u' é ')
             text = text.replace('&nbsp;', '')
-            text = re.sub(re_c, 'é\g<char>', text)
-            text = re.sub(re_ot, 'ú\g<char>', text)
-            text = re.sub(re_pontuacao, '\g<pont> \g<char>', text)
             new_paras.append(text)
             self.paragraphs.pop(0)
         self.paragraphs = list(new_paras)
 
-    def correct_inconsistencies(self):
-        for line in open(REPLACES_FILE, 'r').readlines():
-            s, new_s = line.split('|')
-            s = s.strip(' \n')
-            new_s = new_s.strip(' \n')
-            for para in self.paragraphs:
-                if s in para:
-                    i = self.paragraphs.index(para)
-                    self.paragraphs[i] = para.replace(s, new_s)
-                    print self.paragraphs[i] 
+    def correct_inconsistencies(self, para):
+        para = para.strip('\n ')
+        # reticências
+        if para.endswith(u'»') and not u'«' in para:
+            para = para.replace(u'»', u'…')
+        if u': — »' in para:
+            para = para.replace(u': — »', u': — …')
+        para = para.replace(u'...', u'…')
+
+        for regex, subst in REPLACES:
+            # consultar substituições
+            if re.search(regex, para):
+                para = re.sub(regex, subst, para)
+
+        return para
+
     def get_date(self):
         for p in self.paragraphs:
             if re.search(re_data[0], p):
@@ -276,18 +311,15 @@ class QDSoupParser:
         for s in self.paragraphs:
             if not s.strip('\n '):
                 continue
-            if not type(s) == str:
-                for item in s:
-                    output += s + '\n\n'
-            elif s:
+            else:
                 output += s + '\n\n'
+
         return output
 
     def run(self, soup):
         self.parse_soup(soup)
         self.get_date()
         self.correct_ocr()
-        self.correct_inconsistencies()
 
 def parse_file(infile, outfile):
     f = infile
@@ -301,7 +333,8 @@ def parse_file(infile, outfile):
         raise
 
     outfile = outfile.split('.')[0] + '_' + str(parser.date) + '.' + outfile.split('.')[1]
-    outfile = open(outfile, 'w')
+    import codecs
+    outfile = codecs.open(outfile, 'w', 'utf-8')
     outfile.write(parser.get_txt())
     outfile.close()
 
