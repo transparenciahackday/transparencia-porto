@@ -12,6 +12,14 @@ from utils import *
 
 DEFAULT_MAX = 4230
 
+ROMAN_NUMERALS = {
+    'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
+    'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
+    'XI': 11, 'XII': 12, 'XIII': 13, 'XIV': 14, 'XV': 15,
+    'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
+    'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
+    }
+
 DATASETS = '../../datasets/'
 URL_DEPS_ACTIVOS='http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
 FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
@@ -19,7 +27,7 @@ FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.asp
 def parse_legislature(s):
     s = s.replace('&nbsp;', '')
     number, dates = s.split('[')
-    number = number.strip()
+    number = ROMAN_NUMERALS[number.strip()]
     dates = dates.strip(' ]')
     start, end = dates.split(' a ')
     return number, start, end
