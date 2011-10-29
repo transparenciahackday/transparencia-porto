@@ -1,0 +1,1396 @@
+﻿{
+ "entries": [
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Presidente: Ex. mo Sr. Jaime José Matos da Gama", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Secretários: Ex. mos Srs. Maria Celeste Lopes da Silva Correia\nPaulo Jorge Frazão Batista dos Santos", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Presidente (Teresa Caeiro): - Srs. Deputados, temos quórum, pelo que está aberta a sessão.", 
+   "type": "presidente_aberta"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Sr.as e Srs. Deputados, antes de mais, peço à Sr.ª Secretária que dê\nconta do expediente.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "Celeste Correia", 
+   "speaker": "Secretária", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados, deram entrada na Mesa, e\nforam admitidas, as seguintes iniciativas legislativas: propostas de lei n. os 8/XI (1.ª) — Grandes Opções do\nPlano — Principais Linhas de Acção para 2010-2013 e 9/XI (1.ª) — Orçamento do Estado para 2010, que\nbaixaram à 5.ª e demais comissões; projectos de lei n. os 136/XI (1.ª) — Altera o regime das inelegibilidades\nnas eleições para o Presidente da República, para a Assembleia da República, para o Parlamento Europeu e\npara os órgãos das autarquias locais (PSD), que baixou à 1.ª comissão, 137/XI (1.ª) — Define o regime de\ncertificação e adopção dos manuais escolares, garantindo a sua gratuitidade (PCP), que baixou à 8.ª\nComissão, 138/XI (1.ª) — Regime de apoio à frequência de estágios curriculares (PCP), que baixou à 8.ª\nComissão, 139/XI (1.ª) — Condições de exploração do terminal portuário de Alcântara (PCP), que baixou à 9.ª\nComissão, 140/XI (1.ª) — Altera o Estatuto dos Deputados e o regime jurídico de incompatibilidades e\nimpedimentos dos titulares de cargos políticos e altos cargos públicos (PCP), que baixou à 1.ª Comissão,\n141/XI (1.ª) — Alteração ao regime jurídico da tutela administrativa, aprovado pela Lei n.º 27/96, de 1 de\nAgosto (PCP), que baixou à 1.ª Comissão e 142/XI (1.ª) — Crimes de responsabilidade de titulares de cargos\npolíticos e altos cargos públicos (terceira alteração à Lei n.º 34/87, de 16 de Julho, com as alterações\nintroduzidas pelas Leis n. os 108/2001, de 28 de Novembro e 30/2008, de 1 de Agosto) (PCP), que baixou à 1.ª\nComissão; projectos de resolução n. os 59/XI (1.ª) — Recomenda ao Governo que estude a possibilidade da\ninclusão no Plano Nacional de Vacinação da vacina pneumocócica ou, em alternativa, a sua comparticipação,\nno mínimo, pelo escalão C (CDS-PP), que baixou à 10.ª Comissão, 60/XI (1.ª) — Propõe medidas no âmbito\ndo Porta 65 — Arrendamento Jovem (PS), que baixou à 6.ª Comissão e 61/XI (1.ª) — Recomenda ao Governo\na verificação da implementação dos Conselhos Municipais de Juventude (PS), que baixou à 10.ª Comissão.\nCumpre-me, ainda, informar os Srs. Deputados que, aos 22 dias do mês de Janeiro, procedeu-se à eleição\nde um juiz para o Tribunal Constitucional e que o resultado foi o seguinte: votantes – 219; votos a favor – 156;\nvotos brancos – 57; votos nulos – 6. Face ao resultado obtido, declara-se eleita a candidata proposta, Mestre\nCatarina Teresa Rola Sarmento e Castro.\nEm termos de expediente, é tudo, Sr.ª Presidente.", 
+   "type": "secretario"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Srs. Deputados, a Sr.ª Secretária vai também dar conta de dois\npareceres da Comissão de Ética, Sociedade e Cultura.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "Celeste Correia", 
+   "speaker": "Secretária", 
+   "text": "Sr.ª Presidente e Srs. Deputados, a solicitação da Vara de\nCompetência Mista e Juízos Criminais de Coimbra — 2.º Juízo, Processo n.º 63/06.5TACBR, a Comissão de\nÉtica, Sociedade e Cultura decidiu emitir parecer no sentido de autorizar o Sr. Deputado João Serpa Oliva\n(CDS-PP) a prestar depoimento presencial, como testemunha, no âmbito dos referidos autos.", 
+   "type": "secretario"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Srs. Deputados, está em apreciação o parecer.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Pausa.", 
+   "type": "pausa"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Não havendo pedidos de palavra, vamos votá-lo.", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Submetido à votação, foi aprovado por unanimidade.", 
+   "type": "voto"
+  }, 
+  {
+   "party": "Celeste Correia", 
+   "speaker": "Secretária", 
+   "text": "Sr.ª Presidente e Srs. Deputados, a solicitação do Tribunal de\nInstrução Criminal de Lisboa — 3.º Juízo, Processo n.º 5291/09.9TDLSB, a Comissão de Ética, Sociedade e\nCultura decidiu emitir parecer no sentido de não autorizar o Sr. Deputado Francisco Louçã (BE) a prestar\ndeclarações na qualidade de arguido, no âmbito dos referidos autos.", 
+   "type": "secretario"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Srs. Deputados, está em apreciação o parecer.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Pausa.", 
+   "type": "pausa"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Não havendo pedidos de palavra, vamos votá-lo.", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Submetido à votação, foi aprovado por unanimidade.", 
+   "type": "voto"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Srs. Deputados, vamos passar ao primeiro ponto da nossa ordem de\ntrabalhos, que será preenchido por declarações políticas.\nA Mesa regista a inscrição do PCP, pelo que dou a palavra ao Sr. Deputado Miguel Tiago.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Sr. Presidente, Srs. Deputados: Permitam-me apenas que, antes de dar\ninício a esta declaração política, aproveite para saudar a luta dos enfermeiros portugueses,»", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do PS", 
+   "text": "Oh!»", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "… que hoje iniciam uma greve em defesa da dignidade das suas carreiras e\njusta remuneração, sendo este também um pilar fundamental do Serviço Nacional de Saúde que continua,\ncomo outros, aliás, a ser alvo de ataques deste Governo.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Srs. Deputados: A aversão do Governo à intervenção do Estado, ao controlo\ne ao escrutínio público das opções, dos gastos e dos investimentos que, à medida das necessidades de\npropaganda, vão sendo feitos tem já contornos obsessivos, no que toca à política de gestão do parque escolar\nportuguês.\nEssa aversão levou o Governo a criar uma empresa para gerir, como se gere um negócio, todas as escolas\ndo ensino secundário e, gradualmente, também muitas das escolas do ensino básico. Essa empresa vem,\nporém, criar ao Governo outras possibilidades: que se contornem os procedimentos de contratação e os\nprincípios da transparência das contas públicas e dos contratos que envolvem o Estado e, assim, se\nestabeleçam contratações absolutamente insondáveis, blindadas à fiscalização pública.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Um escândalo!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "A Parque Escolar, E.P.E. é uma empresa, gerida e orientada de acordo com\no objectivo da obtenção de lucro e de fazer negócio com os direitos dos portugueses, particularmente, com os\ndireitos dos estudantes.\nDesde logo, uma dúvida se levanta: se a empresa passa a tutelar, gradualmente, todo o parque escolar, a\ndeterminar os seus usos e a sua gestão, o que sucederá quando o Governo entender privatizá-la? Como se articula e processa a relação entre a direcção de cada escola e a empresa que lhe gere o espaço onde\nlabora? Como se justifica que seja uma empresa a decidir que investimentos são feitos no parque escolar\nportuguês? Por que motivos é que é uma empresa a ditar o que é ou não é concessionado ou privatizado\nentre os bares, as cantinas, os refeitórios, as papelarias, os campos de futebol, etc., nas escolas? Por que é\nque é uma empresa a determinar que equipamentos móveis se compram para uma determinada escola?\nA desresponsabilização da tutela política é tão evidente que o Governo, quando questionado pelo PCP\nsobre um pavilhão desportivo numa determinada escola, afirma mesmo que já não há nada que possa dizer\nsobre a construção ou não desse pavilhão, pois agora é uma decisão da Parque Escolar e é essa a empresa\nque define os investimentos.\nEsperemos não chegar o dia em que o Governo privatiza a empresa e, assim, entrega directamente na\nmão dos privados a gestão de todo o parque escolar!\nMas outras dúvidas se levantam, mesmo enquanto não acontece essa privatização. Como escolhe a\nParque Escolar os projectos e as equipas projectistas? Como adjudica os trabalhos de engenharia e de\nconstrução, que correspondem, no total das intervenções faseadas, e de acordo com os números do próprio\nGoverno, a 2,5 mil milhões de euros?\nDirá o PS, já com a sua ladainha maniqueísta, que o PCP se opõe à modernização do parque escolar.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Ah!» E isso é verdade!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "E, rapidamente, vos dizemos que quem se opôs a uma modernização\ngradual e a uma manutenção apropriada das escolas foram, precisamente, PS e PSD que, na habitual\nalternância no poder, permitiram que as escolas atingissem o grau de deterioração que hoje conhecemos.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "E foi sempre o PCP, ao longo dessas décadas, que trouxe,\nsistematicamente, a esta Assembleia a necessidade urgente de cuidar das escolas, enquanto PS e PSD\npermitiam que escolas fossem e continuassem provisórias, algumas delas em barracões há mais de 30 anos.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "As de Cuba é que são boas!»", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Mas a urgência da intervenção nas escolas não pode justificar tudo! E, para\no PCP, não pode justificar a falta de transparência e de rigor! Não pode justificar a forma atabalhoada como a\nParque Escolar, pressionada pela agenda do Primeiro-Ministro, vai apressando inaugurações; não pode\njustificar que milhões de euros sejam pagos a gabinetes de projectistas sem a mínima justificação, nem que\nmilhões sejam pagos a um conjunto reduzido de empresas escolhidas de entre as grandes construtoras do\nPaís sem que seja cumprida sequer a divulgação dos critérios e das justificações no portal da Parque Escolar,\ncomo estabelece a lei.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Exactamente!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "O carácter de excepcionalidade e urgência da requalificação do parque\nescolar e a constituição de uma empresa que passa a tutelar, para todos os efeitos, essa requalificação são,\nafinal de contas, pretexto para proceder a um conjunto vastíssimo de ajustes directos que, no mínimo, devem\nser questionados.\nGabinete de Arquitectura e Serviços X — 1 474 124 €, por ajuste directo; Arquitectos Y — 404 000 €, por\najuste directo, apenas em 2007; Arquitectos X — 493 000 €, apenas em 2008. São nomes fictícios, com\nvalores reais, respeitantes, como disse, a 2007 e 2008, que não surgem justificados em nenhum documento\npúblico. Mas são apenas três casos de entre centenas de outros que surgem na lista de ajustes directos feitos\npela Parque Escolar sem qualquer justificação.\nÉ ilustrativo que em 567 contratações, feitas em 2007 e 2008 por esta empresa, 421 tenham sido feitas por\najuste directo, sem justificação e sem consulta prévia, de acordo com os documentos da própria empresa.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Protestos do PS.", 
+   "type": "protesto"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Não nos cabe levantar suspeitas, mas cabe-nos denunciar a opacidade e ao Governo, sim, cabe dissipar\nessas suspeitas e garantir a transparência.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Para classificar todos os contornos desses negócios de milhões, o PCP\nproporá à Assembleia da República que requeira ao Tribunal de Contas uma auditoria à actividade da Parque\nEscolar.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "As situações como as da Escola Gil Vicente, em que a direcção da escola\nnão é tida nem havida na execução do projecto, em que o pavimento, ao fim de poucos meses, já está\ncompletamente arruinado em alguns locais da escola, onde os revestimentos interiores já cederam, onde já\nhouve infiltrações, ou como as da Escola Garcia de Orta em que os tectos, os quadros e divisórias já caíram,\nonde houve inundações e fugas de gás, entre muitos outros casos de insuficiências nas instalações, não\npodem passar em branco.\nMuita construção, pouca reflexão!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Reconhecem: muita construção!»", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Na verdade, o Governo criou um plano de injecção de 2,5 mil milhões de\neuros nas contas de um punhado de empresas, escolhidas não se sabe como, encomendou construções à\npressa, para se desdobrar em inaugurações que sacrificam, muitas vezes, a qualidade da obra, e, assim, vai\nescondendo, por detrás dos belos edifícios, que as pessoas contam cada vez menos e a educação é cada vez\nmenos importante.\nProfessores ofendidos, estudantes convertidos em números, auxiliares desmotivados e sem recursos,\ntarefeiros, contratos de emprego e inserção, democracia empobrecida, escola tornada em empresa é o que\nresta dentro das paredes da propaganda do Governo.\nA escola pública precisa, sim, de uma política centrada nos recursos humanos, que promova a qualificação\ndo parque escolar de forma adaptada às exigências mas sem contornar os mecanismos de escrutínio público;\nprecisa de uma qualificação pensada e reflectida, envolvendo a comunidade escolar e local, orientada para a\nmelhoria das condições de ensino e não para a distribuição de trabalhos a empresas escolhidas sem\ntransparência, não para satisfazer a necessidade evidente que têm este Governo e o seu Primeiro-Ministro de\nesconder, atrás de obras, o real carácter da sua política de direita, que se traduz, afinal de contas, num ataque\nà escola pública, gratuita e de qualidade.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PCP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "A Mesa regista três pedidos de esclarecimento, aos quais o Sr.\nDeputado Miguel Tiago responderá individualmente.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Tem, então, a palavra à Sr.ª Deputada Ana Drago.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Ana Drago", 
+   "text": "Sr.ª Presidente, Sr. Deputado Miguel Tiago, traz-nos aqui, hoje, uma matéria\nque, creio, é da maior importância.\nAs imagens que o País teve a oportunidade de ver do que aconteceu na Escola Garcia de Orta seriam,\ntalvez, cómicas, se não fossem uma imagem catastrófica do que é a política de investimento na requalificação\ndo parque escolar das nossas escolas secundárias, levada a cabo por este Governo.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Ana Drago", 
+   "text": "Porque as perguntas têm de ser feitas, pergunto: necessitamos ou não de uma política de requalificação\ndaquilo que são os equipamentos escolares do País? Sim, necessitamos. Este é um investimento público\nnecessário, que cria, supostamente, emprego e responde à qualificação dos serviços públicos. Sim, era\npreciso fazer estas obras.\nO problema foi o modelo e a escolha estratégica feita pelo Governo do Partido Socialista. Porque se é\nverdade que é muito difícil pedir à Sr.ª Ministra da Educação que vá avaliar a qualidade das obras de\nrequalificação que estão a ser feitas nas escolas, também é verdade que podemos pedir contas ao Partido\nSocialista, ao Governo actual e ao anterior, sobre a forma como organizaram esta requalificação do parque\nescolar.\nPortanto, ao criar a Parque Escolar, E.P.E., mais uma vez, fica demonstrado que este modelo empresarial\nde requalificação, desviando os recursos públicos para uma aplicação não transparente das verbas, do nosso\ndinheiro, está falhado. O grave é que este modelo persiste, porque tivemos a prorrogação da possibilidade de\najuste directo, por parte da Parque Escolar, para a requalificação. Ou seja, ficamos numa situação de total,\nrepito, total opacidade, e é preciso ver os montantes que estão a ser investidos neste momento.\nA proposta que o Partido Comunista aqui nos traz hoje é, pois, muitíssimo importante, porque nos dá a\npossibilidade de fazer uma auditoria às formas de gestão, aos ajustes directos que estão a ser feitos pela\nParque Escolar. E noto, apenas como curiosidade, a forma como estão a ser adjudicados os projectos a\ndiferentes arquitectos. Aliás, mesmo por parte de militantes do Partido Socialista, foi referida esta estranheza\nde ser apenas uma meia dúzia de gabinetes de projectistas que está a fazer os projectos de requalificação das\nescolas públicas.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "É verdade!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Ana Drago", 
+   "text": "Portanto, o Governo do Partido Socialista tem responsabilidades nesta matéria,\nbem como a actual Ministra da Educação. É necessário que haja transparência e responsabilidade no gasto do\ndinheiro público para fazer uma obra que é devida.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do BE.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para responder, tem a palavra o Sr. Deputado Miguel Tiago.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Sr.ª Presidente, Sr.ª Deputada Ana Drago, muito obrigado pelas questões\nque colocou e por valorizar as propostas que o PCP aqui trouxe.\nPerguntar se o PCP considera ou não necessária esta intervenção não é o que está em causa, como, aliás,\ntranspareceu da sua intervenção; o que está em causa é, precisamente, a forma como o Governo decidiu levar\na cabo este processo de requalificação e até, em muitos casos, de construção de novos edifícios escolares.\nRefiro-me à escolha da criação de um modelo empresarial cujo objectivo e âmbito está plasmado e estipulado\nclaramente no decreto-lei que o cria, cabendo-lhe não apenas requalificar o parque como também geri-lo, no\nfuturo.\nPortanto, a opção de retirar esta intervenção da esfera da tutela política (pelo menos, aparentemente),\npermitindo criar uma forma que corre em paralelo à tutela política, cria dois problemas: o da\ndesresponsabilização do Estado perante as obras, perante a gestão do parque escolar, e o da opacidade e da\nfalta de transparência na forma como são escolhidas e adjudicadas e feitas as intervenções, como bem referiu\na Sr.ª Deputada Ana Drago.\nComo é que a Parque Escolar, hoje, escolhe e determina qual é a equipa projectista ou o gabinete de\narquitectos que vai fazer um determinado projecto? É só isso que importa conhecer.\nPor outro lado, também é preciso questionar o modelo de empresarialização da gestão do parque escolar,\nque corre em paralelo com o ataque à democracia interna das escolas, com uma política de levar o Ministério\nà parte da gestão política da escola e de atribuir tudo o mais a uma empresa. Afinal de contas, o que aqui se\nfaz é também a empresarialização do parque escolar – aliás, se o Governo seguir o mesmo rumo nesta\nmatéria como noutras, em última instância, até poderá ocorrer a privatização dessa empresa, com tudo o que\nisso pode significar!", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Temos já hoje a gravidade de existir uma empresa que foge ao escrutínio público e que foge à capacidade\nde fiscalização desta Assembleia. O PCP requereu, aliás, as listas de todas as intervenções e os critérios que\npresidiram à escolha dos ajustes directos, mas o que recebeu foi apenas o relatório e contas da empresa,\nonde está uma lista que refere o que foi feito por ajuste directo, sem qualquer justificação para os ajustes\ndirectos.\nIsto não pode, de facto, continuar a suceder!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PCP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Presidente", 
+   "text": "Para pedir esclarecimentos, tem a palavra a Sr.ª Deputada Paula Barros.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "Sr.ª Presidente, Sr. Deputado Miguel Tiago, para o Partido Socialista é um\nmotivo de orgulho que o Sr. Deputado tenha trazido hoje este tema à Assembleia da República.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "E este tema é aqui trazido porque há obra feita,»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do PS", 
+   "text": "Claro!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "… porque há muita construção em termos de parque escolar, como o Sr.\nDeputado reconheceu do alto da tribuna.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "A Sr.ª Deputada Ana Drago também se referiu a montantes investidos em\nobras necessárias. Com certeza, orgulha-nos que, de facto, em prol da melhoria de condições do sistema de\neducação em Portugal, em prol da igualdade de oportunidades para todos os alunos no acesso ao\nconhecimento com qualidade, se faça investimento, investimento que aqui foi reconhecido por vós.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Protestos do Deputado do PCP Miguel Tiago.", 
+   "type": "protesto"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "Já não podemos concordar – e isto foi recorrente na sua intervenção – que\ntenha a cisma das inaugurações que o Primeiro-Ministro faz! E o Sr. Deputado tem essa cisma por uma\nquestão meramente político-partidária,»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "E os ajustes directos?", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "… preferindo pôr de lado o que significa este investimento em termos de\nparque escolar, no que se refere à elevação da qualidade e à igualdade de oportunidades para todos os\nalunos no acesso a equipamentos com qualidade.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "Sr. Deputado, também reconhecemos que, se há problemas no que diz\nrespeito à questão das obras na Escola Secundária Garcia de Orta, eles devem ser assumidos e devem ser\npedidas responsabilidades a quem as tem. O que já não podemos permitir é que o Sr. Deputado confunda «a\nárvore com a floresta» e venha pôr em causa uma política de investimento em educação como não há\nmemória.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "De facto, o investimento que está a ser feito não é, meramente, em termos de recuperação do que já\nexiste, é um investimento que está a ser feito de raiz em muitos locais, investimento esse no qual as\nautarquias têm sido, verdadeiramente, parceiras. Pergunto-lhe, por isso, Sr. Deputado (porque isso, sim, podia\nincomodar-nos), se alguma autarquia, da CDU, por exemplo, se sentiu discriminada neste processo.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PS.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "E qual é o pensamento dos autarcas da CDU em relação a este investimento que está a ser feito,\ninvestimento sobre o qual eles tinham uma responsabilidade directa?", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "E os ajustes directos?", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Paula Barros", 
+   "text": "Neste momento, há uma responsabilidade do Governo em termos de\ninvestimento, que eu saiba, apoiada pelos autarcas e pela sociedade em geral.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PS.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para responder, tem a palavra o Sr. Deputado Miguel Tiago.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Sr.ª Presidente, a intervenção da Sr.ª Deputada Paula Barros é a\nconfirmação de tudo aquilo que referi do alto da tribuna.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "João Oliveira", 
+   "text": "Exactamente!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "O que tentei expressar foi, precisamente, esta tentativa de o Governo utilizar\na escola pública como um instrumento de campanha e de propaganda»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do PCP", 
+   "text": "Exactamente!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "… e de se servir do facto de a escola pública ter atingido um ponto de\nruptura para justificar que os negócios sejam feitos de qualquer forma. E isso não aceitamos!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Exactamente!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "A Sr.ª Deputada veio aqui fazer esse exercício, dizendo: «O investimento é\nimportante, as escolas precisam e, portanto, podemos fazê-lo à pressa, «à balda» e sem reflexão!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Mota Andrade", 
+   "text": "Não, não!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Foi esse o exercício que a Sr.ª Deputada tentou aqui fazer.\nO que o PCP aqui trouxe foi a ausência de transparência, a opacidade na forma como a Parque Escolar\ngere e o que a Sr.ª Deputada nos trouxe foi a importância da intervenção, que é precisamente o argumento\nque o Governo sempre tem utilizado. Ainda o PS e o PSD andavam a esconder o estado em que o parque\nescolar português se encontra já o PCP trazia a esta Casa, sucessivamente, perguntas, requerimentos e\nprojectos para intervir no parque escolar.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Protestos do PS.", 
+   "type": "protesto"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Francisco de Assis", 
+   "text": "Sempre na frente! É uma espécie de vanguarda!…", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Sr.ª Deputada, eu próprio fiz diversas visitas a escolas «a cair de podre»,\npermita-me a expressão, formulei perguntas ao seu Governo na passada Legislatura e a resposta foi sempre a de que não havia possibilidade, até que surgiu a magna oportunidade de fazer este investimento sem\nescrutínio, de entregar a quem apetece ou a quem o Governo escolhe, sem explicar como, um conjunto muito\nsignificativo de verbas públicas.\nDe facto, foram o PS e o PSD que permitiram que o parque escolar chegasse ao ponto em que estamos e,\nportanto, não podem agora, também, usar a degradação do parque escolar como pretexto para fazer o\nnegócio da forma que bem lhes apetece. Há normas a que devem obedecer e, também, o princípio da\ntransparência nas contas públicas»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Sobre isso não disse nada!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "… não pode ser trucidado ou cilindrado só porque a Sr.ª Deputada Paula\nBarros considera que as obras são muito importantes, independentemente dos tectos caírem e tal» – isso é\num percalço!\nSr.ª Deputada, sobre a qualidade das obras, gostaria de dizer o seguinte: obviamente, há obras mais bem\nsucedidas e outras menos bem sucedidas, mas o que está em causa é que isso ilustra precisamente a forma\ncomo a Parque Escolar tem pressionado e, por isso, pago acima da tabela às empresas de construção civil\npara fazerem as obras apressadamente, com mais recursos, para que o Sr. Primeiro-Ministro possa pulular de\nescola em escola com o seu sorriso, juntamente com o da Sr.ª Ministra da Educação, usando a escola pública\ncomo elemento da sua campanha de propaganda. E isso o PCP também não admite!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PCP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para pedir esclarecimentos, tem a palavra o Sr. Deputado Emídio\nGuerreiro.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Emídio Guerreiro", 
+   "text": "Sr.ª Presidente, o Sr. Deputado Miguel Tiago traz aqui hoje um tema\nimportante que é bem o espelho de como uma boa ideia pode ser, depois, mal concretizada. Digo que é uma\nboa ideia porque não nos parece mal o facto de o Estado, em determinado momento, ter procurado responder\na uma necessidade, a de requalificar o parque escolar existente, recorrendo a mecanismos que facilitem e\nagilizem todos os procedimentos. Mas o que poderia ser uma boa ideia não é, depois, bem concretizada por\numa outra razão, que veremos mais à frente.\nCom efeito, não me parece mal aquele investimento que o PSD, ao longo dos últimos meses, procurou dar\ncomo exemplo do que é um bom investimento público: o investimento de proximidade. Isto é, aquele que tem\nrepercussão exactamente na zona onde é feito, que mobiliza os agentes. E não podemos esquecer – e aqui\nestá a tal questão da má concretização de uma boa ideia – o que o Partido Socialista e o Governo quiseram\nfazer logo no arranque deste programa, que foi criar mecanismos de acesso às pequenas e médias empresas,\nàs empresas das regiões onde as escolas iam ser recuperadas, mas dificultando o acesso dessas mesmas\nempresas.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Pedro Duarte", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Emídio Guerreiro", 
+   "text": "Assim, concentraram, logo à partida, um volume grande de obras em\nmeia dúzia de grupos, com dispersão de norte a sul do País, inviabilizando desta forma o que nós\ndefendíamos como sendo uma boa solução, ou seja, um bom exemplo do que é um investimento público de\nproximidade. Mas, graças ao debate que se fez oportunamente sobre esta matéria, foi possível corrigir\nalgumas dessas assimetrias da primeira intenção do Governo neste âmbito.\nTambém queria dizer que o que poderia ser, de facto, uma boa ideia fica prejudicada quando, no\nlançamento ou na concretização da mesma, desde logo percebemos que há uma falta de transparência\nenorme em todo o processo. Há uma grande opacidade à volta de tudo isto, que cria um conjunto de situações\nque todos vamos conhecendo à medida que vão sucedendo e sendo publicitadas e que, de facto, diminui a\nimportância deste programa.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Emídio Guerreiro", 
+   "text": "Termino, dizendo o seguinte: nesta matéria da renovação do parque escolar, ao contrário do que possa\nparecer, em virtude do que foi dito por alguns partidos, o PSD tem muito orgulho do seu passado. Recordo\nque, de 1985 a 1995, nos 2.º e 3.º ciclos e no secundário, construímos de raiz mais de 800 escolas, e\ngostaríamos que este projecto de recuperação de escolas, em vez de andar na casa das dezenas por ano, já\nultrapassasse a largas dezenas, para, aí sim, ouvirmos o Partido Socialista dizer «já fizemos o mesmo que\nvós».\nNão ouvimos, porque ainda lhes falta muito que caminhar!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PSD.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para responder, tem a palavra o Sr. Deputado Miguel Tiago.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "Sr.ª Presidente, Sr. Deputado Emídio Guerreiro, já estamos habituados a\nque o PS e o PSD façam essa «briga« de ver quem fez pior, mas não nos vamos meter nela»\nSr. Deputado Emídio Guerreiro, da parte do PCP também não há qualquer aversão ao princípio da\nsimplificação e da agilização destes trabalhos, bem pelo contrário, mas isso não pode justificar que se\ncontornem todos os mecanismos de garantia da transparência nas contas públicas…", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Emídio Guerreiro", 
+   "text": "Claro!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Miguel Tiago", 
+   "text": "… e que com base nisso se diga «para ser rápido, não explicamos como é\nque foi».\nIsto não é de todo admissível mas é o que o Governo tem feito, não só com a Parque Escolar como num\nconjunto de outras matérias e áreas. Esta é a questão central que aqui trazemos, mas não deixámos de trazer\noutras preocupações, nomeadamente a de saber o que fica nas escolas.\nEstamos a ver que Governo utiliza uma intervenção física junto da escola para, de certa forma, branquear\naquela que foi uma política educativa desastrosa e que destruiu o interior da escola: desmobilizou os recursos\nhumanos, professores, funcionários, auxiliares da acção educativa; atacou os direitos dos estudantes,\nconverteu-os em números e em estatísticas para satisfazer as metas que o próprio Governo se propôs.\nPortanto, esta também é uma preocupação que não se desliga da Parque Escolar, porque esta, de acordo\ncom o decreto-lei que a cria, passa a gerir o parque escolar.\nSr. Deputado, além de termos agora um director que já não obedece democraticamente a ninguém a não\nser ao Ministério da Educação e às direcções regionais, passamos a ter uma empresa que determina se o\nrefeitório da minha escola é concessionado ou não, se a papelaria é privatizada ou não, quando é que fazem\nfalta os computadores, quantos computadores se compram» Portanto, tudo isto se reveste de um carácter\nabsolutamente inaceitável do ponto de vista político do Partido Comunista Português.\nSr. Deputado, quero ainda responder-lhe a uma questão bastante importante que colocou, relativa às\nempresas envolvidas, porque aí também se demonstra bem a ausência de transparência e a forma como o\nGoverno tem vindo a criar aqui «bolos» que entrega a quem escolhe e não explica como escolhe.\nO Governo foi questionado em boa hora por um conjunto de empresas sobre os procedimentos da Parque\nEscolar. E o que é que o Governo fez? Viu que tinha de alterar o seu procedimento e que não podia justificar\natribuições de pequenas obras apenas a grandes construtoras. Então, o que é que fez? A Parque Escolar\nagrupou as pequenas obras de maneira a criar grandes «bolos» de obras para que, na mesma, só as grandes\nempresas lhes pudessem aceder.\nDiz-nos o Governo que estão envolvidas 2700 empresas em contratações com a Parque Escolar. Ora, aqui\nestá a contar não só com as empresas de construção mas também com as empresas até de equipamentos\nelectrónicos. Mas, mesmo assim, a Parque Escolar contratualiza apenas, na verdade, com cerca de 500\nempresas. As outras 2200 empresas que o Governo anuncia são subempreitadas contratadas pelas grandes\nempresas, que abocanham a fatia de leão. E, portanto, as pequenas e médias empresas das regiões acabam,\nde facto, por estar com «a mão na massa», literalmente, mas a massa toda — a outra massa — fica nas mãos\ndas grandes.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PCP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Não havendo mais inscrições para declarações políticas, passamos\nao próximo ponto da nossa ordem do dia que consiste na discussão, na generalidade, dos projectos de lei n. os\n49/XI (1.ª) — Nomeação e cessação de funções dos membros das entidades reguladoras independentes\n(PSD) e 55/XI (1.ª) — Nomeação, cessação de funções e impugnação do mandato dos membros das\nentidades administrativas independentes (CDS-PP).\nPara uma intervenção, tem a palavra o Sr. Deputado Jorge Bacelar Gouveia.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Jorge Bacelar Gouveia", 
+   "text": "Sr.ª Presidente, Srs. Deputados: O projecto de lei n.º 49/XI (1.ª),\nda autoria do PSD, tem um central propósito — equilibrar o sistema político português em matéria de\ndesignação e demissão dos titulares de órgãos directivos das entidades administrativas independentes.\nInfelizmente, têm sido muitas as suspeitas — para não dizer certezas — sobre a governamentalização de\nalgumas destas entidades, ditas e consideradas por muitos, ou por poucos, como independentes. Aliás,\nparece cada vez mais seguro que para serem independentes não basta que se comportem como tal — e,\nainda por cima, isso nem sempre sucede —, é igualmente necessário que quem designa os respectivos\ndirigentes tenha um insuspeito estatuto de intervenção política suprapartidária, necessidade que agora se\nsente ainda com máxima premência neste contexto de um Governo minoritário.\nDaí que a melhor solução só possa ser a de fazer intervir na nomeação e demissão dos dirigentes das\nentidades reguladoras independentes o Presidente da República, que no nosso sistema constitucional se\ncoloca numa posição de independência, em consonância, aliás, com uma ininterrupta tradição política que a\nsucessão de chefes de Estado nesta III República democrática só tem confirmado.\nO Presidente da República é sempre «o Presidente de todos os portugueses» e, por isso mesmo, julgamos\nser inteiramente boa a opção de lhe atribuir a tarefa de designar e demitir os titulares dos órgãos directivos das\nentidades reguladoras independentes.\nDe resto, esta intervenção presidencial em órgãos autónomos e independentes já está constitucionalmente\nprevista em situações análogas. Recorde-se a nomeação do Procurador-Geral da República ou a nomeação\ndo Presidente do Tribunal de Contas.\nSe ao Presidente da República se reconhece legitimidade política para designar estes titulares, coisa que\naté ao momento ninguém contestou, nem mesmo o pensador mais retrógrado, por maioria de razão se lhe\ndeve reconhecer a legitimidade política para nomear os titulares de organismos que vão desenvolver uma\nactividade similar, em que se assinalam todas as características de independência, de imparcialidade, de\nequidistância e de neutralidade, com elevadíssima repercussão na estabilidade da actividade económica e na\nprotecção dos direitos fundamentais dos cidadãos.\nSublinhem-se ainda, a este propósito, as interessantes palavras do Dr. Jorge Sampaio, antigo Presidente\nda República e insuspeito socialista, em Dezembro de 2004, ao considerar conveniente a atribuição ao chefe\nde Estado deste tipo de competência.\nMas, para se ilustrar melhor a lógica intrínseca do projecto do PSD que agora se discute, importa também\nobservar que a nomeação final a cargo do Presidente da República não surge como um acto isolado, antes\nexprime o termo de um procedimento em que intervém o governo, que formula uma proposta, e a que se\nsegue a participação da Assembleia da República através da audição do indigitado.\nEis um triângulo virtuoso, que envolve na nomeação dos titulares dos órgãos directivos das entidades\nreguladores administrativas independentes todos os órgãos políticos de soberania, sem concessões à maioria\nou à oposição, mas introduzindo um novo paradigma de partilha de responsabilidades, muito mais adequado\nàs condições de independência em que estas entidades são chamadas a trabalhar.\nÉ assim que о PSD vê a acção destas entidades, a quem repetidamente o povo português, os agentes\neconómicos e os consumidores em geral têm atribuído um papel de esperança na efectivação da sua acção\nreguladora.\nOxalá os partidos políticos representados na Assembleia possam ver os sinais dos tempos e tenham a\naudácia de remodelar o mecanismo de escolha destes dirigentes, sobre quem vai recaindo uma crescente\nresponsabilidade de um Estado mais regulador e em que a governamentalização só contamina o êxito da sua\nmissão.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PSD.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Tem a palavra a Sr.ª Deputada Cecília Meireles para uma\nintervenção.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: O CDS sempre defendeu a\neconomia de mercado e a liberdade de concorrência. Esta defesa tem, contudo, um pressuposto fundamental:\nos mercados têm de ser transparentes e têm de actuar com responsabilidade ética.\nNão é possível, actualmente, pôr de lado esta dimensão essencial de responsabilidade ética, para a qual,\naliás, a crise económica veio chamar a atenção, muitas vezes de formas bastante infelizes. Temos de saber\nresponder a estas novas exigências e encontrar soluções inovadoras que acompanhem o evoluir da realidade\neconómica.\nNum Estado de direito os mecanismos de regulação têm de ser fortes e, simultaneamente, prudenciais,\ncapazes de assegurar uma verdadeira transparência no mercado e de retirar consequências da\nresponsabilidade dos agentes económicos.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Pedro Mota Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "Só há sã concorrência quando ela é realmente livre e isto significa\nque aos agentes económicos tem de ser garantida igualdade de oportunidades e que tem de haver\nmecanismos eficazes que previnam distorções e sancionem os abusos.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do CDS-PP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "É neste contexto que o CDS vem apresentar este projecto de lei, que visa criar sistemas de regulação mais\neficientes, mais ágeis e mais independentes. Para tal temos várias propostas, a primeira das quais diz respeito\nà nomeação dos membros das entidades administrativas independentes.\nPara reforçar esta independência é preciso assegurar que há uma participação alargada de vários órgãos\nde soberania nesta nomeação, não podendo, nem devendo, o governo ser o único a intervir nela, como\nactualmente acontece, tanto mais que a independência destas entidades face exactamente ao Governo é\nfundamental.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Pedro Mota Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "Temos, aliás, alguns exemplos menos felizes, que em nada abonam\nem relação a esta tese da independência. O mais flagrante de todos eles é o caso da supervisão bancária ou,\nmelhor, da inacção que caracterizou esta supervisão,»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do CDS-PP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "» e que pudemos ver em vários casos a que fomos assistindo ao longo dos anos: primeiro o BCP, depois o\nBPN e, por último, o BPP.\nAliás, os mais atentos não só a estas questões mas também ao que se passa na sociedade americana\npodem, por exemplo, ver aquilo que está a acontecer com a renomeação do Presidente da Reserva Federal\nAmericana, o Sr. Ben Bernanke, que foi chamado a responder, em vários locais, por aquilo que fez, pela forma\ncomo combateu a crise económica, pela forma atempada, ou não atempada, como reagiu a essa mesma crise,\nque medidas tomou, de que forma exerceu o seu mandato. E é através precisamente dessa fiscalização que\npode ser assegurada a independência dos órgãos de supervisão.\nOu seja, não podemos considerar que a independência significa que não há fiscalização. Independência\nquer dizer que não há pressões, mas significa também que tem de haver fiscalização.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Pedro Mota Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "Compreendemos bem que os reguladores têm de ser livres de\nqualquer pressão — esse não é um princípio que esteja aqui em discussão —, mas tem de haver uma forma\nde, numa situação-limite e em circunstâncias particularmente graves, poder existir uma impugnação de\nmandato.\nOra, para além da participação de três órgãos de soberania diferentes na nomeação — o Presidente da\nRepública nomeia, sendo precedida esta nomeação de audiência parlamentar dos indigitados e mantendo o\ngoverno o exclusivo da iniciativa nesta matéria —, vimos propor também que possa haver, em casos\nparticularmente graves e que estão fixados taxativamente na lei, por iniciativa ou do governo ou da Assembleia\nda República (neste caso, por proposta de um mínimo de um quinto de Deputados), impugnação de mandato\ndo membro de um órgão de regulação.\nEste procedimento é muito rigoroso e muito exigente, mas permite responder exactamente a estas\nsituações-limite e encontra uma saída para que a fiscalização possa ser eficaz e dela sejam retiradas\nconsequências.\nPor último, e também no sentido de garantir esta independência, criamos um sistema de incompatibilidades\nespecíficas quanto ao exercício de funções em empresas e em associações sindicais e patronais que digam\ndirectamente respeito ao sector em que o regulador vai actuar.\nPor último, queria falar do problema da inconstitucionalidade. A existir — admitindo-se que exista, mas\nesse assunto também está aberto à discussão —, e antecipando já um argumento, gostaria de dizer que\nestamos em ano de revisão constitucional, pelo que, desde que haja vontade política nesta Câmara, é um\nproblema que facilmente poderá ser resolvido.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do CDS-PP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado Pedro Filipe\nSoares.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Pedro Filipe Soares", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: As entidades reguladoras são-\nnos apresentadas como grupos de peritos supostamente independentes que, no fundo, encarnam o modelo\nneoliberal de «menos Estado e mais mercado».", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Paulo Portas", 
+   "text": "É mais Estado!… É um Estado mais forte!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Pedro Filipe Soares", 
+   "text": "Dizem-nos que as entidades reguladoras por si só servem para fazer o\nbem no mercado, que com as entidades reguladoras tudo vai bem no mercado. Percebemos que a realidade é\nbem diferente — aliás, os exemplos mostram-nos essa mesma realidade.\nA Autoridade da Concorrência diz-nos que tudo vai bem no mercado da energia, no entanto percebemos\nque para a Galp tudo vai bem: tudo vai bem com os milhões apresentados como lucros; e tudo vai bem na sua\nforma de lidar com os preços dos combustíveis para os portugueses.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do BE", 
+   "text": "Exactamente!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Pedro Filipe Soares", 
+   "text": "Mas para os portugueses é que as coisas já não são dessa maneira.\nPara os portugueses vemos que as políticas de preços, com que a Autoridade da Concorrência concorda, são\nlesivas para os portugueses e são lesivas, inclusive, no contexto da União Europeia.\nA Galp aumenta os preços — diz a empresa — impulsionada pelo preço do petróleo; a Galp diminui o\npreço muito, mas muito mais suavemente do que os aumenta»! E esses lucros que a Galp apresenta á custa\nde nós todos são sancionados e aceites pela Autoridade da Concorrência.\nPor outro lado, temos a Entidade Reguladora dos Serviços Energéticos (ERSE). Percebemos que a\n«música» é diferente mas a «moda» vai dar ao mesmo!… A electricidade, em Portugal, aumentou este ano 2,9%, muito acima, portanto, da taxa de inflação, cerca de\noito vezes acima da taxa de inflação. Será que este preço se deve a um aumento do custo da electricidade no\nprodutor? Não! Os portugueses pagam mais do que todos os outros povos da Europa pelo preço da\nelectricidade no produtor, mas a ERSE, a tal entidade que regula a concorrência, diz-nos que tem de ser\nassim, que tudo vai bem porque ela está cá para garantir que pagamos o que é justo. Mas é justo apenas para\nos accionistas da EDP e é muito pouco justo para os portugueses.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do BE", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Pedro Filipe Soares", 
+   "text": "Passando aos diplomas em discussão, quero começar por referir um\nponto em que estamos em absoluto desacordo com a bancada do CDS. Para nós é claro que estes diplomas\nsão inconstitucionais, pois alteram a esfera de interesses do Presidente da República, indo para campos que\nsão do âmbito do Governo. Esta é uma opção pela presidencialização com a qual não estamos de acordo.\nPor outro lado, parece-nos também uma opção puramente conjuntural por parte da direita. Será que, se\nfosse outro o Presidente da República, a opinião seria a mesma? Parece-nos que não»!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do BE", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Pedro Filipe Soares", 
+   "text": "Um terceiro ponto das propostas apresentadas representa um claro\nmenosprezo do papel da Assembleia da República, no sentido em que somos ouvidos a título meramente\nconsultivo e não vinculativo.\nÉ, portanto, um espaço para o clientelismo entre o Governo e o Presidente da República, ao qual a\nAssembleia da República apenas terá de bater palmas, porque nada mais lhe é pedido.\nPor último, chamo a atenção para a alteração de opinião por parte da bancada do CDS: é porque a\ninconstitucionalidade que apontei aqui já foi apontada por essa bancada na anterior legislatura. Por isso era\nalgo a que deveriam estar atentos e que deveriam ter levado em consideração.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Cecília Meireles", 
+   "text": "Mas eu já lhe respondi!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Pedro Filipe Soares", 
+   "text": "Por outro lado, a própria base do vosso projecto de lei já foi revista pelo\nPSD. De facto, lembro que, na discussão ocorrida na anterior legislatura, a lista apresentada pelo PSD, que foi\ncorrigida por este projecto de lei, continua a ser uma lista que os senhores apresentaram e que tem em falta\ndiversas entidades. E passo a nomeá-las: a Entidade Reguladora da Saúde (ERS), o Instituto Portuário e dos\nTransportes Marítimos (IPTM), o Infarmed» Deviam ter feito todo o trabalho de casa. Parece que isso não\naconteceu desta vez.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do BE.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado Agostinho\nLopes.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "Sr.ª Presidente, Srs. Deputados: A crise no sistema capitalista pôs a nu\ncom um enorme estrondo o rotundo falhanço das ditas entidades de regulação e supervisão.\nMas estas tiveram, mais uma vez, uma evidente utilidade política e ideológica: permitiram uma resposta\nfácil e mistificadora às causas da crise e aliviaram, iludiram a responsabilidade política das classes dominantes\ne do seu pessoal político do regabofe da especulação financeira e bolsista. Melhor: estes aparecem, agora,\ncomo «salvadores da pátria», à custa dos contribuintes, na limpeza do lixo financeiro, dito «tóxico».\nCá na terra, não foi diferente: Banco de Portugal e Comissão do Mercado de Valores Mobiliários tudo\npermitiram, com o ámen de sucessivos governos, e, agora, paga a Caixa Geral de Depósitos, paga o\nOrçamento do Estado, isto é, pagam os portugueses!\nÉ nesta onda que navegam os projectos de lei do PSD e do CDS-PP, como navegam igualmente a onda —\ne não preciso de citar aqui o presidente da Câmara Municipal de Lisboa, António Costa — da completa descredibilização das outras entidades reguladoras: de uma Autoridade da Concorrência, que não vê a\nconcertação dos preços dos combustíveis nos painéis que semeou para combater a concertação; de uma\nAutoridade da Concorrência, que não vê a violação da concorrência e dumping na venda a baixo de custo pela\ngrande distribuição, que não enxerga abusos de posições dominantes e de dependência económica nas\nrelações dos grupos monopolistas e oligopolistas com os seus fornecedores e clientes; ou de uma ERC, que\nacha que o facto de o aumento médio mensal da factura de electricidade, de 1,07 €, absorver todo o aumento\nque o Governo propõe para os reformados de baixas pensões, de 1,3 €, nada tem a ver com o facto de a EDP\nrealizar, pelo quinto ano consecutivo, lucros de 1000 milhões de euros»!\nMas também estas entidades desempenham uma importante tarefa política: desresponsabilizam o Governo\ne a política de direita de decisões que se confrontam escandalosamente com os interesses dos portugueses e\nda economia nacional!", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Claro!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "No processo de reconfiguração neoliberal do Estado, elas aparecem\ncomo um «segundo governo», não responsabilizado perante os eleitores e por cujas decisões a Assembleia\nda República não pode pedir responsabilidades ao Governo, numa aparente independência institucional e\nneutralidade técnica, ao arrepio da Constituição.\nO PSD e o CDS propõem-se, agora, completar o formalismo legal deste «segundo governo», com a\naudição na Assembleia da República e a nomeação pelo Presidente da República, o que só poderia fazer\naumentar a mistificação em torno destas entidades e da sua total e sistemática captura pelos poderes\neconómicos.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do PCP", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "Antes, para o PCP, a responsabilidade directa, clara e transparente do\nGoverno, que é, entre outras coisas, quem vai ser julgado pelos eleitores.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PCP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra a Sr.ª Deputada Isabel Oneto.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Isabel Oneto", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: Em 2002, o Partido Socialista\napresentou a esta Assembleia um projecto de lei que pretendia instituir a lei-quadro das entidades\nadministrativas independentes.\nPara o que agora interessa e é matéria deste debate, a proposta do PS determinava que:\n— O processo de criação destas entidades cabia à Assembleia da República\ne\n— O controlo da sua actividade regular competia à comissão parlamentar em função da matéria.\nTal projecto de lei foi rejeitado com os votos do PSD e do CDS, então maioria neste Parlamento.\nFundamentos então apresentados pelo CDS:\nPela voz do então Deputado Diogo Feio, o CDS afirmava — e passo a citar — que não se podia tratar «de\nmodo igual, mesmo num plano meramente genérico, realidades tão diversas como a regulação da Bolsa, a\ndas telecomunicações ou a do gás e da electricidade».\nPor seu turno, o PSD, pela voz do Deputado Pinho Cardão, considerava — e passo a citar — que no\nprojecto de lei do Partido Socialista «a necessidade de intervenção da Assembleia da República é obsessiva\nem todo o articulado», isto porque a Assembleia da República (e volto a citar) estava «sempre presente na\nvida e no funcionamento das Autoridades Reguladoras Independentes, desde a sua criação à nomeação dos\nresponsáveis, à definição das orientações estratégicas, à aprovação de estatutos, à aprovação da estrutura\norgânica, à consulta e à verificação da sua actividade. Com tanta tutela — dizia o PSD — parece não sobrar\nindependência»«.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Isabel Oneto", 
+   "text": "Aliás, o PSD chegou mesmo a argumentar que não descortinava as razões pelas quais a criação das\nautoridades administrativas independentes deveria revestir a forma de lei, conforme o PS propunha, na\nmedida em que tal matéria se inscrevia na competência organizativa do Governo — Vide o Diário da\nAssembleia da República, I Série, n.º 86, de 13 de Fevereiro de 2003.\nO projecto de lei do PSD hoje em debate retoma a proposta já apresentada em 2007. E se, em 2002,\nconsiderou excessiva — mais correctamente, «obsessiva» — a intervenção desta Assembleia no processo de\ncriação das entidades administrativas independentes, em 2007, tal como agora, o PSD remete a Assembleia\nda República para uma função meramente consultiva, para justificar que afinal a intervenção parlamentar,\nafinal, é insuficiente e que, por isso, a nomeação, sob proposta do Governo, deve competir ao Presidente da\nRepública.\nFicamos esclarecidos!\nMas que posição tomou o CDS-PP face ao projecto de lei do PSD de 2007, e que hoje, aqui, ambos os\npartidos renovam perante este Parlamento?\nSe, quanto aos princípios, às ideias e aos objectivos do projecto de lei do PSD, o CDS-PP estava de\nacordo, o mesmo já não poderia dizer quanto às soluções ali apresentadas.\nDe que discordou, então, o CDS-PP?\nPela voz do Sr. Deputado Nuno Magalhães — veja-se o Diário da Assembleia da República, I Série, n.º 56,\nde 3 de Março de 2007,»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Afonso Candal", 
+   "text": "Ah, não está cá» É melhor chamarem-no!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "José Manuel Rodrigues", 
+   "text": "Ele já falou disso!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Isabel Oneto", 
+   "text": "… o CDS-PP explicou (e passo a citar): «Não só juridicamente, pela\ndificuldade que vislumbramos da conformidade com o artigo 133.º da Constituição, que prevê a competência\ndo Presidente da República quanto a outros órgãos (e que nos parece taxativo), como, politicamente, por nos\nparecer que o escrutínio que defendemos, e é exigível, deve pertencer à Assembleia da República e aos\nlegítimos representantes do povo. Aceitamos, coerentemente com o que sempre defendemos, uma\n‘parlamentarização’, e um reforço da mesma, deste escrutínio, mas não nos parece adequada uma\n‘presidencialização’, que é o que se pretende, que não só não é conforme, juridicamente, com a Constituição\ncomo cremos que, politicamente, poderá criar, ou potenciar, climas de tensão entre órgãos de soberania,\nperfeitamente indesejáveis, e que até vão em sentido inverso à génese da organização do nosso sistema\npolítico.»\nDigo ao CDS-PP e ao Sr. Deputado Nuno Magalhães»", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Afonso Candal", 
+   "text": "Estranhamente, não está cá!» Estranhamente»", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Isabel Oneto", 
+   "text": "… que faço minhas as suas palavras, porque — como bem então referiu o Sr.\nDeputado, e permita-me que o cite uma vez mais — «os poderes que se pretendem instituir ao Presidente da\nRepública dificilmente se encaixam na repartição dos poderes executivo, legislativo e judicial, afastando-o de\num poder moderador, que deve ter, para um poder de direcção que, a nosso ver, não deve possuir».", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Sr.ª Deputada, já ultrapassou largamente o seu tempo» Tem de\nconcluir.", 
+   "type": "presidente_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Isabel Oneto", 
+   "text": "A posição do Partido Socialista é aquela que tinha em 2002: não queremos a\npresidencialização do sistema mas, sim, a parlamentarização do escrutínio das entidades administrativas\nindependentes.\nMuito obrigada pela tolerância, Sr.ª Presidente.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PS.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Artur Rêgo", 
+   "text": "A posição do PS é a de que mais vale quieto do que parado!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado José Luís\nFerreira.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "José Luís Ferreira", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: Voltamos hoje a discutir,\npor proposta do PSD e do CDS-PP, a nomeação e cessação de funções — e a impugnação do mandato, no\ncaso do projecto do CDS-PP —, dos membros das entidades administrativas independentes.\nNos termos de ambos os projectos de lei, os membros dos órgãos de direcção das entidades\nadministrativas independentes são nomeados pelo Presidente da República sob proposta do Governo e após\na respectiva audição pública pela Assembleia da República.\nAmbas as iniciativas legislativas pretendem, portanto, alterar o modo de designação das entidades\nadministrativas independentes.\nEsta solução, envolvendo o Presidente da República, o Governo e a Assembleia da República, suscita-nos,\nporém, as maiores reservas relativamente ao envolvimento do Sr. Presidente da República, no que diz\nrespeito às nomeações das entidades administrativas independentes. Estas reservas têm a ver com o facto de\nas competências do Presidente da República se encontrarem muito bem elencadas na Constituição da\nRepública Portuguesa e, a nosso ver, não poderem ser alteradas por lei ordinária, mas tão-só através de uma\nrevisão da Constituição.\nA solução apontada pelo CDS-PP para ultrapassar esta questão da constitucionalidade é, diria, no mínimo,\nestranha: a ser aprovada, teríamos uma lei que era inconstitucional até haver uma revisão da Constituição — e\numa revisão da Constituição que alterasse as competências do Presidente da República de forma a poder\nnomear a direcção destas entidades — ou, então, teríamos de acrescentar em ambos os projectos de lei, num\nprimeiro ponto, que a entrada em vigor estava dependente de uma revisão da Constituição e, depois, num\nponto seguinte, que essa revisão da Constituição teria de alterar as competências do Presidente da República.\nDiria que esta seria uma solução, no mínimo, original»!\nDepois, quanto ao conteúdo dos projectos de lei — e vou falar apenas daquilo que é comum aos dois —,\ndiz-se quais as entidades administrativas independentes a que a lei se aplica, elencando-as. Porém, metade\ndelas não são entidades administrativas independentes mas, sim, institutos — muitos dos quais até já com\numa designação diferente da que aí consta — e, como sabemos, a natureza jurídica das entidades\nadministrativas é diferente da dos institutos. Assim: o Instituto Nacional de Aviação Civil (INAC) não é uma\nentidade administrativa independente; o Instituto Nacional do Transporte Ferroviário (INTF), que, agora, já não\ntem esta designação, não é uma entidade administrativa independente; o Instituto Regulador das Águas e\nResíduos (IRAR), que, aliás, já tem outra designação, não é uma entidade administrativa independente; e o\nInstituto dos Mercados de Obras Públicas e Particulares e do Imobiliário (IMOPPI) também já não existe, pelo\nmenos, com esta designação.\nPortanto, seria bom que, a serem aprovados (o que duvido), se acrescentassem, no n.º 1 do artigo 1.º do\nprojecto de lei do PSD e no n.º 1 do artigo 2.º do projecto de lei do CDS-PP, alguns dos institutos\nmencionados.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes de Os Verdes e do PCP", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Srs. Deputados, está concluída a discussão conjunta, na\ngeneralidade, dos projectos de lei n. os 49/XI (1.ª) — Nomeação e cessação de funções dos membros das\nentidades reguladoras independentes (PSD) e 55/XI (1.ª) — Nomeação, cessação de funções e impugnação\ndo mandato dos membros das entidades administrativas independentes (CDS-PP).", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Jorge Bacelar Gouveia", 
+   "text": "Peço a palavra, Sr.ª Presidente.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para que efeito, Sr. Deputado?", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Jorge Bacelar Gouveia", 
+   "text": "Para interpelar a Mesa relativamente à condução dos trabalhos. É para solicitar que a Mesa da Assembleia faça chegar aos Grupos Parlamentares do PS, do PCP e também do CDS-PP a acta relativa á discussão aqui realizada em Março de 2007, sobre dois pontos específicos…", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Sr. Deputado, não lhe dei a palavra» Tem de esperar que eu o faça.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Jorge Bacelar Gouveia", 
+   "text": "Peço desculpa, Sr.ª Presidente.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Tem a palavra, Sr. Deputado.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Jorge Bacelar Gouveia", 
+   "text": "Sr.ª Presidente, o meu pedido tem como finalidade esclarecer que o PSD, neste momento, não faz qualquer retoma de um projecto anterior…", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Deputado quer fazer distribuir alguns documentos?» É essa a finalidade da sua interpelação?", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "Jorge Bacelar Gouveia", 
+   "text": "Sim, Sr.ª Presidente.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Muito bem, pode fazê-lo através da Mesa.\nSrs. Deputados, vamos, agora, passar à apreciação dos projectos de resolução n. os 42/XI (1.ª) — Requer a suspensão do Programa Nacional de Barragens com Elevado Potencial Hidroeléctrico (Os Verdes) e 56/XI (1.ª) — Recomenda ao Governo a revisão do plano nacional de barragens de elevado potencial hidroeléctrico (PNBEPH) e a exclusão das barragens de Foz Tua e de Fridão (BE).\nPara uma intervenção, tem a palavra a Sr.ª Deputada Heloísa Apolónia.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: O Programa Nacional de Barragens volta à Assembleia da República mais uma vez por iniciativa do Partido Ecologista «Os Verdes».\nTodos temos ouvido, por diversas vezes, membros do Governo referir que este Programa é de relevante interesse nacional. Os Verdes também consideram esta matéria uma questão de relevante interesse nacional, seguramente por razões diferentes das do Governo. O certo, no entanto, é que o Governo nunca quis discutir com os Deputados, na Assembleia da República, o Programa Nacional de Barragens.\nOs Verdes propõem, através do projecto de resolução n.º 42/XI (1.ª), hoje em discussão, a suspensão do Programa Nacional de Barragens. E por que é que pedimos a suspensão deste Programa? Em primeiro lugar, porque está sustentado num estudo de avaliação estratégica que foi — vou utilizar um eufemismo — completamente manipulado, talvez mesmo manipulado. Este Programa sustenta-se num levantamento feito sobre o potencial hidroeléctrico no País que existe há décadas e que, portanto, está completamente desactualizado. De resto, o mais recente estudo encomendado pela Comissão Europeia vem, justamente, referir essa fragilidade do Programa.\nPor outro lado, ele não tem sequer em conta um documento relevantíssimo que existe em Portugal, que é o Plano Nacional de Acção para a Eficiência Energética, provavelmente porque este Plano está arrecadado na gaveta e o Governo não o quer concretizar. Este Plano sustenta-se num aumento de consumo energético e é muito duvidoso em relação às suas conclusões.\nPor outro lado, este Programa Nacional de Barragens não estudou o impacto cumulativo das barragens propostas com as barragens já existentes, nem tão-pouco fez uma avaliação da potencialidade de aproveitamento das barragens já existentes para os fins a que se propõe com as 10 novas barragens a construir. Para além disso, este estudo de avaliação estratégica não teve em consideração um conjunto de parâmetros fundamentais a uma tomada de decisão desta natureza, como, por exemplo, os efeitos deste Programa sobre o litoral, designadamente ao nível do transporte de inertes e ao nível da qualidade da água.\nDe resto, Sr.as e Srs. Deputados, os estudos de impacte ambiental que se estão agora a fazer em relação a cada uma das barragens estão a revelar impactos sociais, económicos e ambientais muitíssimo superiores aos que o próprio estudo de avaliação estratégica previa.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "Já referi o estudo encomendado pela Comissão Europeia. Trata-se de um estudo independente do qual o Governo tem conhecimento desde Junho de 2009, mas que nunca quis revelar, quis fazer segredo. No entanto, ele foi revelado. Os Verdes já pediram ao Governo o envio da resposta que remeteu à Comissão Europeia relativamente a este estudo, mas o Governo não quer enviar essa resposta ao Parlamento. Para quê tanto secretismo? Porquê esta revelação de interesses em relação a empresas, como a EDP, que tudo têm a ganhar com este Programa Nacional de Barragens em detrimento das populações que tanto têm a perder? Não se compreende a forma como o Governo quer escamotear informação quanto a este Programa. Os Verdes entendem que os Deputados têm o direito de conhecer a informação que é transmitida, designadamente à Comissão Europeia.\nEstas são, resumidamente, as razões que levam Os Verdes a pedir a suspensão do Programa Nacional de Barragens.\nNo entanto — perguntarão alguns Srs. Deputados —, suspender o Programa para quê? Suspender para estudar seriamente o que não está estudado, sem decisões previamente tomadas e sem interesses a tapar a decisão tomada.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Peço-lhe para concluir, Sr.ª Deputada.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "Vou terminar, Sr.ª Presidente.\nÉ necessário realizar um estudo sério e independente relativamente às nossas potencialidades hidroeléctricas, às nossas necessidades de consumo, paralelamente à concretização do Plano Nacional de Acção para a Eficiência Energética. No Ano Internacional da Biodiversidade, o País não pode mandar machadadas à nossa biodiversidade com um programa desta natureza, que se revela profundamente negativo para o País, sem sequer cumprir os objectivos a que se propõe com ele.\nAssim, Os Verdes apelam hoje, aqui, às restantes bancadas que o Programa Nacional de Barragens seja suspenso, para que se possa realizar um estudo sério.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Muito bem!", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Tem a palavra, para uma intervenção, a Sr.ª Deputada Rita Calvário.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Rita Calvário", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: O Bloco de Esquerda propõe hoje a reavaliação do plano nacional de barragens e a exclusão, deste plano, das barragens de Foz Tua e de Fridão.\nE passo a explicar porquê.\nÉ absolutamente justificável pedir a reavaliação do plano nacional de barragens quando é a própria Comissão Europeia que lhe aponta erros graves de concepção. Segundo a Comissão, o plano nacional de barragens não avalia correctamente os custos ambientais e sobrevaloriza os benefícios energéticos avaliados nesse plano. Relativamente aos custos ambientais, diz-nos ainda o relatório da Comissão que Portugal poderá não cumprir a Directiva-Quadro da Água no que se refere à qualidade dos recursos hídricos. Quando temos mais de 50% dos nossos rios extremamente poluídos, percebemos bem a gravidade desta afirmação.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "José Manuel Pureza", 
+   "text": "Muito bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Rita Calvário", 
+   "text": "O Ano Internacional da Biodiversidade, 2010, deve fazer-nos reflectir sobre os graves impactes que estas barragens vão ter ao nível de espécies ameaçadas e de habitats sensíveis.\nHá também outros erros neste plano, porque não estuda os impactos cumulativos destas barragens. Notese que, destas barragens, seis situam-se na bacia hidrográfica do Douro e cinco na sub-bacia do Tâmega, que são bacias já extremamente poluídas e com repercussões graves na erosão do litoral — onde, aliás, o Governo vai gastar 15 milhões de euros para remediar toda a grave erosão que já existe. Portanto, é preciso estudar bem estes impactes para saber com o que contamos.\nExistem também erros nos cálculos energéticos efectuados. Diz-nos o relatório que a produção eléctrica ficará apenas a 67% do estimado no plano nacional de barragens; um valor que será reduzido entre 10% a 30% por razões ambientais; e, se considerarmos o fenómeno das alterações climáticas, será ainda reduzido em mais 55%.\nAs conclusões deste relatório levam-nos a concluir que muita coisa ficou por estudar e que as decisões de avançar com estas barragens não estão devidamente fundamentadas.\nO Governo justifica este plano com a necessidade de incremento da produção eólica. Mas o próprio Governo não sabe bem qual é o valor deste incremento. Diz-nos o Ministério do Ambiente que a capacidade conjunta entre a energia hídrica e a eólica será de 18%; o Ministério da Economia é mais favorável e fala num valor de 30%. Ficamos sem saber qual é o valor real, o que mostra como não há estudos fundamentados sobre esta matéria.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do BE", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Rita Calvário", 
+   "text": "O que os Ministérios também não nos dizem é quanto é que este incremento da produção hídrica e eólica para alimentar as barragens vai custar a cada um dos consumidores domésticos.\nSabemos, no entanto, que há uma vantagem: a tarifa das eólicas é extremamente subsidiada e, portanto, aí reside o interesse. Aliás, foi isso que permitiu que, no início deste ano, Portugal exportasse energia a preço zero para o país vizinho.\nCom o nosso projecto, pedimos também a exclusão das barragens de Foz Tua e de Fridão, porque são erros de escolha. A barragem de Foz Tua vai desactivar uma linha ferroviária com mais de 120 anos de história, extremamente importante para as populações e para o desenvolvimento turístico e económico da região. É, portanto, inadmissível que se avance com esta barragem.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do BE", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "BE", 
+   "speaker": "Rita Calvário", 
+   "text": "A construção da barragem de Fridão irá colocar a cidade de Amarante emparedada entre duas barragens, o que coloca riscos muito sérios em termos de segurança de pessoas e bens, além de contribuir grandemente para a degradação da qualidade da água destes recursos.\nSabemos que tem sido a lógica do negócio a imperar nas decisões tomadas no âmbito do plano nacional de barragens. Por isso, o Governo já concessionou 8 das 10 barragens deste plano, mesmo antes de as decisões estarem fundamentadas em avaliações de impacte ambiental, com prazos bastante longos, que vão de 65 a 75 anos. E fê-lo, porque isso já permitiu arrecadar 600 milhões de euros e foi o truque utilizado por este Governo para reduzir o défice orçamental de 2008.\nNo entanto, a Assembleia da República não pode ser refém destes truques do Governo nem dos negócios dos privados em sectores tão estratégicos como a energia e a água. É por isso que trazemos aqui, à decisão da Assembleia da República, a reavaliação do plano nacional de barragens e a exclusão do erro de incluir neste plano as barragens de Foz Tua e de Fridão.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do BE.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado António Leitão Amaro.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amaro", 
+   "text": "Sr.ª Presidente, Srs. Deputados: Por muito estranho que pareça, sobre este tema conseguimos encontrar no Governo do PS e nos partidos à sua esquerda uma semelhança: apesar de uns serem rosas, outros vermelhos e outros verdes, nesta matéria todos são cinzentos. E cinzentos porquê? De um lado, mais à esquerda, é o cinzentismo do imobilismo, porque perante um projecto com tanto potencial energético e económico,…", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "Está a falar antes do tempo!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amaro", 
+   "text": "… ainda assim o querem parar.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "João Oliveira", 
+   "text": "É a intervenção arco-íris!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amaro", 
+   "text": "É também cinzentismo, porque, parando a construção de barragens, aposta-se mais na energia do petróleo, do carvão e do gás.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PSD.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amaro", 
+   "text": "No entanto, do lado do Partido Socialista também se vê cinzentismo e opacidade: na falta de clareza ambiental; na falta de rigor nos estudos; na falta de avaliação completa dos impactes ambientais; na biodiversidade; no potencial energético; no querer fazer tudo à pressa sem rigor e sem planeamento integrado.\nNão hesitam em propagandear este Programa como sendo investimento público, sabendo que se trata de investimento privado, ou seja, receita pública com despesa privada.\nPorém, este Governo é também cinzento pelos danos que o Programa Nacional, tal como está e sem as dúvidas resolvidas, pode causar à biodiversidade, à qualidade da água e ao ambiente.\nSão conhecidas as críticas que estudos independentes encomendados pela Comissão Europeia fazem ao impacte que este Programa pode trazer na qualidade da água, podendo colocar-se até um problema de cumprimento da Directiva-Quadro da Água.\nHá dúvidas quanto ao impacte na biodiversidade, designadamente em relação a espécies protegidas, que se perdem, ao impacte no turismo e ao impacte nas paisagens. Há dúvidas quanto à forma como se procedeu à avaliação, visto que os efeitos cumulados não foram avaliados e a avaliação foi feita sem haver um planeamento da bacia hidrográfica. Desconhece-se o verdadeiro potencial energético destes projectos, os impactes das alterações climáticas na redução da disponibilidade da água, as reduções que existirão por força das condicionantes das declarações de impacte ambiental nos caudais e, por isso, na quantidade de energia produzida.\nEm suma, há muitas dúvidas que importa esclarecer. E contra este cinzentismo, Sr.ª Presidente e Srs. Deputados, o PSD quer trazer luz e esclarecimento.\nPara que este Programa possa, afinal, ser verde, daremos imediatamente entrada a um requerimento, pedindo que a Sr.ª Ministra venha com urgência ao Parlamento explicar os projectos que estão em causa e esclarecer as dúvidas que existem. Mais: solicitamos a audição das autoridades públicas envolvidas, como a Agência Portuguesa do Ambiente (APA), o Instituto Nacional da Água (INAG) ou a Direcção-Geral de Energia (DGE) e também dos concessionários que nos possam mostrar e esclarecer quais as medidas de mitigação que querem introduzir e das associações representativas.\nQueremos obter o esclarecimento cabal para que este possa ser, verdadeiramente, um projecto verde.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PSD.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado Acácio Pinto.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Acácio Pinto", 
+   "text": "Sr.ª Presidente, Sr.as e Srs. Deputados: Pensávamos nós que a deriva da suspensão, da exclusão e da renúncia eram conceitos abandonados no léxico parlamentar por força de um veredicto popular de há muito poucos meses. Enganámo-nos.\nSenão, vejamos os dois projectos em discussão, de Os Verdes e do Bloco de Esquerda, o primeiro de suspensão de todo o programa e o segundo de revisão e exclusão de algumas barragens do respectivo Programa Nacional de Barragens.\nOra, isto demonstra, mais uma vez, que continua a haver partidos que têm uma grande dificuldade para interiorizarem esse veredicto.\nEntão, como explicar que o Programa Nacional de Barragens com Elevado Potencial Hidroeléctrico fosse suspenso, fosse excluído das opções estratégicas do nosso país, precisamente quando vivemos debaixo da ameaça das alterações climáticas, precisamente neste tempo em que há o maior consenso em torno do aumento do uso das energias renováveis?", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Acácio Pinto", 
+   "text": "Será que queremos continuar a deixar fugir todo um potencial hidroeléctrico, endógeno, que nos atravessa e que aproveitamos em menos de metade (46%), quando a maioria dos países da União Europeia já o explora em mais de 80%? Não, não é essa a nossa opção. É outro, bem diferente, o nosso rumo.  Para nós, o Programa Nacional de Barragens assenta numa perspectiva de desenvolvimento económico e social integrado e sustentável, mas sem esquecer, nunca, a centralidade que hoje assumem as questões ambientais.\nPortanto, o que nós queremos é, com certeza, aumentar a capacidade de produção de energia hídrica em mais 50% relativamente aos actuais 5000 MW instalados. O que nós queremos é, de igual modo e em congregação, potenciar o desenvolvimento e a maximização das outras energias renováveis, nomeadamente a eólica, que permitirão a acumulação potencial de energia através da reversibilidade hídrica. O que nós queremos é, com essa produção de energia, evitar a importação de 3,3 milhões de barris de petróleo, diminuindo a nossa dependência energética do exterior.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "Vozes do PS", 
+   "text": "Muito bem!", 
+   "type": "vozes_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Acácio Pinto", 
+   "text": "O que nós queremos é reduzir 570 milhões de toneladas de emissões de CO2 por ano, que essa produção permite.\nO que nós queremos é criar riqueza, é criar emprego: 2500 milhões de euros de investimento integralmente garantidos pelos privados — sim, pelos privados! — e 10 000 empregos directos e, pelo menos, o dobro de empregos indirectos.\nAfinal, o que querem Os Verdes e o Bloco de Esquerda, partidos que tanto apregoam o combate aos gases com efeito de estufa, que tanto se indignam com as energias fósseis, que tanto combatem este paradigma de desenvolvimento? Parece-me que estamos conversados sobre os seus concretos e reais objectivos.\nÉ que a defesa do ambiente e dos valores ambientais não é uma prerrogativa de alguns partidos, não é uma área de acesso condicionado a partidos políticos. Todos nós temos acesso a essa área.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Queira concluir, Sr. Deputado.", 
+   "type": "presidente_aparte"
+  }, 
+  {
+   "party": "PS", 
+   "speaker": "Acácio Pinto", 
+   "text": "Tanto assim é (e com isto concluo, Sr.ª Presidente) que o Partido Socialista, desde sempre, integrou as questões ambientais no seu programa, no seu discurso e na sua praxis de governo, como é o caso do Programa Nacional de Barragens.\nPortanto, Sr.as e Srs. Deputados, esperamos com serenidade pelo desenrolar dos processos de impacte ambiental, pelos processos de avaliações ambientais em curso que vierem a ser definidos.\nPor nós e para nós, o Programa Nacional de Barragens com Elevado Potencial Hidroeléctrico é para prosseguir, não por ser bom para o PS, mas por ser bom para a economia, para o ambiente e, afinal, para Portugal e para os portugueses.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PS.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado João Pinho de Almeida.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "João Pinho de Almeida", 
+   "text": "Sr. Presidente, Srs. Deputados, o aproveitamento dos recursos hídricos nacionais é, para o CDS, da mais elementar importância e constitui uma prioridade natural.\nSofremos já bastante, neste momento, e fomos sofrendo ao longo dos anos por não termos sido capazes de aproveitar esse recurso e por tantas vezes termos adiado decisões com ele relacionadas.\nPor isso, entendemos que o Programa Nacional de Barragens é importante do ponto de vista desse aproveitamento, do ponto de vista de outra aposta que Portugal está a fazer, e bem, nas energias renováveis, designadamente na energia eólica e, para conjugar o aproveitamento de uma e de outra, é essencial que o Programa Nacional de Barragens avance.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "João Pinho de Almeida", 
+   "text": "Mas não podemos deixar de dizer que é lamentável a forma como o Partido Socialista tem conduzido este processo.\nÉ lamentável porque priorizou o encaixe financeiro à avaliação do impacte deste Programa. Priorizou o equilíbrio do défice em 2008, encaixando imediatamente as contrapartidas das adjudicações das concessões destas barragens, não fazendo em tempo útil os estudos de impacte ambiental, o que faz com que, agora, seja a própria Comissão Europeia a criticar severamente a forma como este plano está a ser construído. E nós fazemos eco dessas preocupações da Comissão Europeia, porque entendemos que, do ponto de vista da qualidade da água, é uma irresponsabilidade avançar com o Programa tal qual ele está definido. Se o fizermos, vamos, com certeza, incumprir a directiva da água e ser penalizados por isso.\nOra, entendemos que, quer do ponto de vista da potência, quer do ponto de vista do número de barragens, provavelmente, este plano está para além do que era necessário e prejudica, assim, o cumprimento da directiva da água e também a biodiversidade e a qualidade de vida nalgumas das regiões onde se pretendem implantar barragens.\nÉ por isso que o Sr. Deputado Altino Bessa, daqui a pouco, se pronunciará em concreto sobre as duas barragens de que fala o Bloco de Esquerda.\nDevo ainda dizer que, pela irresponsabilidade do Partido Socialista, não podemos fazer uma outra irresponsabilidade. Estando, neste momento, já comprometido pelo Partido Socialista, e mal, o que existe relativamente às concessões, suspender todo o Programa seria uma irresponsabilidade. É por isso que entendemos que não se pode suspender o Programa, mas de forma alguma se poderá compactuar com a forma como o Partido Socialista o tem conduzido.\nPortanto, bater-nos-emos para que haja alterações profundas no Programa Nacional de Barragens, mas que não passem, mais uma vez, por adiarmos o investimento na exploração dos recursos hídricos, porque esse adiamento prejudicaria o País.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do CDS-PP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, tem a palavra o Sr. Deputado Agostinho Lopes.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "Sr.ª Presidente, Srs. Deputados: O Governo e o PS transformaram as energias renováveis, pese a ficção dos valores propagandeados e o plano nacional de barragens, numa «cortina de fumo» para iludir e justificar os brutais custos energéticos, eléctricos e de combustíveis com que os portugueses e as empresas portuguesas se confrontam.\nCom o plano nacional de barragens, fizeram de um objectivo justo, o aproveitamento do potencial hidroeléctrico do País, a justificação para um escandaloso negócio de privatização do sistema electroprodutor português, assim obtendo também receitas extraordinárias — o tal partido que não recorria a receitas extraordinárias! — para a sua espantosa consolidação orçamental, que ficámos agora a conhecer com o Orçamento do Estado.\nO PCP tem, de há muitos anos, uma posição clara sobre a matéria: uma firme e forte condenação da política de direita de sucessivos governos, que não avançaram no aproveitamento de mais de 50% do potencial hidroeléctrico do País.\nNão, Sr. Deputado Leitão Amaro! Não, foi o cinzentismo. Foi uma negra escuridão, durante anos e anos, de governos do PSD sobre essa matéria.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bruno Dias", 
+   "text": "Essa é que é essa!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bernardino Soares", 
+   "text": "É a escuridão laranja!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "Mas tal não pode significar o nosso acordo com o plano do Governo do PS e com o processo da sua concretização. Dissemo-lo ao longo da anterior Legislatura, sem que muitas das questões que colocámos ao Governo tivessem obtido qualquer esclarecimento.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "Recordemos três dessas questões, qualquer delas suficiente, se mais não houvesse, para abalar qualquer réstia de bondade que atribuíssemos ao plano.\nA primeira questão prende-se com a recusa de acatar as recomendações do Conselho Nacional do Ambiente e Desenvolvimento Sustentável para dar uma maior atenção aos impactes dos aproveitamentos, inclusive a avaliação integrada dos impactes cumulativos das quatro barragens da cascata do Tâmega e a reabertura de um novo e mais amplo período de consulta e discussão pública. À pergunta do Grupo Parlamentar do PCP respondeu o anterior e actual Secretário de Estado do Ambiente: «Não, não o faremos!».\nOutra das questões tem a ver com o esclarecimento do negócio da Iberdrola — alguém lhe chamou o Eldorado da Iberdrola — na concessão das quatro barragens da cascata do Tâmega, com uma potência a instalar duas vezes e meia superior à que estava prevista em concurso, o que significará uma elevada intensidade de bombagem e recirculação de água.\nA Iberdrola não vai produzir watts/hora, mas euros! O ex-Ministro da Economia nunca foi capaz de esclarecer tal situação, apesar de sucessivamente questionado pelo Grupo Parlamentar do PCP.\nÉ incompreensível a decisão do Governo de avançar com as normas extraordinárias para a expropriação dos terrenos das novas barragens, dando aos concessionários vantagens inaceitáveis para pressionar os preços e as condições dessas expropriações.\nOntem mesmo, veio um testemunho elucidativo das margens do Tâmega. E cito: «Vieram ter comigo dois mandantes da Iberdorla e queriam com urgência comprar um terreno junto ao rio Tâmega, no lugar de Paçô.\nEm palavras mansas, como precisam de instalar a central de britagem e o estaleiro, disseram: ‘ou vende por 1,35 € ou será expropriado’«.\nPercebemos agora melhor, para quem não tenha percebido, o alcance das alterações feitas pelo PS ao Código das Expropriações!", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Bruno Dias", 
+   "text": "Ora bem!", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Queira concluir, Sr. Deputado.", 
+   "type": "presidente_aparte"
+  }, 
+  {
+   "party": "PCP", 
+   "speaker": "Agostinho Lopes", 
+   "text": "Sendo o PCP a favor do aproveitamento dos recursos hídricos do País, está contra este Programa Nacional de Barragens do Governo socialista.", 
+   "type": "continuacao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do PCP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para uma intervenção, dispondo de 8 segundos, tem a palavra o Sr. Deputado Altino Bessa.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "CDS-PP", 
+   "speaker": "Altino Bessa", 
+   "text": "Sr.ª Presidente, uso da palavra apenas para uma pequena intervenção relativamente à barragem de Fridão.\nO estudo de impacte ambiental dessa barragem está em apreciação até ao dia 15 de Fevereiro deste ano e, como sabem, só após a conclusão favorável de todo este processo é que serão assinados contratos de concessão, que permitirão a construção e a exploração dos aproveitamentos. Ora, existe uma incoerência, estando o debate inquinado desde o início, porque o que o Governo fez foi receber largos milhões de euros, mais de 90 milhões de euros, para controlar o défice em 2008 de um processo que só poderia avançar após o respectivo estudo do impacte ambiental estar concluído.\nTambém trago uma notícia do Notícias do Tâmega, de 1994, segundo a qual o Dr. Francisco Assis — é pena que o Sr. Deputado não esteja presente — estaria muito preocupado com a população de Amarante.\nHoje, desgraçadamente, não ouvimos a sua voz, não o ouvimos dizer nada aos seus conterrâneos, não se encontrando sequer presente, quando, na altura, pensou em referendar a questão da barragem.\nÉ, pois, triste que hoje não esteja presente para defender aquela população que, em tempos, tanto quis defender!", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aplausos do CDS-PP.", 
+   "type": "aplauso"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "Peço a palavra, Sr.ª Presidente.", 
+   "type": "deputado_aparte"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para que efeito, Sr.ª Deputada?", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "Para uma interpelação à Mesa, Sr.ª Presidente.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Faça favor, Sr.ª Deputada.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "Sr.ª Presidente, através da Mesa, gostaria de prestar um esclarecimento à Câmara que julgo ser importante.\nNão sei se, para o PSD, a luz anda a falhar ou se as làmpadas não serão eficientes… O PSD veio aqui anunciar uma pseudo-solução para um problema gravíssimo como o que estamos a discutir. Reconhecendo todas as falhas de todo o processo, ainda assim a solução que apresenta…", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Sr.ª Deputada, em que é consiste a interpelação?", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "Os Verdes", 
+   "speaker": "Heloísa Apolónia", 
+   "text": "… é chamar a Sr.ª Ministra do Ambiente á respectiva comissão parlamentar para discutir o Programa Nacional de Barragens! Ocorre que, como o Sr. Deputado sabe, esse pedido já foi feito pelo Partido Ecologista «Os Verdes», na medida em que reconvertemos o nosso pedido de vinda da Sr.ª Ministra para discutir a questão do Tua num pedido para discutir o Programa Nacional de Barragens.\nPortanto, a luz que se quer fazer, pelos vistos, está feita, e feita pelo Partido Ecologista «Os Verdes»!", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Sr.ª Deputada, penso que extravasou um pouco o conteúdo do que é uma interpelação à Mesa.", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amado", 
+   "text": "Peço a palavra, Sr.ª Presidente.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Para que efeito, Sr. Deputado?", 
+   "type": "presidente"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amado", 
+   "text": "Também para uma interpelação à Mesa.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "Teresa Caeiro", 
+   "speaker": "Presidente", 
+   "text": "Faça favor, Sr. Deputado.", 
+   "type": "presidente_temapalavra"
+  }, 
+  {
+   "party": "PSD", 
+   "speaker": "António Leitão Amaro", 
+   "text": "Sr.ª Presidente, queria solicitar à Mesa que seja distribuída aos vários grupos parlamentares a acta da última reunião da comissão, onde consta que foi o Grupo Parlamentar do PSD que, perante o requerimento de Os Verdes para discutir com a Sr.ª Ministra apenas a questão da rede ferroviária do Tua, pediu que esse debate fosse alargado a todo o Programa Nacional de Barragens.", 
+   "type": "deputado_intervencao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Presidente (Teresa Caeiro): - Será distribuída, Sr. Deputado.\nSrs. Deputados, está concluída a nossa ordem de trabalhos de hoje.\nA próxima sessão plenária realizar-se-á amanhã, quinta-feira, às 15 horas, com a seguinte ordem de trabalhos: aprovação de Diários da Assembleia da República; declarações políticas; discussão conjunta, na generalidade, dos projectos de lei n. os 107/XI (1.ª) — Altera o Código Penal, criando um novo tipo legal de crime urbanístico (CDS-PP), 135/XI (1.ª) — Altera o Código Penal, aditando o «crime urbanístico» (BE), 108/XI (1.ª) — Altera o Código Penal, consagrando medidas legislativas que visam reforçar a eficácia do combate à corrupção (CDS-PP), 109/XI (1.ª) — Clarifica o regime jurídico de Incompatibilidades e Impedimentos dos Titulares de Cargos Políticos e Altos Cargos Públicos (Lei n.º 64/93, de 26 de Agosto) e o regime do controlo de riqueza dos Titulares de Cargos Políticos (Lei n.º 4/83, de 2 de Abril) (CDS-PP), 102/XI (1.ª) — Publicidade das declarações de rendimento dos titulares de cargos políticos (BE), 110/XI (1.ª) — Consagra nova inelegibilidade para a eleição dos órgãos das autarquias locais e um motivo de suspensão do respectivo mandato (CDS-PP) e 111/XI (1.ª) — Altera a Lei n.º 34/87, de 16 de Julho (Crimes de responsabilidade de titulares de cargos políticos), consagrando medidas legislativas que visam reforçar a eficácia do combate à corrupção (CDS-PP), dos projectos de resolução n. os 37/XI (1.ª) — Recomenda ao Governo a adopção de medidas legislativas tendentes à criação da figura do «Arrependido», em crimes de especial dificuldade de investigação (CDS-PP), 38/XI (1.ª) — Medidas de combate à corrupção (CDS-PP) e 39/XI (1.ª) — Transparência nos contratos públicos (CDS-PP) e dos projectos de lei n. os 136/XI (1.ª) — Altera o regime das inelegibilidades nas eleições para o Presidente da República, para a Assembleia da República e para o Parlamento Europeu e para os Órgãos das Autarquias Locais (PSD), 140/XI (1.ª) — Altera o Estatuto dos Deputados e o Regime Jurídico de Incompatibilidades e Impedimentos dos Titulares de Cargos Políticos e Altos Cargos Públicos (PCP), 141/XI (1.ª) — Alteração ao Regime Jurídico da Tutela Administrativa, aprovado pela Lei n.º 27/96, de 1 de Agosto (PCP) e 142/XI (1.ª) — Crimes de responsabilidade de Titulares de Cargos Políticos e Altos Cargos Públicos (Terceira Alteração à Lei n.º 34/87, de 16 de Julho, com as alterações introduzidas pelas Leis n. os 108/2001, de 28 de Novembro, e 30/2008, de 1 de Agosto) (PCP)  Proceder-se-á, igualmente, à discussão conjunta, na generalidade, dos projectos de lei n. os 76/XI (1.ª) — Financiamento do ensino superior público (PCP), 88/XI (1.ª) — Adopta o sistema plurianual de financiamento das instituições de ensino superior (BE) e 114/XI (1.ª) — Revoga o regime de pagamento de propinas no Ensino Superior Público (BE).\nSerão, ainda, discutidos, conjuntamente, na generalidade, os projectos de lei n. os 82/XI (1.ª) — Alarga às pessoas que sofram de doença do foro oncológico o regime excepcional atribuído aos doentes com tuberculose, previsto no regime jurídico de protecção social na eventualidade de doença no âmbito do subsistema previdencial (BE), 83/XI (1.ª) — Inclui no Escalão A de comparticipação os medicamentos queratolíticos e antipsoriáticos destinados aos doentes portadores de psoríase (BE), 84/XI (1.ª) — Altera o Decreto-Lei n.º 173/2003, de 1 de Agosto, isentando do pagamento das taxas moderadoras os portadores de epilepsia (BE), 85/XI (1.ª) — Altera o Decreto-Lei n.º 173/2003, de 1 de Agosto, isentando do pagamento das taxas moderadoras os portadores de psoríase (BE), 86/XI (1.ª) — Altera o Decreto-Lei n.º 173/2003, de 1 de Agosto, isentando do pagamento das taxas moderadoras os portadores de doença inflamatória do intestino — DII (Colite Ulcerosa e Doença de Crohn) (BE) e 106/XI (1.ª) — Regime de comparticipação de medicamentos destinados exclusivamente a portadores de psoríase (CDS-PP).\nÀs 18 horas, terão ainda lugar votações regimentais.\nEstá encerrada a sessão.", 
+   "type": "presidente_encerrada"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "———", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Acta relativa à eleição de um juiz para o Tribunal Constitucional", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Aos vinte e dois dias do mês de Janeiro de dois mil e dez, procedeu-se á eleição de um juiz para о Tribunal\nConstitucional.\nCandidata proposta:\nMestre Catarina Teresa Rola Sarmento e Castro\nO resultado obtido, nos termos da alínea h) do artigo 163.º da Constituição e do artigo 16.º da Lei n.º 28/82,\nde 15 de Novembro, na redacção dada pela Lei n.º 13-А/98, de 26 de Fevereiro, foi o seguinte:\nVotantes — 219\nVotos a favor — 156\nVotos brancos — 57\nVotos nulos — 6\nFace ao resultado obtido, declara-se eleita a candidata proposta.\nPara constar se lavrou a presente acta, que vai ser devidamente assinada.", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "Os Deputados escrutinadores: Paulo Batista Santos —  Rosa Maria Albernaz.", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "——", 
+   "type": "orfao"
+  }, 
+  {
+   "party": "", 
+   "speaker": "", 
+   "text": "A DIVISÃO DE REDACÇÃO E APOIO AUDIOVISUAL", 
+   "type": "fim"
+  }
+ ], 
+ "president": "", 
+ "rollcall": {
+  "absent": "", 
+  "late": "", 
+  "mission": "", 
+  "present": ""
+ }, 
+ "secretaries": [], 
+ "session-date": null, 
+ "summary": "", 
+ "time_end": null, 
+ "time_start": null
+}

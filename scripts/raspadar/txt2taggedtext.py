@@ -72,14 +72,15 @@ re_hora = (re.compile(ur'^Eram (?P<hours>[0-9]{1,2}) horas e (?P<minutes>[0-9]{1
 # Importa notar que esta regex é unicode, por causa dos hífens (o Python não os vai
 # encontrar de outra forma)
 re_separador = (re.compile(ur'\:?[ \.]?[\–\–\—\-] ', re.LOCALE|re.UNICODE), ': -')
+re_separador_estrito = (re.compile(ur'\: [\–\–\—\-] ', re.LOCALE|re.UNICODE), ': - ')
 re_mauseparador = (re.compile(ur'(?P<prevchar>[\)a-z])\:[ \.][\–\–\—\-](?P<firstword>[\w\»])', re.LOCALE|re.UNICODE), '\g<prevchar>: - \g<firstword>')
 
-re_titulo = (re.compile(ur'O Sr[\.:]|A Sr\.?(ª)?'), '')
+re_titulo = (re.compile(ur'((O Sr[\.:])|(A Sr\.?(ª)?))(?!( Deputad))'), '')
 
 re_ministro = (re.compile(ur'^Ministr'), '')
 re_secestado = (re.compile(ur'^Secretári[oa] de Estado.*:'), '')
 
-re_palavra = (re.compile(ur'(dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|faça favor[^ de terminar]', re.UNICODE|re.IGNORECASE), '')
+re_palavra = (re.compile(ur'(dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|(faça favor(?! de terminar))', re.UNICODE|re.IGNORECASE), '')
 
 re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o seu tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)|(deixem ouvir o orador)|(faça favor de prosseguir a sua)|(poder prosseguir a sua intervenção)', re.UNICODE|re.IGNORECASE), '')
 
@@ -90,7 +91,8 @@ re_cont = (re.compile(ur'O Orador|A Oradora(?P<sep>\:[ \.]?[\–\–\—\-\-])',
 re_voto = (re.compile(ur'^Submetid[oa]s? à votação', re.UNICODE), '')
 
 re_interv = (re.compile(ur'^(?P<titulo>O Sr[\.:]?|A Sr[\.:]?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:?[ \.]?[\–\–\—\-]? ?)', re.UNICODE), '')
-re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr(\.)?(ª)?)\ (?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
+#re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr(\.)?(ª)?)\ (?P<nome>[\w ,’-]{1,30})\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])', re.UNICODE), '')
+re_interv_semquebra = (re.compile(ur'(?P<titulo>O Sr\.?|A Sr(\.)?(ª)?)\ (?P<nome>[\w ,’-]{1,50})\ ?(?P<partido>\([\w -]+\))?(?P<sep>\:[ \.]?[\–\–\—\-] )', re.UNICODE), '')
 
 re_interv_simples = (re.compile(ur'^(?P<nome>[\w ,’-]+)\ ?(?P<partido>\([\w -]+\))?\ ?(?P<sep>\:?[ \.]?[\–\–\—\-]? )', re.UNICODE), '')
 
@@ -181,7 +183,9 @@ class RaspadarTagger:
             if not (re.match(re_titulo[0], p) and re.search(re_separador[0], p)):
                 stype = ORPHAN
             else:
-                p = re.sub(re_titulo[0], re_titulo[1], p, count=1).strip(u'ª \n')
+                speaker, text = re.split(re_separador[0], p, 1)
+                speaker = re.sub(re_titulo[0], re_titulo[1], speaker, count=1).strip(u'ª \n')
+                p = speaker + ': - ' + text.strip()
                 if p.startswith('Presidente'):
                     return self.parse_president(p)
                 elif re.match(re_ministro[0], p) or re.match(re_secestado[0], p):
@@ -197,7 +201,7 @@ class RaspadarTagger:
         # encontrar intervenções onde não há quebra de linha
         # TODO: este check tem de ser feito no parse_paragraph
         if re.search(re_interv_semquebra[0], output):
-            # print '### Encontrei uma condensada: ###'
+            #print '### Encontrei uma condensada: ###'
             result = re.split(re_interv_semquebra[0], output)
             new_p = ''
             for part in result[1:]:
@@ -219,7 +223,7 @@ class RaspadarTagger:
                 print 'Loop infinito ao processar uma linha com mais do que uma intervenção.'
                 print u'1ª:   ' + result[0]
                 print u'2ª:   ' + new_p
-                sys.exit()
+                raise
             return
         self.contents.append(output)
         return output
@@ -356,7 +360,10 @@ class RaspadarTagger:
                 stype, remainder = p.split(' ', 1)
                 stype = stype.strip('[]')
                 # órfãos seguintes passam a ter o mesmo tipo
-                new_p = self.contents[self.contents.index(p) + 1]
+                try:
+                    new_p = self.contents[self.contents.index(p) + 1]
+                except IndexError:
+                    break
                 if not new_p.startswith('[%s]' % ORPHAN):
                     continue
                 self.contents[self.contents.index(p) + 1] = change_type(new_p, stype)
@@ -374,6 +381,8 @@ class RaspadarTagger:
                     prev_p = new_contents[-1]
                     if get_type(p) == ORPHAN and get_type(prev_p) == MP_STATEMENT:
                         p = change_type(p, MP_CONT)
+                    elif get_type(p) == ORPHAN and get_type(prev_p) == VOTE:
+                        p = change_type(p, PRESIDENT_STATEMENT)
 
             MAIN_INTERVENTION_TYPES = (MP_STATEMENT, MINISTER_STATEMENT, PM_STATEMENT, STATE_SECRETARY_STATEMENT, SECRETARY_STATEMENT) 
 
@@ -562,8 +571,8 @@ if __name__ == '__main__':
         if verbose:
             totalcount = len(successes) + len(failures)
             print '----------------------------------'
-            print 'Successfully parsed:   %d files (%f%%)' % (len(successes), int(len(successes)/totalcount))
-            print 'Failed:                %d files (%f%%)' % (len(failures), int(len(failures)/totalcount))
+            print 'Successfully parsed:   %d files (%d%%)' % (len(successes), int(len(successes)/totalcount))
+            print 'Failed:                %d files (%d%%)' % (len(failures), int(len(failures)/totalcount))
             print '----------------------------------'
                 
     else:

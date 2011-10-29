@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from BeautifulSoup import BeautifulSoup, HTMLParseError
+from BeautifulSoup import BeautifulSoup
 import os, sys
 import re
 import urllib, urllib2
@@ -12,7 +12,7 @@ BASE_INDEX_URL = 'http://80.251.167.40/diary.aspx?cid=r3.dar&'
 GET_COOKIE_URL = 'http://80.251.167.40/catalog.aspx?cid=r3.dar'
 
 # number of sessions per legislature
-SESSIONS = {11: 2, 10: 4, 9: 3, 8: 3, 7: 4, 6: 4,
+SESSIONS = {12:1, 11: 2, 10: 4, 9: 3, 8: 3, 7: 4, 6: 4,
             5: 4, 4: 2, 3: 2, 2: 3, 1: 4,}
 
 def get_page_url(leg, sess, num, pag):
@@ -64,7 +64,7 @@ def get_diary(leg, sess, num):
         print 'Getting page %d...' % page 
         try:
             page_contents[page] = get_page(leg, sess, num, page)
-        except HTMLParseError:
+        except:
             print 'Page %d corrupted. (Leg %d, Sess %d, Number %d)' % (page, leg, sess, num)
             errors = True
             break

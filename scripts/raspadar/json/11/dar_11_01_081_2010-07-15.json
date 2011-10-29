@@ -1,0 +1,15 @@
+﻿{
+ "entries": [], 
+ "president": "", 
+ "rollcall": {
+  "absent": "", 
+  "late": "", 
+  "mission": "", 
+  "present": ""
+ }, 
+ "secretaries": [], 
+ "session-date": null, 
+ "summary": "", 
+ "time_end": null, 
+ "time_start": null
+}

@@ -23,18 +23,18 @@ TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.
           )
 
 MESES = {
-    'JANEIRO': 1,
-    'FEVEREIRO': 2,
-    'MARÇO': 3,
-    'ABRIL': 4,
-    'MAIO': 5,
-    'JUNHO': 6,
-    'JULHO': 7,
-    'AGOSTO': 8,
-    'SETEMBRO': 9,
-    'OUTUBRO': 10,
-    'NOVEMBRO': 11,
-    'DEZEMBRO': 12,
+    u'JANEIRO': 1,
+    u'FEVEREIRO': 2,
+    u'MARÇO': 3,
+    u'ABRIL': 4,
+    u'MAIO': 5,
+    u'JUNHO': 6,
+    u'JULHO': 7,
+    u'AGOSTO': 8,
+    u'SETEMBRO': 9,
+    u'OUTUBRO': 10,
+    u'NOVEMBRO': 11,
+    u'DEZEMBRO': 12,
     }
 
 NUMEROS_ROMANOS = {
@@ -76,6 +76,9 @@ REPLACES = [
         (re.compile(ur'Deputado falou: - ', re.UNICODE), 'Deputado falou - '),
         (re.compile(ur'^Sr. Pedro Mota Soares', re.UNICODE), 'O Sr. Pedro Mota Soares'),
         (re.compile(ur'da Justiça. O Sr. Secretário de Estado', re.UNICODE), u'da Justiça.\n\nO Sr. Secretário de Estado'),
+        (re.compile(ur'^O Secretário de Estado da Educação \(J', re.UNICODE), u'O Sr. Secretário de Estado da Educação (J'),
+        (re.compile(ur'^O Sr. Ministros', re.UNICODE), u'O Sr. Ministro'),
+        
     ]
 
 ### Regexes para detecção de erros de OCR ###
@@ -277,6 +280,8 @@ class QDSoupParser:
         para = para.strip('\n ')
         # reticências
         if para.endswith(u'»') and not u'«' in para:
+            para = para.replace(u'»', u'…')
+        if para.startswith(u'»'):
             para = para.replace(u'»', u'…')
         if u': — »' in para:
             para = para.replace(u': — »', u': — …')
