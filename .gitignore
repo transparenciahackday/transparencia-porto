@@ -11,3 +11,4 @@ darscraper/txt-1
 darscraper/scraped
 darscraper/testfiles/*out*
 tools/*.db
+scripts/tools/cache
