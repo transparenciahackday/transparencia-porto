@@ -29,7 +29,11 @@ def parse_legislature(s):
     number, dates = s.split('[')
     number = ROMAN_NUMERALS[number.strip()]
     dates = dates.strip(' ]')
-    start, end = dates.split(' a ')
+    if len(dates.split(' a ')) == 2:
+        start, end = dates.split(' a ')
+    else:
+        start = dates.split(' a ')[0]
+        end = ''
     return number, start, end
 
 def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
