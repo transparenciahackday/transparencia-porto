@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
 import urllib
 from BeautifulSoup import BeautifulSoup
 #from BeautifulSoup import BeautifulStoneSoup
@@ -38,8 +40,11 @@ DATASETS = '../../datasets/'
 URL_DEPS_ACTIVOS='http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
 FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
 
+def parse_legislature(s):
+    s = s.replace('&nbsp;', '')
+    return s
 
-def scrape(start=0, end=None, verbose=False, outfile=DATASETS + 'deputados.json', indent=1):
+def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
     if not end:
         try:
             deps_activos_list = getpage(URL_DEPS_ACTIVOS)
@@ -76,15 +81,10 @@ def scrape(start=0, end=None, verbose=False, outfile=DATASETS + 'deputados.json'
         short = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
         birthdate = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
         party = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblPartido'))
-        #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf
         profession = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf'))
-        #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes
         literacy = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes'))
-        #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos
         jobs = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos')) # ;)
-        #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes
         coms = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
-        #ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs
         legs = soup.find('table',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
         if name:
             deprows[i]= {'id': i,
@@ -112,21 +112,22 @@ def scrape(start=0, end=None, verbose=False, outfile=DATASETS + 'deputados.json'
                 for each in jobs.findAll('tr')[1:]:
                     deprows[i]['jobs'].append(each.text)
             if coms:
-                deprows[i]['coms'] = []
+                deprows[i]['comissions'] = []
                 for each in coms.findAll('tr')[1:]:
-                    deprows[i]['coms'].append(each.text)
+                    deprows[i]['comissions'].append(each.text)
             if legs:
-                deprows[i]['legs'] = []
+                deprows[i]['mandates'] = []
                 for each in legs.findAll('tr')[1:]:
                     leg=each.findAll('td')
-                    deprows[i]['legs'].append({'desc': leg[0].text, 'circulo': leg[3].text, 'grupo': leg[4].text})
+                    deprows[i]['mandates'].append({'legislature': parse_legislature(leg[0].text), 'constituency': leg[3].text, 'party': leg[4].text})
             print name
     
-    depsfp = open(outfile, 'w+')
-    depsfp.write(dumps(deprows, encoding='utf-8', indent=indent, sort_keys=True))
-    depsfp.close()
-
-    #print dumps(deprows, encoding='utf-8', indent=1, sort_keys=True)
+    if outfile:
+        depsfp = open(outfile, 'w+')
+        depsfp.write(dumps(deprows, encoding='utf-8', indent=indent, sort_keys=True))
+        depsfp.close()
+    else:
+        print dumps(deprows, encoding='utf-8', indent=indent, sort_keys=True)
 
 
 if __name__ == '__main__':
