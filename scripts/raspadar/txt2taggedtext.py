@@ -453,7 +453,7 @@ class RaspadarTagger:
                 output += s.strip('\n ').encode('utf-8') + '\n\n'
         return output
 
-def parse_file(infile, outfile):
+def parse_txt_file(infile, outfile):
     f = infile
     tagger = RaspadarTagger()
     try:
@@ -560,7 +560,7 @@ if __name__ == '__main__':
                 continue
             if verbose: print '  %s -> %s' % (i, inputs[i])
             try:
-                parse_file(i, inputs[i])
+                parse_txt_file(i, inputs[i])
                 successes.append(i)
             except:
                 outfile = open(inputs[i], 'w')
@@ -576,5 +576,5 @@ if __name__ == '__main__':
             print '----------------------------------'
                 
     else:
-        parse_file(input, output)
+        parse_txt_file(input, output)
 

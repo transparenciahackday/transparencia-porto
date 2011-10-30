@@ -326,7 +326,7 @@ class QDSoupParser:
         self.get_date()
         self.correct_ocr()
 
-def parse_file(infile, outfile):
+def parse_html_file(infile, outfile):
     f = infile
     html = open(f, 'r')
     soup = BeautifulSoup(html)
@@ -437,7 +437,7 @@ if __name__ == '__main__':
                 continue
             if verbose: print '  %s -> %s' % (i, inputs[i])
             try:
-                parse_file(i, inputs[i])
+                parse_html_file(i, inputs[i])
                 successes.append(i)
             except:
                 logfile = open('broken-txt2tag.log', 'a')
@@ -453,5 +453,5 @@ if __name__ == '__main__':
             print '----------------------------------'
                 
     else:
-        parse_file(input, output)
+        parse_html_file(input, output)
 

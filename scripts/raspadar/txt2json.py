@@ -267,7 +267,7 @@ class QDTextParser:
         self.session.flush_statements()
         self.session = Session()
 
-def parse_file(infile, outfile):
+def parse_tagtxt_file_to_json(infile, outfile):
     lines = open(infile, 'r').read().split('\n\n')
     parser = QDTextParser(lines)
     try:
@@ -373,7 +373,7 @@ if __name__ == '__main__':
                 continue
             if verbose: print '  %s -> %s' % (i, inputs[i])
             try:
-                parse_file(i, inputs[i])
+                parse_tagtxt_file_to_json(i, inputs[i])
                 successes.append(i)
             except:
                 outfile = open(inputs[i], 'w')
@@ -388,4 +388,4 @@ if __name__ == '__main__':
             print '----------------------------------'
                 
     else:
-        parse_file(input, output)
+        parse_tagtxt_file_to_json(input, output)
