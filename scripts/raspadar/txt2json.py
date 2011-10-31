@@ -216,11 +216,16 @@ class QDTextParser:
                     print remainder
                     print re.search(re_separador[0], remainder)
                     raise
+
                 if '(' in speakerparty:
                     speaker, party = speakerparty.split('(', 1)
                     party = party.strip(')')
                 elif stype.startswith('president') or stype in (INTERRUPTION, PM_STATEMENT): 
                     speaker = speakerparty
+                    party = ''
+                elif speakerparty == 'Primeiro-Ministro':
+                    # FIXME: Map who is the prime minister in this legislature!
+                    speaker = 'Primeiro-Ministro'
                     party = ''
                 else:
                     print '  Type:         ' + stype

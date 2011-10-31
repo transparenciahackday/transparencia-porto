@@ -337,11 +337,12 @@ def parse_html_file(infile, outfile):
         logging.error('Parsing error in file %s.' % (f))
         raise
 
-    outfile = outfile.split('.')[0] + '_' + str(parser.date) + '.' + outfile.split('.')[1]
+    outfile = outfile.rsplit('.')[0] + '_' + str(parser.date) + '.' + outfile.rsplit('.')[1]
     import codecs
-    outfile = codecs.open(outfile, 'w', 'utf-8')
-    outfile.write(parser.get_txt())
-    outfile.close()
+    out = codecs.open(outfile, 'w', 'utf-8')
+    out.write(parser.get_txt())
+    out.close()
+    return outfile
 
 if __name__ == '__main__':
     import sys
