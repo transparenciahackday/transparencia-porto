@@ -3,7 +3,7 @@
 
 import os
 from BeautifulSoup import BeautifulSoup
-import html2text
+import html2text, txt2taggedtext
 import unittest
 
 TESTFILE_DIR = 'testfiles/'
@@ -25,7 +25,12 @@ def diff(s1, s2):
 class TestHTMLParsing(unittest.TestCase):
 
     def setUp(self):
-        self.parser = html2text.QDSoupParser()
+        self.maxDiff = None
+        self.html_parser = html2text.QDSoupParser()
+        self.txt_tagger = txt2taggedtext.RaspadarTagger()
+
+    def tearDown(self):
+        pass
 
     def _test_file(self, name, get_metadata=False):
         infile = os.path.join(TESTFILE_DIR, name) + '.html'
@@ -35,35 +40,31 @@ class TestHTMLParsing(unittest.TestCase):
         html = open(infile)
         soup = BeautifulSoup(html)
 
-        self.parser.parse_soup(soup)
-        self.parser.clean_statements()
-        self.parser.clean_statements()
-        self.parser.clean_statements()
-        if get_metadata:
-            self.parser._extract_metadata()
-        else:
-            self.parser._trim_ending()
+        self.html_parser.run(soup, get_date=False)
+        txt = self.html_parser.get_txt()
 
-        txt = self.parser.get_txt()
-
-        out = open(outfile, 'w')
+        import codecs
+        out = codecs.open(outfile, 'w', 'utf-8')
         out.write(txt)
         out.close()
 
-        result = open(outfile).read()
-        control = open(controlfile).read()
+        result = codecs.open(outfile, 'r', 'utf-8').read()
+        control = codecs.open(controlfile, 'r', 'utf-8').read()
+
+        os.remove(outfile)
         try:
-            self.assertEqual(txt, control)
+            self.assertEqual(result, control)
         except AssertionError:
-            print '  ---- Generated text ---- '
-            print
+            print '== Error parsing HTML to txt in test "%s" ==' % name
+            print '----------- Generated text (%s) -------- ' % name
             print result
+            print '----------------------------------------'
             print
-            print '  ---- Expected text ----'
-            print
+            print '----------- Expected text (%s) -------- ' % name
             print control
+            print '----------------------------------------'
             print
-            raise
+            raise 
 
     def test_linebreaks(self):
         '''basic.html: Assegura que as quebras de linha são feitas como deve ser.'''
@@ -91,6 +92,35 @@ class TestHTMLParsing(unittest.TestCase):
 
 class TestTextParsing(unittest.TestCase):
     pass
+
+from html2text import is_full_name
+
+NAMES = [u'Teresa Maria Neto Venda',
+         u'Emídio Guerreiro',
+         u'Álvaro Cósta',
+         u'João Chulé',
+         u"Diogo d'Ávila"]
+
+NOT_NAMES = [u'Partido Social Democrata (PSD):',
+             u'Sr. Primeiro-Ministro',
+             u'O Deputado acha']
+
+class TestUtils(unittest.TestCase):
+    def test_name(self):
+        for name in NAMES:
+            try:
+                self.assertTrue(is_full_name(name))
+            except:
+                print 'Full name test - False negative: %s' % name
+                raise
+        for name in NOT_NAMES:
+            try:
+                self.assertFalse(is_full_name(name))
+            except:
+                print 'Full name test - False positive: %s' % name
+                raise
+
+
 
 if __name__ == '__main__':
     unittest.main()

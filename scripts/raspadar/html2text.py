@@ -59,7 +59,12 @@ REPLACES = [
         # no entanto omitimos ".a", por causa de "Sr.as"
         (re.compile(ur'(?P<pont>[.,?!])(?P<char>[A-Zb-zÁÀÉÍÓÚ][^\.])', re.UNICODE), u'\g<pont> \g<char>'),
 
+        # newlines mal postas
+        (re.compile(ur'(?P<titulo>Sr.|Sr.ª|Srs.)\n', re.UNICODE), '\g<titulo> '),
+
         # gralhas
+        (re.compile(ur'PrimeiroMinistro', re.UNICODE), 'Primeiro-Ministro'),
+        (re.compile(ur'Primeiro Ministro', re.UNICODE), 'Primeiro-Ministro'),
         (re.compile(ur'deeuros', re.UNICODE), 'de euros'),
         (re.compile(ur'sms', re.UNICODE), 'SMS'),
         (re.compile(ur'Mubarack', re.UNICODE), 'Mubarak'),
@@ -84,12 +89,13 @@ REPLACES = [
 ### Regexes para detecção de erros de OCR ###
 
 # nomes próprios portugueses
-re_nome = r" ?[A-ZdÁ][a-z\-ç'(é )]+\b|Álvaro"
+#re_nome = ur"[A-Zd][a-z\-ç'(é )]+\b|Álvaro"
+re_nome = ur"[A-Zd][a-z\-']+|e"
+re_n = re.compile(re_nome, re.UNICODE)
+
 # data da sessão
 re_data = (re.compile(ur'REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
 
-
-re_n = re.compile(re_nome, re.LOCALE|re.UNICODE|re.MULTILINE)
 
 # marcador de intervenção
 re_intervencao = r'.*:[ .]?[-—] ?.*'
@@ -119,12 +125,20 @@ def strip_accents(s):
         new_s = ''.join((c for c in unicodedata.normalize('NFD', new_s) if unicodedata.category(c) != 'Mn'))
         return new_s.encode('UTF-8')
     else:
-        s = re.sub(re.compile(ur'(\xc3\xa0)|(\xc3\xa1)|(\xc3\xa3)|(\xc3\xa2)', re.LOCALE|re.UNICODE), 'a', s)
-        s = re.sub(re.compile(ur'(\xc3\xa7)', re.LOCALE|re.UNICODE), 'c', s)
-        s = re.sub(re.compile(ur'(\xc3\xa9)|(\xc3\xa8)|(\xc3\xaa)', re.LOCALE|re.UNICODE), 'e', s)
-        s = re.sub(re.compile(ur'(\xc3\xad)|(\xc3\xac)', re.LOCALE|re.UNICODE), 'i', s)
-        s = re.sub(re.compile(ur'(\xc3\xb3)|(\xc3\xb2)|(\xc3\xb4)|(\xc3\xb5)', re.LOCALE|re.UNICODE), 'o', s)
-        s = re.sub(re.compile(ur'(\xc3\xba)|(\xc3\xb9)', re.LOCALE|re.UNICODE), 'u', s)
+        s = re.sub(re.compile(ur'\xe1|\xe0|\xe2|\xe3', re.UNICODE), 'a', s)
+        s = re.sub(re.compile(ur'\xe7', re.UNICODE), 'c', s)
+        s = re.sub(re.compile(ur'\xe9|\xe8|\xea', re.UNICODE), 'e', s)
+        s = re.sub(re.compile(ur'\xec|\xed', re.UNICODE), 'i', s)
+        s = re.sub(re.compile(ur'\xf3|\xf2|\xf4|\xf5', re.UNICODE), 'o', s)
+        s = re.sub(re.compile(ur'\xfa|\xf9', re.UNICODE), 'u', s)
+
+        s = re.sub(re.compile(ur'\xc1|\xc0|\xc2|\xc3', re.UNICODE), 'A', s)
+        s = re.sub(re.compile(ur'\xc7', re.UNICODE), 'C', s)
+        s = re.sub(re.compile(ur'\xc9|\xc8|\xca', re.UNICODE), 'E', s)
+        s = re.sub(re.compile(ur'\xcc|\xcd', re.UNICODE), 'I', s)
+        s = re.sub(re.compile(ur'\xd2|\xd3|\xd4|\xd5', re.UNICODE), 'O', s)
+        s = re.sub(re.compile(ur'\xda|\xd9', re.UNICODE), 'U', s)
+
         return s
 
 def is_full_name(s):
@@ -247,6 +261,24 @@ class QDSoupParser:
                             self.paragraphs[-1] = prev_para + ' ' + text
                         return
 
+        # tentar remover newlines que não deviam lá estar
+
+        # guardar duplas newlines, temos de as conservar com
+        # um placeholder
+        text = text.replace('\n\n', '#NNN#')
+
+        lines = text.split('\n')
+        new_lines = []
+        for line in lines:
+            if (line.endswith(('.', '?', '!', ':')) and not line.endswith(('Sr.', 'Srs.', u'Srª.'))) or is_full_name(line.strip('\n ')):
+                new_lines.append(line + '\n')
+            else:
+                new_lines.append(line + ' ')
+        text = ''.join(new_lines).strip('\n')
+        # repôr duplas newlines
+        text = text.replace('#NNN#', '\n\n')
+        
+
         if 'BREAK' in text:
             print text
 
@@ -258,7 +290,6 @@ class QDSoupParser:
                 self.paragraphs.append(p)
         else:
             self.paragraphs.append(text)
-
 
     def correct_ocr(self):
         new_paras = []
@@ -278,8 +309,14 @@ class QDSoupParser:
 
     def correct_inconsistencies(self, para):
         para = para.strip('\n ')
+        # travessão errado
+        para = para.replace(u'\u2014', '-')
+        # inconsistência no espaço após o speaker
+        para = para.replace(u'-  ', '- ')
         # reticências
         if para.endswith(u'»') and not u'«' in para:
+            para = para.replace(u'»', u'…')
+        if u'»' in para and not u'«' in para:
             para = para.replace(u'»', u'…')
         if para.startswith(u'»'):
             para = para.replace(u'»', u'…')
@@ -321,9 +358,12 @@ class QDSoupParser:
 
         return output
 
-    def run(self, soup):
+    def run(self, soup, get_date=True):
+        '''Parse the BeautifulSoup instance. get_date enables us to skip
+        date detection in unit tests.'''
         self.parse_soup(soup)
-        self.get_date()
+        if get_date:
+            self.get_date()
         self.correct_ocr()
 
 def parse_html_file(infile, outfile):

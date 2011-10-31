@@ -1,8 +1,10 @@
-[pm] Primeiro-Ministro: - Calou! Eu é que falo!
+O Sr. Primeiro-Ministro: - Calou! Eu é que falo!
 
-[mp] João Semedo (BE): - Vou interromper o gajo, eh eh!
+O Sr. João Semedo (BE): - Vou interromper o gajo, eh eh!
 
-[pm] Primeiro-Ministro: - Não me chateie!\nAgora tomem lá mais outra linha que é pra aprenderem.
+O Sr. Primeiro-Ministro: - Não me chateie!
+Agora tomem lá mais outra linha que é pra aprenderem.
 
-[pm] Primeiro-Ministro: - E ainda mais outra.\nE esta é a última.
+O Sr. Primeiro-Ministro: - E ainda mais outra.
+E esta é a última.
 
