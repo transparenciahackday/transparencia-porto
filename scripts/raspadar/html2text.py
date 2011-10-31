@@ -18,8 +18,8 @@ from pprint import pprint
 LOWERCASE_LETTERS = unicode(string.lowercase) + u'áàãâéèêíìóòõôúùç'
 
 SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0', 'SUMARIO')
-TITLES = ('Secretários: ', 'Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. ', 'Ex.mos. Srs. '
-          'Presidente: ', 'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 'Ex.mo. Sr. '
+TITLES = ('Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. ', 'Ex.mos. Srs. '
+          'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 'Ex.mo. Sr. ', 'Ex. mo Sr.', 'Ex. mos Srs.'
           )
 
 MESES = {
@@ -63,6 +63,7 @@ REPLACES = [
         (re.compile(ur'(?P<titulo>Sr.|Sr.ª|Srs.)\n', re.UNICODE), '\g<titulo> '),
 
         # gralhas
+        (re.compile(ur'CDSPP', re.UNICODE), 'CDS-PP'),
         (re.compile(ur'PrimeiroMinistro', re.UNICODE), 'Primeiro-Ministro'),
         (re.compile(ur'Primeiro Ministro', re.UNICODE), 'Primeiro-Ministro'),
         (re.compile(ur'deeuros', re.UNICODE), 'de euros'),
@@ -261,6 +262,7 @@ class QDSoupParser:
                             self.paragraphs[-1] = prev_para + ' ' + text
                         return
 
+
         # tentar remover newlines que não deviam lá estar
 
         # guardar duplas newlines, temos de as conservar com
@@ -270,14 +272,30 @@ class QDSoupParser:
         lines = text.split('\n')
         new_lines = []
         for line in lines:
+            if u'#Secretários: ' in line:
+                new_lines.append(line.strip() + '\n')
+                continue
+            # tratar das newlines
             if (line.endswith(('.', '?', '!', ':')) and not line.endswith(('Sr.', 'Srs.', u'Srª.'))) or is_full_name(line.strip('\n ')):
                 new_lines.append(line + '\n')
             else:
                 new_lines.append(line + ' ')
+
         text = ''.join(new_lines).strip('\n')
         # repôr duplas newlines
         text = text.replace('#NNN#', '\n\n')
-        
+
+        lines = text.split('\n\n')
+        for line in lines:
+            idx = lines.index(line)
+            if line.strip().startswith(('Presidente: ', u'Secretários: ')):
+                for t in TITLES:
+                    if t in line:
+                        # retirar título
+                        lines[idx] = line.replace(t, '')
+                        # remover duplo espaçamento resultante
+                        lines[idx] = lines[idx].replace('  ', ' ')
+        text = '\n\n'.join(lines)
 
         if 'BREAK' in text:
             print text

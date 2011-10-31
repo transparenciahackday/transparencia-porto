@@ -51,10 +51,11 @@ class TestHTMLParsing(unittest.TestCase):
         result = codecs.open(outfile, 'r', 'utf-8').read()
         control = codecs.open(controlfile, 'r', 'utf-8').read()
 
-        os.remove(outfile)
+        #os.remove(outfile)
         try:
             self.assertEqual(result, control)
         except AssertionError:
+            '''
             print '== Error parsing HTML to txt in test "%s" ==' % name
             print '----------- Generated text (%s) -------- ' % name
             print result
@@ -64,6 +65,7 @@ class TestHTMLParsing(unittest.TestCase):
             print control
             print '----------------------------------------'
             print
+            '''
             raise 
 
     def test_linebreaks(self):
@@ -99,7 +101,8 @@ NAMES = [u'Teresa Maria Neto Venda',
          u'Emídio Guerreiro',
          u'Álvaro Cósta',
          u'João Chulé',
-         u"Diogo d'Ávila"]
+         u"Diogo d'Ávila"
+         u'Duarte Rogério Matos Ventura Pacheco']
 
 NOT_NAMES = [u'Partido Social Democrata (PSD):',
              u'Sr. Primeiro-Ministro',
