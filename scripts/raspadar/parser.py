@@ -64,10 +64,10 @@ def run_tests():
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         filename = sys.argv[1]
-        parse_file(filename)
+        parse_file(filename, continuous=False)
     elif len(sys.argv) > 2:
         for filename in sys.argv:
-            parse_file(filename)
+            parse_file(filename, continuous=False)
     else:
         print 'Argh! I need an input file to go on!'
         sys.exit()

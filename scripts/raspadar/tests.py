@@ -102,7 +102,8 @@ NAMES = [u'Teresa Maria Neto Venda',
          u'Álvaro Cósta',
          u'João Chulé',
          u"Diogo d'Ávila"
-         u'Duarte Rogério Matos Ventura Pacheco']
+         u'Duarte Rogério Matos Ventura Pacheco',
+         u'Pedro do Ó Barradas de Oliveira Ramos']
 
 NOT_NAMES = [u'Partido Social Democrata (PSD):',
              u'Sr. Primeiro-Ministro',

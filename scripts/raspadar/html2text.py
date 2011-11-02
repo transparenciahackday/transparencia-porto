@@ -19,7 +19,8 @@ LOWERCASE_LETTERS = unicode(string.lowercase) + u'áàãâéèêíìóòõôúù
 
 SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0', 'SUMARIO')
 TITLES = ('Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. ', 'Ex.mos. Srs. '
-          'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 'Ex.mo. Sr. ', 'Ex. mo Sr.', 'Ex. mos Srs.'
+          'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 'Ex.mo. Sr. ', 'Ex. mo Sr.', 'Ex. mos Srs.',
+          u'Ex. ma Sr.ª ',
           )
 
 MESES = {
@@ -91,7 +92,7 @@ REPLACES = [
 
 # nomes próprios portugueses
 #re_nome = ur"[A-Zd][a-z\-ç'(é )]+\b|Álvaro"
-re_nome = ur"[A-Zd][a-z\-']+|e"
+re_nome = ur"[A-Zd][a-z\-']*|e"
 re_n = re.compile(re_nome, re.UNICODE)
 
 # data da sessão
@@ -272,6 +273,8 @@ class QDSoupParser:
         lines = text.split('\n')
         new_lines = []
         for line in lines:
+            # é a linha que indica os secretários? Temos de colocar uma newline
+            # para não juntar nomes
             if u'#Secretários: ' in line:
                 new_lines.append(line.strip() + '\n')
                 continue
