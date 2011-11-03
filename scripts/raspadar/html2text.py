@@ -46,8 +46,6 @@ NUMEROS_ROMANOS = {
     'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
     }
 
-REPLACES_FILE = '/home/rlafuente/code/transparencia/datasets/transcricoes/replaces.txt'
-
 REPLACES = [
         # o carácter 'é' às vezes é lido como 'ç', temos de substituir onde não bater certo
         # presumimos que se não for seguido por certas vogais, é erro de OCR
