@@ -116,13 +116,13 @@ class Session:
                             }
 
                 }
-        output = ''
-        for s in self.statements:
-            if s.text.strip('\n '):
-                output += json.dumps(s.as_dict, encoding='utf-8', ensure_ascii=False, sort_keys=True, indent=1)
+        #output = ''
+        #for s in self.statements:
+            #if s.text.strip('\n '):
+                #output += json.dumps(s.as_dict, encoding='utf-8', ensure_ascii=False, sort_keys=True, indent=1)
                 # output += s.as_csv + '\n'
-            else:
-                print 'Empty statement found.'
+            #else:
+            #    print 'Empty statement found.'
         # return output
         return json.dumps(sess, encoding='utf-8', ensure_ascii=False, sort_keys=True, indent=1)
 
@@ -283,6 +283,7 @@ def parse_tagtxt_file_to_json(infile, outfile):
 
     import codecs
     outfile = codecs.open(outfile, 'w', 'utf-8-sig')
+    # outfile = codecs.open(outfile, 'w', 'utf-8')
     outfile.write(parser.session.get_json())
     outfile.close()
 

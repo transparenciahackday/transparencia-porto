@@ -80,7 +80,7 @@ re_titulo = (re.compile(ur'((O Sr[\.:])|(A Sr\.?(ª)?))(?!( Deputad))'), '')
 re_ministro = (re.compile(ur'^Ministr'), '')
 re_secestado = (re.compile(ur'^Secretári[oa] de Estado.*:'), '')
 
-re_palavra = (re.compile(ur'(dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|(faça favor(?! de terminar))', re.UNICODE|re.IGNORECASE), '')
+re_palavra = (re.compile(ur'(concedo(-lhe)?|dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|(faça favor(?! de terminar))', re.UNICODE|re.IGNORECASE), '')
 
 re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o( seu)? tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)|(deixem ouvir o orador)|(faça favor de prosseguir a sua)|(poder prosseguir a sua intervenção)|(faça( o)? favor de continuar)', re.UNICODE|re.IGNORECASE), '')
 
