@@ -64,7 +64,7 @@ def run_tests():
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         filename = sys.argv[1]
-        parse_file(filename, continuous=False)
+        parse_file(filename, continuous=True)
     elif len(sys.argv) > 2:
         for filename in sys.argv:
             parse_file(filename, continuous=False)
