@@ -18,7 +18,6 @@ from html2text import add_item
 ### Constantes ###
 
 MP_STATEMENT = 'deputado_intervencao'
-GOV_STATEMENT = 'governo_intervencao'
 PM_STATEMENT = 'pm_intervencao'
 MINISTER_STATEMENT = 'ministro_intervencao'
 STATE_SECRETARY_STATEMENT = 'secestado_intervencao'
@@ -47,7 +46,6 @@ ROLLCALL_MISSION = 'chamada_missao'
 SECTION = 'seccao'
 END = 'fim'
 
-MP_START = 'mp_inicio'
 MP_CONT = 'continuacao'
 MP_ASIDE = 'deputado_aparte'
 OTHER_START = 'outro_inicio'
@@ -82,7 +80,7 @@ re_secestado = (re.compile(ur'^Secretári[oa] de Estado.*:'), '')
 
 re_palavra = (re.compile(ur'(concedo(-lhe)?|dou|tem|vou dar)(,?[\w ^,]+,?)? a palavra|(faça favor(?! de terminar))', re.UNICODE|re.IGNORECASE), '')
 
-re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o( seu)? tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)|(deixem ouvir o orador)|(faça favor de prosseguir a sua)|(poder prosseguir a sua intervenção)|(faça( o)? favor de continuar)', re.UNICODE|re.IGNORECASE), '')
+re_concluir = (re.compile(ur'(tempo esgotou-se)|(esgotou-se o( seu)? tempo)|((tem (mesmo )?de|queira) (terminar|concluir))|((ultrapassou|esgotou|terminou)[\w ,]* o( seu)? tempo)|((peço|solicito)(-lhe)? que (termine|conclua))|(atenção ao tempo)|(remate o seu pensamento)|(atenção para o tempo de que dispõe)|(peço desculpa mas quero inform)|(deixem ouvir o orador)|(faça favor de prosseguir a sua)|(favor de (concluir|terminar))|(poder prosseguir a sua intervenção)|(faça( o)? favor de continuar|(queira[\w ,]* concluir))', re.UNICODE|re.IGNORECASE), '')
 
 re_president = (re.compile(ur'O Sr\.?|A Sr\.?ª? Presidente\ ?(?P<nome>\([\w ]+\))?(?P<sep>\:[ \.]?[\–\–\—\-])'), '')
 
@@ -239,6 +237,7 @@ class RaspadarTagger:
             stype = PRESIDENT_CLOSE
         elif (u'quórum' in p or 'quorum' in p) and 'aberta' in p:
             stype = PRESIDENT_OPEN
+            p = p.replace('Presidente: - ', '', 1)
         elif re.search(re_palavra[0], p):
             stype = PRESIDENT_NEWSPEAKER
         elif re.search(re_concluir[0], p):
@@ -411,11 +410,6 @@ class RaspadarTagger:
 
                     if get_type(next_p) in (PRESIDENT_STATEMENT, PRESIDENT_NEWSPEAKER, PRESIDENT_CLOSE):
                         # intervenção do presidente = a anterior terminou
-                        # print '  Acabou a intervenção:'
-                        # print '    ' + p
-                        # print '  Porque encontrei:'
-                        # print '    ' + next_p
-                        # print
                         break
                     elif get_type(next_p) in (MP_STATEMENT, MINISTER_STATEMENT, PM_STATEMENT, STATE_SECRETARY_STATEMENT):
                         if not speaker == get_speaker(next_p):
