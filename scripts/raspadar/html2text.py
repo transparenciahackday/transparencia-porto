@@ -21,6 +21,8 @@ SUMMARY_STRINGS = ('SUMÁRIO', 'S U M Á R I O', 'SUMÁRI0', 'SUMARIO')
 TITLES = ('Ex.mos Srs. ', 'Ex. mos Srs. ', 'Exmos Srs. ', 'Ex.. Srs. ', 'Ex.mos. Srs. '
           'Ex.mo Sr. ', 'Exmo. Sr. ', 'Ex.. Sr.', 'Ex.mo. Sr. ', 'Ex. mo Sr.', 'Ex. mos Srs.',
           u'Ex. ma Sr.ª ',
+          # I Legislatura
+          u'Exmº Sr.', u'Exmºs Srs.',
           )
 
 MESES = {
@@ -94,7 +96,7 @@ re_nome = ur"[A-Zd][a-z\-']*|e"
 re_n = re.compile(re_nome, re.UNICODE)
 
 # data da sessão
-re_data = (re.compile(ur'REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
+re_data = (re.compile(ur' ?REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
 
 
 # marcador de intervenção
@@ -161,6 +163,7 @@ class QDSoupParser:
         self.president = None
         self.secretaries = []
         self.paragraphs = []
+        self.filename = None
 
     def parse_soup(self, soup):
         output = ''
@@ -364,7 +367,7 @@ class QDSoupParser:
             # if matches date RE
             # save the date, else raise error
         if not self.date:
-            raise RuntimeError('Session date not found')
+            logging.error('Could not get date from file %s.' % (self.filename))
         return self.date
 
     def get_txt(self):
@@ -390,13 +393,17 @@ def parse_html_file(infile, outfile):
     html = open(f, 'r')
     soup = BeautifulSoup(html)
     parser = QDSoupParser()
+    parser.filename = f
     try:
         parser.run(soup)
     except:
         logging.error('Parsing error in file %s.' % (f))
         raise
 
-    outfile = outfile.rsplit('.')[0] + '_' + str(parser.date) + '.' + outfile.rsplit('.')[1]
+    if parser.date:
+        outfile = outfile.rsplit('.')[0] + '_' + str(parser.date) + '.' + outfile.rsplit('.')[1]
+    else:
+        outfile = outfile.rsplit('.')[0] + '.' + outfile.rsplit('.')[1]
     import codecs
     out = codecs.open(outfile, 'w', 'utf-8')
     out.write(parser.get_txt())
