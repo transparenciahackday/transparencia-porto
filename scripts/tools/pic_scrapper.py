@@ -19,8 +19,14 @@ def main():
     # csv_MP=reader(open('MP.csv'),delimiter='|', quotechar='"')
     mp_json = json.loads(open(mp_file, 'r').read())
     for mp_id in mp_json:
+        # only for new ones, remove later
+        if int(mp_id) > 4200:
+            continue
         print 'retrieving picture with id: %s' % mp_id
-        urlretrieve(pic_url_formatter % mp_id, '%s%s.jpg' % (dest,mp_id))
+        try:
+            urlretrieve(pic_url_formatter % mp_id, '%s%s.jpg' % (dest,mp_id))
+        except IOError:
+            print '- Socket error! :('
     
     print "it's almost done"
     print 'do find ./imgs/ -size -722c -exec rm {} \;'

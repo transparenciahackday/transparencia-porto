@@ -96,7 +96,7 @@ re_nome = ur"[A-Zd][a-z\-']*|e"
 re_n = re.compile(re_nome, re.UNICODE)
 
 # data da sessão
-re_data = (re.compile(ur' ?REUNIÃO( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
+re_data = (re.compile(ur' ?REUNI[AÃ]O( PLENÁRIA)? DE (?P<day>[0-9]{1,2}) DE (?P<month>[A-Za-zÇç]+) DE (?P<year>[0-9]{4})', re.UNICODE), '')
 
 
 # marcador de intervenção

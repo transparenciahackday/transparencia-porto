@@ -34,6 +34,8 @@ def parse_legislature(s):
     else:
         start = dates.split(' a ')[0]
         end = ''
+    if start.endswith(' a'):
+        start = start.replace(' a', '')
     return number, start, end
 
 def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
@@ -73,49 +75,77 @@ def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
         short = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
         birthdate = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
         party = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblPartido'))
-        profession = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf'))
-        literacy = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes'))
+        occupation = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf'))
+        education = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes'))
+        current_jobs = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosDesempenha')) # ;)
         jobs = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos')) # ;)
+        awards = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCondecoracoes')) 
         coms = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
-        legs = soup.find('table',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
+        mandates = soup.find('table',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
         if name:
             deprows[i]= {'id': i,
                          'name': name.text,
                          'url': url,
                          'scrape_date': dt.utcnow().isoformat()}
             if short:
-                deprows[i]['short'] = short.text
+                deprows[i]['shortname'] = short.text
             if birthdate:
                 deprows[i]['birthdate'] = birthdate.text
             if party:
                 deprows[i]['party'] = party.text
-            if profession:
-                #TODO: break professions string into multiple entries, ';' is the separator
+            if education:
+                #TODO: break educations string into multiple entries, ';' is the separator
                 #TODO: these blocks are repeated and should be made into functions
-                deprows[i]['profession'] = []
-                for each in profession.findAll('tr')[1:]:
-                    deprows[i]['profession'].append(each.text)
-            if literacy:
-                deprows[i]['literacy'] = []
-                for each in literacy.findAll('tr')[1:]:
-                    deprows[i]['literacy'].append(each.text)
+                deprows[i]['education'] = []
+                for each in education.findAll('tr')[1:]:
+                    text = each.find('span').text
+                    deprows[i]['education'].append(text)
+            if occupation:
+                deprows[i]['occupation'] = []
+                for each in occupation.findAll('tr')[1:]:
+                    deprows[i]['occupation'].append(each.text)
             if jobs:
                 deprows[i]['jobs'] = []
                 for each in jobs.findAll('tr')[1:]:
-                    deprows[i]['jobs'].append(each.text)
+                    if '\n' in each.text:
+                        for j in each.text.split('\n'):
+                            if j:
+                                deprows[i]['jobs'].append(j.rstrip(' .;'))
+                    else:
+                        deprows[i]['jobs'].append(each.text)
+            if current_jobs:
+                deprows[i]['current_jobs'] = []
+                for each in current_jobs.findAll('tr')[1:]:
+                    if '\n' in each.text:
+                        for j in each.text.split('\n'):
+                            if j:
+                                deprows[i]['current_jobs'].append(j.rstrip(' .;'))
+                    else:
+                        deprows[i]['current_jobs'].append(each.text.rstrip(' ;.'))
             if coms:
-                deprows[i]['comissions'] = []
+                deprows[i]['commissions'] = []
                 for each in coms.findAll('tr')[1:]:
-                    deprows[i]['comissions'].append(each.text)
-            if legs:
+                    deprows[i]['commissions'].append(each.text)
+            if awards:
+                deprows[i]['awards'] = []
+                for each in awards.findAll('tr')[1:]:
+                    if '\n' in each.text:
+                        for j in each.text.split('\n'):
+                            if j:
+                                deprows[i]['awards'].append(j.rstrip(' .;'))
+                    else:
+                        deprows[i]['awards'].append(each.text.rstrip(' ;.'))
+            if mandates:
                 deprows[i]['mandates'] = []
-                for each in legs.findAll('tr')[1:]:
+                for each in mandates.findAll('tr')[1:]:
                     leg = each.findAll('td')
                     l = leg[0].text
                     number, start, end = parse_legislature(l)
 
                     deprows[i]['mandates'].append({'legislature': number, 'start_date': start, 'end_date': end, 'constituency': leg[3].text, 'party': leg[4].text})
-            print name
+
+            if verbose:
+                print name
     
     if outfile:
         depsfp = open(outfile, 'w+')
@@ -132,12 +162,12 @@ if __name__ == '__main__':
     # TODO: Add an option to overwrite cache, in order to get up-to-date records
     parser.add_option('-s', '--start', 
                       dest="start", 
-                      default="0",
+                      default="1",
                       help='Begin parsing from this ID (int required)'
                       )
     parser.add_option('-e', '--end', 
                       dest="end", 
-                      default="",
+                      default="5000",
                       help='Stop parsing on this ID (int required)'
                       )
     parser.add_option('-v', '--verbose',
