@@ -11,48 +11,76 @@ destas ferramentas é permitido, bem como breves descrições.
 A versão mais recente deste repositório pode ser encontrada em:
 http://gitorious.org/transparencia-porto/transparencia-porto
 
-Descrições e licenças
-=====================
+Temos o repositório dividido em áreas de interesse específicas:
+- Deputados
+- DAR (Diário da Assembleia da República, as transcrições oficiais dos plenários)
+- Eleições
+- Partidos
 
-cores_partidos.svg
-------------------
-Autores:         Ana Carvalho <ana@manufacturaindependente.org>
-                 Ricardo Lafuente <ricardo@manufacturaindependente.org>
-Localização:     transparencia-porto/cores_partidos.svg
-Descrição:       Proposta de cores individuais para cada partido.
-Licença:         Creative Commons Attribution ShareAlike
+Deputados
+=========
 
 Datagovpt
 ---------
-Autor:           Vítor Silva
-Localização:     transparencia-porto/scripts/datagovpt
+Autoria:         Vítor Silva <vitorsilva.com@gmail.com>
+Localização:     deputados/datagovpt
 Licença:         Domínio público
 
 Depscrape.py
 ------------
-Autor:           Pedro Rodrigues <medecau@gmail.com>
-Localização:     transparencia-porto/scripts/tools
+Autoria:         Pedro Rodrigues <medecau@gmail.com>
+Localização:     deputados/tools
 Descrição:       Raspador de informação dos deputados. Exporta JSON.
 Licença:         Domínio público
 
-Fotos deputados
----------------
-Autor:           Assembleia da República Portuguesa
-Localização:     transparencia-porto/scripts/fotos-deputados
-Descrição:       Fotografias dos deputados extraídas do site do Parlamento
 
-Linkscraping
+
+Diário da Assembleia da República
+=================================
+
+PDF DAR hack
 ------------
-Autor:           Eduardo Morais
-Localização:     transparencia-porto/scripts/linkscraping
+Autoria:         Eduardo Morais
+Localização:     dar/pdfdarhack
 Descrição:       Script para descodificar as localizações dos PDF's do DAR
 Licença:         Domínio público
 
 RaspaDAR
 --------
-Autor:           Ricardo Lafuente <ricardo@manufacturaindependente.org>
-Localização:     transparencia-porto/scripts/raspadar
+Autoria:         Ricardo Lafuente <ricardo@manufacturaindependente.org>
+Localização:     dar/raspadar
 Descrição:       Raspador e processadores do Diário da Assembleia da República.
-                 Aceita HTML e cria CSV ou JSON.
-Licença:         GPL
+                 Aceita ficheiros HTML e cria CSV ou JSON. Para fazer o download
+                 dos HTML é preciso usar antes o DARscraper.
+Licença:         GPL v3
+
+
+
+Partidos
+========
+
+Proposta de cores para identificar os partidos
+----------------------------------------------
+Autoria:         Ana Carvalho <ana@manufacturaindependente.org>
+                 Ricardo Lafuente <ricardo@manufacturaindependente.org>
+Localização:     partidos/cores_partidos.svg
+O que é:         Proposta de cores individuais para identificar cada partido. É difícil
+                 estabelecer uma convenção para cores únicas para identificar cada partido:    
+                 cada meio de informação usa o seu. Esta é a disposição de cores que usamos
+                 no Demo.cratica.
+Licença:         Creative Commons Attribution ShareAlike
+
+
+
+Eleições
+========
+
+Resultados das eleições legislativas
+------------------------------------
+Autoria:         Cláudia Amorim
+                 Victor Cardoso
+Localização:     eleicoes/resultados_legislativas.ods
+O que é:         Lista dos resultados eleitorais em todas as eleições legislativas desde 1975,
+                 por distrito
+Licença:         Creative Commons Attribution ShareAlike
 
