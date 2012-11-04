@@ -2,6 +2,29 @@
 from darpdfurls import encode_url
 import sys, os
 
+import urllib2
+from urllib2 import urlopen
+import shutil
+import urlparse
+
+FILENAME_TEMPLATE = 'dar_%d_%02d_%03d.pdf'
+
+def make_filename(leg, sess, number):
+    leg = int(leg)
+    sess = int(sess)
+    number = int(number)
+    return FILENAME_TEMPLATE % (leg, sess, number)
+
+def download(leg, sess, number):
+    leg = int(leg)
+    sess = int(sess)
+    number = int(number)
+    url = encode_url(leg, sess, num)
+    filename = make_filename(leg, sess, number)
+    cmd = 'wget "%s" --quiet --output-document %s' % (url, filename)
+    import subprocess
+    subprocess.call(cmd, shell=True)
+
 def dar_exists(leg, sess, num):
     url = encode_url(leg, sess, num)
     # Now we check if there's anything at the URL.
@@ -27,7 +50,8 @@ if __name__ == '__main__':
 
     leg, sess, num = sys.argv[1:]
     if dar_exists(leg, sess, num):
-        print "Resource exists!"
+        print "Resource exists! Downloading to %s..." % make_filename(leg, sess, num)
+        download(leg, sess, num)
     else:
         print "Resource does not exist."
 
