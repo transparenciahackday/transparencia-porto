@@ -14,6 +14,9 @@ txt = ''
 for page in pages:
     textboxes = page.findAll('textbox')
     for textbox in textboxes:
+        # discard first two textboxes, they're the page headers and don't matter
+        if page['id'] != "1" and textbox['id'] in ('0','1'):
+            continue
         textlines = textbox.findAll('textline')
         for textline in textlines:
             line = ''
