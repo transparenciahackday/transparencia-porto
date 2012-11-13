@@ -1,0 +1,75 @@
+﻿O que falta para fechar o parsing dos PDF para um formato JSON
+
+Já fizemos:
+- Um script para fazer o download dos DAR em PDF, dando apenas a legislatura, sessão e número do diário. Dá-lhes nomes sensíveis, na convenção DAR-<legislatura>-<sessão>-<número>.pdf (dardownloader.py)
+- Um par de scripts para converter os PDF em txt, passando-os pelo PDFminer e peneirando o XML resultante
+
+O que falta:
+
+- [FEITO] pdf2xml: Encontrar os marcadores de página do txt e eliminá-los. Isto pode ser feito verificando como é que o PDFminer pode limitar a área de scan. -- Resolvi de outra forma: os cabeçalhos são sempre as duas primeiras caixas de texto de um PDF, pelo que adicionámos uma verificação no xml2txt para as ignorar. Problema resolvido!
+- [FEITO] pdf2xml: Juntar parágrafos em páginas separadas. Talvez um marcador de fim de página no pdfminer para conseguirmos detectar e colar parágrafos se necessário. -- O ponto anterior acabou por resolver este!
+- xml2txt: Determinar se um parágrafo tem indentação ou não, através do atributo “bbox” de cada <textline>. Deverão ter valores x específicos. Isto dá jeito para conseguir limpar as newlines a seguir.
+
+“txtpostproc.py”:
+Termina a pipeline do pdf2xml, xml2txt.
+- Colocar as chamadas no fim -- temos o webservice do Nuno, mas é melhor preservar esse registo, por uma questão de integridade total
+- Remover linhas sem relevância (a última deve ser preservada.)
+- Consertar quebras de linha quando encontramos newlines num parágrafo sem terminar em pontuação.
+- Remover newlines duplas.
+- Harmonizar os cabeçalhos sem modificar demasiado o template do DAR (remover maiúsculas, decidir quebras de linha no cabeçalho, harmonizar Sumários)
+- Encontrar mudanças de presidente e juntar os nomes dos presidentes às intervenções
+- Determinar erros nos cabeçalhos se não conseguir ler, e corrigir apropriadamente se possível
+
+Este txt já serve para ser publicado num repositório, e ser integrado no Demo.cratica como opção de download.
+O repositório teria versões pdf, txt e json. Um servidor estático para datadump.
+
+- catalog.py: aceita um txt e cospe um JSON com todo o parsing feito. Precisa de uma classe Entry.
+Adaptar as heurísticas de catalogação do txt2taggedtext.py a uma lógica object-oriented (sem hardcoding dos tipos) e uso de dicionários para facilitar a saída de JSON.
+
+txtlint.py
+Validador e corrector de ficheiros txt para integração. Distingue entre casos sérios e menos sérios.
+Usa a lógica do detector para analisar se um texto está conforme as normas soltas que decidimos (sem quebras de linha parvas, etc.)
+
+
+“detector”
+Serve para uma transcrição inteira, ou só para um conjunto de entradas.
+No primeiro caso presume que o txtlint funcionou, por isso 
+Tem módulo para analisar uma só entrada (com opção de dar as 10 anteriores)
+
+Secções ou linhas que devem ser retiradas e guardadas nos meta-dados:
+- Data
+- Nomes/ID’s dos presidentes e secretários (tem sempre)
+- Sumário
+- Hora de início e hora de fim (primeira e última entrada de Hora)
+
+Primeiro, adivinha tipos mais evidentes.
+Depois, processa entradas não identificadas.
+Um órfão segue-se sempre a uma entrada identificada, por isso é fácil determinar o seu tipo. No caso dos apartes, é preciso ver o orador anterior, ou os anteriores, no caso de múltiplos apartes.
+
+
+Objectivo
+=========
+
+O formato JSON final deve ser compreensivo com todos os metadados, para que possa ser importado e encaixar perfeitamente no Demo.cratica, mas também ter todos os dados necessários para fazer facilmente uma aplicação que faça uso das transcrições.
+
+Exemplo:
+
+{’session’:
+    {’date’: ‘2012-08-01’,
+     ’president_id’: 3254,    # pode ser nulo no caso de uma primeira sessão
+     ‘summary’:
+     ‘start_time’: ‘10:25’,
+     ‘end_time’: ‘18:45’,
+     ‘entries’:
+       {’type’: ‘Intervenção de deputado’,
+        ’speaker’: ‘Alice Nenhures’,
+        ‘party’: ‘PSN’,
+        ‘text’: ‘É uma vergonha!’,
+       },
+    }
+}
+
+Duvidas:
+- rollcall?
+- tipo da intervenção por extenso? Se sim, fazer uma lista canónica, para começar a definir o standard nacional.
+- demo_cratica_options: campo para opções internas

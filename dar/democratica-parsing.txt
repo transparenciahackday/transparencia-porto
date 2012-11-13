@@ -1,0 +1,12 @@
+Dardownloader- interface optparse para aceitar parametros para sacar um ou varios diarios especificos
+
+
+
+Items do menu da transcrição
+  - Download do PDF, XML, TXT
+  - Ver faltas
+  - Estatísticas
+  - Ver sumario
+  - Ver vídeo
+
+SCAFFOLD DO DJANGO!

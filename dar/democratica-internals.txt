@@ -1,0 +1,157 @@
+﻿Demo.cratica: Como republicámos a informação do Parlamento sem sair do sofá
+
+
+
+As partes do problema
+---------------------
+
+1. Encontrar e descarregar as transcrições
+2. Convertê-las para um formato que possa ser importado e convertido para a base de dados do Demo.cratica
+3. Analisá-las e catalogá-las, determinando os tipos de intervenções, fazendo corresponder oradores aos seus perfis no Demo.cratica, isolar partes específicas
+4. Importar para a base de dados do Demo.cratica e mostrá-los
+
+
+  1. Encontrar e descarregar as transcrições
+
+Em 2010, quando começámos, encontrámos dois locais onde são disponibilizadas as edições do DAR: o site do Parlamento e o debates.parlamento.pt. Ambos têm ao dispôr as transcrições em formato PDF, e o debates.parlamento.pt fornece também uma versão para ler no browser, em HTML. Isto mudou recentemente, mais abaixo explicamos!
+
+Encontrámos limitações sérias nestas duas opções:
+- O formato PDF é bastante difícil de processar para um formato aberto onde possamos usar outro tipo de ferramentas no conteúdo (ex. análise estatística, detecção dos oradores);
+- A versão no browser tem a séria limitação de corresponder à versão impressa do Diário -- nomeadamente, a divisão em páginas, forçando o utilizador a um cansativo exercício de repetição no botão “Próximo” caso queira ler mais a fundo o que se passou numa sessão plenária. Este género de interface dissuade até a pessoa mais paciente. Aliás, foi esta constatação que nos levou a pensar um dia que uma ferramenta de fácil leitura do Parlamento não existia ainda, e nasceu o Demo.cratica.
+
+Teríamos, então, de descarregar as transcrições para as poder converter para um formato mais acessível. Inicialmente, usámos a extensão DownThemAll do Firefox para fazer o download dos PDF’s. Esta extensão dá-nos o poder de descarregar todos ou parte dos links de uma determinada página (por exemplo, todas as imagens). O site do Parlamento obrigou-nos a abrir cada sessão legislativa em cada legislatura para poder descarregar todos os PDF’s dessa sessão, esperar que estejam finalizados, e continuar. É daquelas alturas onde é ótimo ter algo onde ocupar as mãos enquanto esperamos (no nosso caso, estávamos a tratar de um jantar para 4 enquanto íamos sacando tudo).
+
+À primeira vista, os PDF’s estão bastante completos e bem formatados: o uso do bold nos nomes dos oradores, bem como o uso de itálicos em certos tipos de intervenção, facilitam o seu reconhecimento no pós-processamento das transcrições -- explicaremos melhor este processo no ponto 3.
+
+No entanto, ter as transcrições em PDF não chega -- temos de obter a transcrição em formato de texto para que possa ser lida por qualquer pessoa ou programa, incluindo os programas para as importar para a base de dados do Demo.cratica (que não conseguem abrir PDF). E aí tudo se complica: na altura, não encontrámos nenhuma solução satisfatória para esta conversão. Algumas ferramentas confundiam-se com a disposição em 2 colunas, outras perdiam os acentos, outras tinham problemas com as quebras de linha, e nenhuma preservava a formatação do texto.
+
+A alternativa que seguimos foi esquecer os PDF e tentar extrair o conteúdo das transcrições do debates.parlamento.pt, o tal onde elas aparecem como páginas que temos de clicar “Próximo” para ler o resto. Naturalmente estava fora de questão gravar manualmente cada página, pelo que investigámos a hipótese de criar um scraper.
+
+Um scraper, também conhecido como web-crawler, é um pequeno programa que rasteja pelas várias ligações de um site e grava a informação que encontra. O Google anexa e cataloga os conteúdos da WWW através de um exército desses rastejadores, que exploram a Internet inteira e seguem as suas interligações para anotar tudo o que há para encontrar. No nosso caso, o nosso rastejador seria bem mais simples e modesto.
+
+Escrevemos um rastejador em Python especificamente desenhado para o debates.parlamento.pt. A sua missão era abrir a página de cada sessão, gravar o seu conteúdo, seguir o link de “Próximo”, gravar a seguinte, e por aí adiante; no final, ele cumpriria o seu desígnio ao juntar tudo num único documento HTML, pronto a ser re-processado para um formato de texto fácil de ler e catalogar.
+
+O nosso pequeno crawler aguentou-se durante ano e meio a cumprir a sua função, mas em outubro de 2012 reparámos que o site que aloja as transcrições no debates.parlamento.pt não respondia: apesar do site dos debates funcionar, qualquer link para uma transcrição devolvia erros de ligação. Isto complicou-nos bastante a vida -- apesar de já termos extraído a grande maioria das transcrições existentes desde 1976, o fim do acesso ao debates.parlamento.pt significava que não poderíamos atualizar o Demo.cratica com novas transcrições. Constatámos este problema pouco antes do evento Cidadania 2.0 em outubro de 2012, quando umas semanas antes tentámos atualizar o Demo.cratica para corresponder à atualidade (as mais recentes eram de há 6 meses). 
+
+Nesta altura, voltámos a tentar a solução de extracção do texto do PDF. 20 meses depois da nossas experiências falhadas com PDF, encontrámos uma biblioteca Python recente feita especificamente para extrair texto -- o PDFminer -- que com alguns ajustes mostrou conseguir efetuar a conversão que procurávamos na perfeição! No ponto seguinte vamos detalhar este processo.
+
+Agora, no início de novembro de 2012, as transcrições parecem estar disponíveis de forma diferente: o site do Parlamento providencia agora as versões HTML paginadas (visíveis através de resultados de pesquisa), enquanto que o debates.parlamento.pt continua com o servidor em baixo. Com a descoberta do PDFminer, deixámos de precisar das versões HTML e passámos a usar um crawler simples que descarrega os PDF a partir do site do Parlamento.
+
+Uma nota sobre eventuais dúvidas éticas de descarregar informação em massa: estamos em crer que as transcrições são informação pública e, por isso, livremente acessível. Os nossos crawlers não representam nenhuma carga significativa para os servidores do Parlamento -- eles descarregam muita informação, de facto, mas só o fazem uma vez. Finalmente, caso os rastejadores que criámos soem um pouco sombrios, são apenas uma forma rápida de não passarmos horas a clicar “Próximo” e podermos ocupar o nosso tempo com coisas mais interessantes (como fazer o jantar) em vez de fazer directas a gastar o dedo indicador.
+
+  2. Convertê-las para um formato que possa ser importado e convertido para a base de dados do Demo.cratica
+
+O PDF é o demónio. Dizemo-lo com todas as letras: não existe qualquer razão para, em 2012, disponibilizar informação textual em outro formato que não o HTML. Pode ser lido por qualquer browser, por mais obscuro que seja, e é o que melhor permite a análise e processamento do texto -- leitores de texto para invisuais e bases de dados linguísticas são dois potenciais usos de valor destacado, que são impossíveis de considerar se o texto está enjaulado num formato fechado como é o PDF.
+
+É muitíssimo complicado fazer a conversão de PDF para texto, uma vez que a estrutura interna do PDF varia enormemente de acordo com o programa que foi usado para o criar. Não existem regras fixas e, assim, a interpretação lógica que um programa tenta fazer para compreender qual a sequência das letras que encontra é um verdadeiro tiro aos patos.
+
+Antes de arrumar este assunto, gostávamos de destacar uma última vez: não há razão para usar PDF em documentos publicados online, que só complica a vida a muita gente. Se a leitora ou o leitor se encontrar numa posição de responsabilidade no que toca à publicação de documentos de qualquer género, esperamos ter exposto os argumentos para deixar claro que é uma péssima ideia, e que há alternativas fáceis como incluir a informação no próprio website.
+
+No nosso caso, tivemos sorte: durante um pequeno sprint que fizemos na sequência da energia e entusiasmo ganhos no Cidadania 2.0, experimentámos retomar a tentativa de conversão do PDF, e após algumas falsas esperanças, encontrámos a solução na forma do PDFminer, uma ferramenta de linha de comandos que corremos em GNU/Linux para fazer a conversão, e o resultado mostrou-se muito satisfatório: os acentos estavam preservados, é-nos possível detectar bolds e itálicos, e a integridade das quebras de linha é decente.
+
+Nota técnica: Para quem estiver curiosa/o em experimentar o PDFminer para libertar os conteúdos de um PDF, nós obtivemos os melhores resultados usando o pdf2txt.py para converter em XML (o formato que melhor preserva os meta-dados, como as fontes utilizadas), escrevendo depois um script simples que transforma o XML peludo que o PDFminer cospe para um formato de texto simples, como queríamos.
+
+  3. Pós-processamento das transcrições: Analisá-las e catalogá-las
+
+A nossa ambição é conseguir catalogar as sessões parlamentares. Não nos contentamos com texto simples, queremos conseguir determinar o que é cada intervenção: é um voto ou uma pausa? Quem está a falar? É uma intervenção ou um aparte? Estas informações podem parecer acessórias, mas são fundamentais para conseguirmos uma ferramenta que nos consiga dar informações mais relevantes sobre o que se passa no Parlamento. 
+
+Ao conseguir uma transcrição onde cada linha é identificada segundo o seu tipo e, eventualmente, o orador, abrem-se possibilidades interessantíssimas: 
+- agregar os vários discursos de um deputado e obter estatísticas relevantes
+- determinar a duração de cada sessão
+- encontrar as palavras mais mencionadas nas intervenções
+- identificar sentidos de voto
+- calcular quanto falou cada deputado e cada bancada
+- contar o número de “Muito bem!” vindo de cada bancada
+
+Definimos uma lista com os vários tipos de acções ou intervenções que podemos encontrar numa transcrição:
+
+- Início de intervenção: quando é dada a palavra a um deputado e este/a inicia a sua intervenção. Vem sempre precedida do nome do orador. O orador poderá ser um deputado, o presidente, secretário, Primeiro-Ministro, ou uma pessoa externa ao Parlamento (alguns membros do Governo, Presidente da República, convidados). Para cada tipo de orador, criámos um tipo individual de intervenção, de forma a mostrá-los de forma específica no site.
+- Aparte: comentário feito a meio da intervenção de outro orador; pode ser vindo de um deputado ou de uma bancada (”Vozes do PSD: - Muito bem!”)
+- Continuação de uma intervenção: depois de uma interrupção. Às vezes o orador é identificado novamente, mas muitas vezes a intervenção surge sem isso, obrigando-nos a análises complexas do texto anterior para determinar quem é o orador.
+- Intervenção do presidente, mais continuações e apartes (”terminou o seu tempo”)
+- Intervenção do secretário, mais continuações e apartes
+- Interrupções: Protestos, aplausos, risos
+- Pausa: Indicado como “Pausa.”
+- Voto: cada voto pode ser facilmente reconhecido por começar sempre com “Submetido/a(s) à votação”. O que está a ser votado pode ser determinado lendo a intervenção anterior do presidente.
+- Texto de uma proposta: Surge normalmente depois de “É o seguinte:”
+- Hora: nota sobre a hora actual: “Eram 15 horas e 30 minutos”
+- Sumário: surge no início da transcrição
+- Declaração de voto: presentes no final da transcrição
+- Lista de presenças: deputados presentes (no início), atrasados, em missão parlamentar, ausentes (no final)
+- Notas de redacção: título, data, nome da/o presidente e secretários
+
+
+corresponder oradores aos seus perfis no Demo.cratica
+isolar partes específicas
+
+Detector de muito bem
+
+
+
+Cometemos um erro de julgamento ao deixar a lógica de pós-processamento das transcrições dentro do Demo.cratica, e não como parte autónoma. Isto fez com que uma parte da lógica de conversão esteja demasiado incorporada no Demo.cratica e não na suite de scripts de conversão, o que complica a geração de transcrições standard fora do Demo.cratica. Também nos levou a depender de formatos ad hoc que fomos fazendo e aperfeiçoando -- eles não são maus, mas não é boa prática reinventar a roda, além de criar várias questões de interoperabilidade. A opção de usar JSON é ainda mais lógica quando consideramos o uso do Demo.cratica como API, que devolverá resultados em JSON. Ao fazer corresponder o input ao output, usando o mesmo formato e schema nos dois, vai ser algo que facilitará imensamente os testes dos parsers.
+
+
+As ferramentas para os resolver
+-------------------------------
+
+O formato ideal
+---------------
+
+Um objetivo importante será chegar a um formato standard que possa comportar todas as exigências e particularidades das transcrições. Já fizemos algumas tentativas nesse sentido, e temos continuado a pensar qual será a melhor forma. 
+
+Estamos a par de propostas como o Akoma Ntoso, mas achamos que é prioritário encontrar primeiro um formato que possa servir todas as necessidades das transcrições em Portugal, e depois será fácil adaptar esse formato ao Akoma Ntoso e qualquer outro standard.
+
+Inicialmente, usávamos texto simples (plaintext), sem qualquer markup ou meta-dados -- era importado quase tal como vinha do scraper. 
+
+
+
+Mais tarde, experimentámos um formato com “tags” a preceder cada linha, tendo a enorme vantagem de já poder conter meta-dados sobre as intervenções. Um exemplo deste formato:
+
+
+
+O problema deste formato era criar uma nova convenção (os tags em chavetas), mas mostrou que precisávamos de um formato que tenha todo o suporte para meta-dados -- data da sessão, presidente/secretários, listas de presença, sumários, tipos de intervenção, ID’s para corresponder os oradores aos seus perfis.
+
+Mais recentemente, procurámos abordar este problema usando o JSON como formato-base, que pode facilmente ser expandido com novos atributos, resolvendo assim o problema de como deveríamos representar os meta-dados de cada sessão e cada intervenção.
+
+
+
+Passo final: Mostrar, como deve ser, as transcrições ao mundo
+-----------------------------------------------------------
+
+
+distinção entre oradores e caixas de intervenção
+
+Aventuras futuras
+-----------------
+
+1. Palavras, termos
+
+Um desafio que vamos querer tomar será a indexação de palavras, expressões e temas. 
+
+O primeiro objectivo seria conseguir adivinhar os temas de uma dada intervenção através dos termos usados. Por exemplo: “INEM”, “hospitais”, “SNS” e “cheque-dentista” dizem todos respeito à área da saúde. “Portugal Telecom” não está relacionada com o país mas sim com uma empresa, pelo que não deveríamos considerar a palavra Portugal numa análise de significado. 
+
+Tudo isto implicará a construção de uma base de termos, siglas e entidades, junto com as áreas relacionadas. Não será nada fácil e uma saída poderá ser recorrer ao crowdsourcing, através de um interface simples para os editores poderem facilmente marcar palavras-chave e associá-las a temas, sinónimos ou termos relacionados.
+
+Para tudo isto, talvez seja de pensar um webservice separado -- ou até um conjunto de webservices: 
+- entidades, a que várias vezes estas siglas se referem (CMVM, PJ, INE)
+- palavras e termos - para isto temos de investigar as Wordnets existentes em português
+
+2. Parsing de compostas
+
+Às vezes encontramos frases como “Protestos do PS e do deputado do PSD António Graceja.”, e gostávamos de as processar para poder identificar os autores. Mas não é muito simples.
+
+O mesmo acontece em títulos de Ministros: era útil conseguir extrair os vários ministérios mencionados em expressões como “Ministro de Estado, dos Negócios Estrangeiros e das pescas”.
+
+1º passo: fazer um grep para encontrar os protestos/ministros e definir vários casos onde os encontramos.
+2º passo: encontrar regexes para conseguir cobrir todos os casos. 
+3º passo: fazer um unit test com os casos encontrados no 1º passo. Isto é *mesmo importante*: à medida que actualizamos as regexes temos de ter a certeza absoluta que cobrem todos os casos anteriores.
+
+
+
+------------------------------------------------------
+
+Tagline: Ver as transcrições com olhos de hacker
+
+Interface de edição -- Opção “Isto não é uma continuação”, “intervenção”, “aparte”, “aplausos”, etc.
+
+Modelo Flag: entry (ForeignKey para Deputado ou Entry), message, author (anonymous), solved

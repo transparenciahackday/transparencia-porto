@@ -1,0 +1,120 @@
+﻿Esta é uma lista exaustiva de todos os tipos específicos de entradas que podemos encontrar nas transcrições.
+É uma referência para quem tiver curiosidade sobre como funcionam os scripts que processam os textos e determinam os tipos para podermos ter transcrições bonitinhas no Demo.cratica (e outros do género).
+
+Intervenção (início)
+---------------------
+Nome interno: mp_statement, president_statement, secretary_statement, pm_statement, minister_statement, statesecretary_statement
+Nome completo: Intervenção, Intervenção (presidente), Intervenção (secretário), Intervenção (PM), Intervenção (Ministro), Intervenção (Sec. Estado)
+
+- Quando é dada a palavra a um deputado ou membro de governo e este inicia a sua intervenção. 
+- Quando o presidente intervém (em expediente) ou dá a palavra.
+- Quando o secretário intervém
+
+Vem sempre precedida do nome do orador. O orador poderá ser um deputado, o presidente, secretário, Primeiro-Ministro, ou uma pessoa externa ao Parlamento (alguns membros do Governo, Presidente da República, convidados). Para cada tipo de orador, criámos um tipo individual de intervenção, de forma a mostrá-los de forma específica no site.
+
+- Intervenção do presidente, mais continuações e apartes (”terminou o seu tempo”)
+- Intervenção do secretário, mais continuações e apartes
+
+Intervenção (continuação)
+-------------------------
+
+Aparte
+------
+Nome interno: mp_aside, president_aside, secretary_aside, pm_aside, minister_aside, statesecretary_aside
+Nome completo: Aparte, Aparte (presidente), Aparte (secretário), Aparte (PM), Aparte (Ministro), Aparte (Sec. Estado)
+
+O aparte é um tipo particular de intervenção. Pode não corresponder à definição oficial de aparte, mas é o que usamos para qualquer intervenção feita a interromper ou interpelar brevemente outro orador.
+- Quando um deputado coloca um aparte
+- Quando o presidente indica o final do tempo
+- Quando um deputado pede a palavra para intervir. Se lhe é dada a palavra, a seguinte será uma Intervenção normal, mas o pedido deve ser um aparte.
+
+comentário feito a meio da intervenção de outro orador; pode ser vindo de um deputado ou de uma bancada (”Vozes do PSD: - Muito bem!”)
+
+Continuação
+-----------
+Continuação de uma intervenção: depois de uma interrupção. Às vezes o orador é identificado novamente, mas muitas vezes a intervenção surge sem isso, obrigando-nos a análises complexas do texto anterior para determinar quem é o orador.
+
+
+
+Interrupções
+============
+
+Protestos
+---------
+Nome interno: protest
+Nome completo: Protestos
+Regex identificadora: “^Protesto.*.” (FIXME)
+
+O(s) autor(es) do protesto podem ser identificados removendo “Protesto[s] d[ao]s? ” e o ponto final.
+
+Aplausos
+--------
+Nome interno: applause
+Nome completo: Aplausos
+
+Risos
+-----
+Nome interno: applause
+Nome completo: Aplausos
+
+Indicações
+==========
+
+Notas da redacção relevantes para a descrição da sessão.
+
+Voto
+----
+Detectado com a regex “^Submetid[oa]s? à votação”.
+Cada voto pode ser facilmente reconhecido por começar sempre com “Submetido/a(s) à votação”. O que está a ser votado pode ser determinado lendo a intervenção anterior do presidente.
+
+Pausa
+-----
+“Pausa.”
+
+Mudança de presidente
+---------------------
+“Entretanto, assumiu a presidência...”
+
+Hora
+----
+Nota sobre a hora actual: “Eram 15 horas e 30 minutos”
+
+Sumário
+-------
+Surge no início da transcrição.
+
+Lista de presenças
+------------------
+Deputados presentes (no início), atrasados, em missão parlamentar, ausentes (no final).
+
+Outras notas
+------------
+- “Procedeu-se à votação.”
+- notas de redacção: título, data, nome da/o presidente e secretários
+
+Outras nâo implementadas
+========================
+
+Documento
+---------
+Nome interno: document
+Nome completo: Documento
+
+Diz respeito a actas que são lidas na sessão, além de textos de propostas.
+Surgem normalmente depois de “É o seguinte:”, ou “do seguinte teor:”
+
+Declaração de voto
+------------------
+Nome interno: vote_statement
+Nome completo: Declaração de voto
+
+(extra: relativa à votação x)
+Presentes no final da transcrição. Difíceis de processar automaticamente.
+
+
+
+
+- Sumário: 
+- Declaração de voto: 
+- 
+- Notas de redacção: 
