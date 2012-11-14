@@ -3,6 +3,11 @@
 import sys
 from BeautifulSoup import BeautifulStoneSoup
 
+def bbox_coords(value):
+    # these might be in the wrong order, but it's indeed xyxy order
+    left, bottom, right, top = [float(x) for x in value.split(',')]
+    return (left, bottom, right, top)
+
 xml = open(sys.argv[1], 'r')
 soup = BeautifulStoneSoup(xml)
 
@@ -14,12 +19,16 @@ txt = ''
 for page in pages:
     textboxes = page.findAll('textbox')
     for textbox in textboxes:
-        # discard first two textboxes, they're the page headers and don't matter
-        if page['id'] != "1" and textbox['id'] in ('0','1'):
+        # check textbox positioning for header filtering
+        left, bottom, right, top = bbox_coords(textbox.get('bbox'))
+        if page['id'] != "1" and (top > 800 or (page['id'] == "2" and top > 760)):
             continue
-        textlines = textbox.findAll('textline')
-        for textline in textlines:
+        # we'll store tuples for storing the text and position, since sometimes PDFminer
+        # gets the word order wrong -- FIXME NOT WORKING
+        textlines = []
+        for textline in textbox.findAll('textline'):
             line = ''
+            left_pos = bbox_coords(textline.get('bbox'))[0]
             textbits = textline.findAll('text')
             for textbit in textbits:
                 if not textbit.text:
@@ -50,6 +59,13 @@ for page in pages:
                             line += '*' + textbit.text + '*'
                     else:
                         line += textbit.text
+            textlines.append((left_pos, line))
+        # sort list by position 
+        # NOT working, it mixes lines in different heights....
+        # sorted_lines = sorted(textlines, key=lambda tup: tup[0])
+        sorted_lines = textlines
+
+        for pos, line in sorted_lines:
             txt += line + '\n'
 
 import codecs
