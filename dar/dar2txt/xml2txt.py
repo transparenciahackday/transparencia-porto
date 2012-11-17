@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#-*- coding: utf-8 -*-
 # see prettify_dar.xml for a prettified xml tree
 import sys
 from BeautifulSoup import BeautifulStoneSoup
