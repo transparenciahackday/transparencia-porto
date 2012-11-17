@@ -8,6 +8,16 @@ def bbox_coords(value):
     left, bottom, right, top = [float(x) for x in value.split(',')]
     return (left, bottom, right, top)
 
+def has_vertical_line(page):
+    # vertical lines are actually rects
+    rects = page.findAll('rect')
+    for rect in rects:
+        x0, y0, x1, y1 = bbox_coords(rect.get('bbox'))
+        if x1 - x0 < 3:
+            return True
+    return False
+
+
 xml = open(sys.argv[1], 'r')
 soup = BeautifulStoneSoup(xml)
 
@@ -19,9 +29,9 @@ txt = ''
 for page in pages:
     textboxes = page.findAll('textbox')
     for textbox in textboxes:
-        # check textbox positioning for header filtering
+        # check textbox positioning for header filtering and summary removal
         left, bottom, right, top = bbox_coords(textbox.get('bbox'))
-        if page['id'] != "1" and (top > 800 or (page['id'] == "2" and top > 760)):
+        if page['id'] != "1" and (top > 800 or (page['id'] == "2" and has_vertical_line(page) and top > 760)):
             continue
         # we'll store tuples for storing the text and position, since sometimes PDFminer
         # gets the word order wrong -- FIXME NOT WORKING
@@ -39,6 +49,10 @@ for page in pages:
                     # avoid double spaces, only output if last char wasn't a space
                     if line and not line[-1] == ' ':
                         line += ' '
+                # also, most useless metadata is at specific small sizes, let's weed that out too
+                # isto ajuda pra remover os sumários!
+                elif textbit.get('size') in ('7.485', '7.542', '7.525', '4.671', '4.728'):
+                    continue
                 else:
                     # add the text to the line string, and mark it up if necessary
                     if 'Italic' in textbit['font']:
