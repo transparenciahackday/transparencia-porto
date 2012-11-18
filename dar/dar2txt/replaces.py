@@ -4,6 +4,7 @@ REPLACES = (
         (u'CDP-PP', 'CDS-PP'),
         (u'CSD-PP', 'CDS-PP'),
         (u'CDS-P)', 'CDS-PP)'),
+        (u'CDSPP)', 'CDS-PP)'),
         (u'OS Verdes', 'Os Verdes'),
         (u'os Verdes', 'Os Verdes'),
         (u'sms', 'SMS'),

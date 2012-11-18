@@ -77,7 +77,7 @@ def get_note_type(e):
             return APPLAUSE
         elif e.text.startswith(u'Pausa'):
             return PAUSE
-        elif e.text.startswith(u'Eram '):
+        elif e.text.startswith(u'Eram ') and e.text.endswith(('horas.', 'minutos.', 'minuto.')):
             return TIME
         elif e.text.startswith(u'Nota'):
             return NOTE
@@ -102,10 +102,12 @@ def get_note_type(e):
         elif e.text.endswith(('2009', '2010', '2011', '2012')):
             parse_session_date(e)
             return DATE
-        elif e.text.endswith(u' seguinte:') or e.text.startswith('Ata'):
+        elif e.text.endswith((u' seguinte:', u'seguintes:')) or e.text.startswith('Ata') or e.text.startswith('Propostas apresentadas'):
             return DOCUMENT_START
         elif e.text.startswith(u'Declaraç'):
             return VOTE_STATEMENT_START
+        elif 'Hino Nacional' in e.text:
+            return ANTHEM
         elif e.text == u'…':
             return DOCUMENT
         else:
@@ -150,6 +152,10 @@ def parse_statement(e):
     # já detectámos antes se é o Secretário da AR, por isso agora é secretários de estado
     elif (e.party and e.party.startswith(u'Secretári')) or e.speaker.startswith(u'Secretári'):
         e.type = STATE_SECRETARY_STATEMENT
+    elif e.speaker == u'Presidente da República' or e.party == u'Presidente da República':
+        e.party = u'Presidente da República'
+        e.type = PR_STATEMENT
+
     elif e.party in PARTIES:
         e.type = MP_STATEMENT
     elif e.speaker.startswith(('Vozes', 'Uma voz d')):
@@ -207,7 +213,7 @@ if __name__ == "__main__":
             prev_e = e.get_previous()
             
             # separador?
-            if e.text == u'———':
+            if e.text.startswith(u'——') and len(e.text) < 10:
                 e.type = SEPARATOR
             # conteúdos de um documento?
             elif prev_e.type == DOCUMENT_START:
@@ -221,9 +227,8 @@ if __name__ == "__main__":
                 e.type = VOTE_STATEMENT
             elif prev_e.type == SEPARATOR and (prev_e.get_previous().type == VOTE_STATEMENT or e.text.startswith('Relativ')):
                 e.type = VOTE_STATEMENT
-            # sumário? kill kill kill
+            # sumário? 
             elif prev_e.type == SUMMARY:
-                entries_to_remove.append(entry_index)
                 e.type = SUMMARY
             # continuação?
             elif prev_e.type in (STATEMENT, CONT):
@@ -231,48 +236,53 @@ if __name__ == "__main__":
                 # para já marcamos como continuação
                 e.type = CONT
             elif prev_e.type in INTERRUPTIONS and prev_e.get_previous().type in (STATEMENT, CONT):
+                e.speaker = prev_e.get_previous().speaker
+                e.party = prev_e.get_previous().party
                 e.type = CONT
             # duas interrupções seguidas
             elif prev_e.type in INTERRUPTIONS and prev_e.get_previous().type in INTERRUPTIONS and prev_e.get_previous(steps=2).type in (STATEMENT, CONT):
                 e.type = CONT
             else:
-                print prev_e.get_previous().get_previous().type
-                print prev_e.get_previous().type
-                print prev_e.type
-                print e.type
+                print 'Continuação não identificada:'
+                print '  - ' + str(prev_e.get_previous().get_previous().type)
+                print '  - ' + str(prev_e.get_previous().type)
+                print '  - ' + str(prev_e.type)
+                print '  - ' + str(e.type)
+                print e.text.encode('utf-8')
                 print
-
 
     # mais uma passagem para remover restos da verificação dos órfãos
     entries_to_remove.reverse()
     for e in entries_to_remove:
         s.entries.pop(e)
 
-    # passagem para juntar varios DOCUMENT ou VOTE_STATEMENT num só
-    # o mesmo com as continuações!
-    '''
-    if not prev_e.text.endswith(('.','!','?')):
-        # juntar os textos na intervenção anterior
-        prev_e.text = prev_e.text + ' ' + e.text
-        # remover eventuais espaços duplos que criámos
-        prev_e.text = prev_e.text.replace('  ', ' ')
-        # apagamos esta no fim
-        entries_to_remove.append(entry_index)
-    else:
-        # juntar os textos na intervenção anterior com quebra de parágrafo
-        prev_e.text = prev_e.text + '\n' + e.text
-        # apagamos esta no fim
-        entries_to_remove.append(entry_index)
-    # mudar o tipo para não confundir os checks seguintes
-    '''
     # third pass: tipos especificos de intervencao
+    entries_to_remove = []
     for e in s.entries:
         if not e.type == STATEMENT:
             continue
         parse_statement(e)
         if e.type == PRESIDENT_STATEMENT:
             parse_president_statement(e)
-    # continuations
+        # colar continuações da mesma intervenção
+        # FIXME este passo é destrutivo e pode ser perigoso, precisamos de unit tests aqui
+        elif e.type == CONT: 
+            prev_e = e.get_previous()
+            if not e.speaker and not e.party and prev_e().type == MP_STATEMENT:
+                # parágrafo solto!
+                if prev_e().text.strip().endswith(('.','?','!', ':')):
+                    prev_e().text += '\n' + e.text
+                else:
+                    prev_e().text += ' ' + e.text
+                entries_to_remove.append(s.entries.index(e))
+                e.type = MP_STATEMENT
+            # elif e.type in PRESIDENT_STATEMENTS
+            # TODO: elif prev_e.type in INTERRUPTIONS:
+
+
+    entries_to_remove.reverse()
+    for e in entries_to_remove:
+        s.entries.pop(e)
     # fourth pass: mp_id, identidades de ministros, secs. estado, pm
 
     
@@ -287,13 +297,13 @@ if __name__ == "__main__":
             if e.type == SPEAKER_ERROR:
                 print e.speaker
                 print e.party
-            print e.text
+            print e.text.encode('utf-8')
             print
         if e.type == STATEMENT:
             print 'Unparsed statement!'
-            print '  ' + e.speaker
-            if e.party: print '  ' + e.party
-            print '  ' + e.text
+            print '  ' + e.speaker.encode('utf-8')
+            if e.party: print '  ' + e.party.encode('utf-8')
+            print '  ' + e.text.encode('utf-8')
             print
     
     import codecs

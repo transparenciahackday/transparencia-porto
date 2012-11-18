@@ -80,7 +80,6 @@ Definimos uma lista com os vários tipos de acções ou intervenções que podem
 - Lista de presenças: deputados presentes (no início), atrasados, em missão parlamentar, ausentes (no final)
 - Notas de redacção: título, data, nome da/o presidente e secretários
 
-
 corresponder oradores aos seus perfis no Demo.cratica
 isolar partes específicas
 
@@ -140,7 +139,7 @@ Para tudo isto, talvez seja de pensar um webservice separado -- ou até um conju
 
 Às vezes encontramos frases como “Protestos do PS e do deputado do PSD António Graceja.”, e gostávamos de as processar para poder identificar os autores. Mas não é muito simples.
 
-O mesmo acontece em títulos de Ministros: era útil conseguir extrair os vários ministérios mencionados em expressões como “Ministro de Estado, dos Negócios Estrangeiros e das pescas”.
+O mesmo acontece em títulos de Ministros: era útil conseguir extrair os vários ministérios mencionados em expressões como “Ministro de Estado, dos Negócios Estrangeiros e das Pescas”.
 
 1º passo: fazer um grep para encontrar os protestos/ministros e definir vários casos onde os encontramos.
 2º passo: encontrar regexes para conseguir cobrir todos os casos. 
@@ -154,4 +153,4 @@ Tagline: Ver as transcrições com olhos de hacker
 
 Interface de edição -- Opção “Isto não é uma continuação”, “intervenção”, “aparte”, “aplausos”, etc.
 
-Modelo Flag: entry (ForeignKey para Deputado ou Entry), message, author (anonymous), solved
+Modelo Flag: entry (ForeignKey para Deputado ou Entry), message, author (anonymous-IP), solved
