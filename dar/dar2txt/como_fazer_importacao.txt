@@ -1,0 +1,45 @@
+
+
+
+em dar/dar2txt:
+
+for f in txtsprocessados/*.txt; do echo ${f}; python txt2json.py ${f} ${f/%txt/json}; done
+
+em democratica/scripts:
+
+for f in ~/Projects/Transparência/repo/dar/dar2txt/txtsprocessados/*.json; do python import_json_transcripts.py -i ${f} -f; done
+
+Para o scrape dos deputados:
+python depscrap > deputados-20121120.json
+
+
+Para restaurar os conteúdos do Demo.cratica depois de um reset:
+pm syncdb
+pm migrate --all
+cd scripts
+python import_mps.py
+python import_parties.py
+python import_governments.py
+python import_linksets.py
+python import_mp_photos.py
+python import_legislatures.py
+python determine_mp_gender.py
+python import_json_transcripts.py ---.json
+
+O que falta agora:
+- juntar documentos e declarações de voto numa entrada só (ler separadores)
+
+- conseguir isolar continuações órfãs e determinar o orador 
+- última pass: dicionário com os nomes dos ministros e secestado, grepados das primeiras intervenções (speaker, party)
+- Quando aparecer um minister_statement que comece por Ministro (o mesmo pra secs.estado), substituir pelo nome do ministro
+
+- Ana: itálico nos <em>
+
+- Flag para apontar erros - email, qual é o problema?, minicaptcha
+
+- que scripts montar no mojo
+  - cron dardownloader
+  - scp para a watch folder no sinesis
+  - api call para importar, delegando ao celery
+
+  - comando para re-formar o json dos deputados (ver acima!)
