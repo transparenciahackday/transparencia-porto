@@ -10,7 +10,7 @@ from utils import *
 #import sys
 
 
-DEFAULT_MAX = 4230
+DEFAULT_MAX = 4600
 
 ROMAN_NUMERALS = {
     'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
@@ -167,7 +167,7 @@ if __name__ == '__main__':
                       )
     parser.add_option('-e', '--end', 
                       dest="end", 
-                      default="5000",
+                      default=DEFAULT_MAX,
                       help='Stop parsing on this ID (int required)'
                       )
     parser.add_option('-v', '--verbose',
