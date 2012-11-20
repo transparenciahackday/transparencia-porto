@@ -8,6 +8,7 @@ darscraper/csv
 darscraper/txt
 darscraper/txt-1
 *.swp
+*.swo
 darscraper/scraped
 darscraper/testfiles/*out*
 tools/*.db

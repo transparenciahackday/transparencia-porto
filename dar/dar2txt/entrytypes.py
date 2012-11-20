@@ -1,15 +1,33 @@
-MP_STATEMENT = 'deputado_intervencao'
-GOV_STATEMENT = 'governo_intervencao'
-PM_STATEMENT = 'pm_intervencao'
-MINISTER_STATEMENT = 'ministro_intervencao'
-STATE_SECRETARY_STATEMENT = 'secestado_intervencao'
-PR_STATEMENT = 'presidenterepublica_intervencao'
 PRESIDENT_STATEMENT = 'presidente'
+PRESIDENT_CONT = 'presidente_continuacao'
+PRESIDENT_ASIDE = 'presidente_aparte'
+PRESIDENT_NEWSPEAKER = 'presidente_temapalavra'
+PRESIDENT_OPEN = 'presidente_aberta'
+PRESIDENT_CLOSE = 'presidente_encerrada'
+PRESIDENT_SUSPEND = 'presidente_suspensa'
+PRESIDENT_REOPEN = 'presidente_reaberta'
+PRESIDENT_SWITCH = 'presidente_troca'
+MP_STATEMENT = 'deputado_intervencao'
+MP_ASIDE = 'deputado_aparte'
+MP_CONT = 'deputado_continuacao'
 SECRETARY_STATEMENT = 'secretario'
 STATEMENT = 'intervencao'
 
-MP_ASIDE = 'deputado_aparte'
+PM_STATEMENT = 'pm_intervencao'
+PM_CONT = 'pm_continuacao'
+PM_ASIDE = 'pm_aparte'
+MINISTER_STATEMENT = 'ministro_intervencao'
+MINISTER_CONT = 'ministro_continuacao'
+MINISTER_ASIDE = 'ministro_aparte'
+STATE_SECRETARY_STATEMENT = 'secestado_intervencao'
+STATE_SECRETARY_CONT = 'secestado_continuacao'
+STATE_SECRETARY_ASIDE = 'secestado_aparte'
+PR_STATEMENT = 'presidenterepublica_intervencao'
+PR_CONT = 'presidenterepublica_continuacao'
+
+CONT = 'continuacao'
 VOICES_ASIDE = 'vozes_aparte'
+
 APPLAUSE = 'aplauso'
 PROTEST = 'protesto'
 LAUGHTER = 'riso'
@@ -19,7 +37,6 @@ TIME = 'hora'
 NOTE = 'nota'
 ANTHEM = 'hino'
 SILENCE = 'silencio'
-INTERRUPTIONS = (VOICES_ASIDE, MP_ASIDE, APPLAUSE, PROTEST, LAUGHTER, PAUSE, VOTE, TIME, NOTE, SILENCE, ANTHEM)
 
 DATE = 'data'
 DOCUMENT_START = 'inicio_documento'
@@ -27,36 +44,23 @@ DOCUMENT = 'documento'
 VOTE_STATEMENT_START = 'inicio_declaracao_voto'
 VOTE_STATEMENT = 'declaracao_voto'
 SEPARATOR = 'separador'
-OTHER = 'outro'
+SUMMARY = 'sumario'
 
 PRESIDENT_NAME = 'nome_presidente'
 SECRETARY_NAME = 'nomes_secretarios'
 
-INTRO = 'intro'
-SUMMARY = 'sumario'
-ROLLCALL = 'chamada'
-ROLLCALL_PRESENT = 'chamada_presentes'
-ROLLCALL_ABSENT = 'chamada_ausentes'
-ROLLCALL_LATE = 'chamada_atrasados'
-ROLLCALL_MISSION = 'chamada_missao'
-SECTION = 'seccao'
-END = 'fim'
+# apagar este? usamos?
+REAL_STATEMENTS = (MP_STATEMENT, PRESIDENT_STATEMENT, VOICES_ASIDE, SECRETARY_STATEMENT, MP_CONT, PM_STATEMENT, MINISTER_STATEMENT, STATE_SECRETARY_STATEMENT, STATEMENT, MP_ASIDE, PRESIDENT_ASIDE, PRESIDENT_NEWSPEAKER, PRESIDENT_OPEN, PRESIDENT_CLOSE)
 
-MP_START = 'mp_inicio'
-MP_CONT = 'continuacao'
-CONT = 'continuacao'
-OTHER_START = 'outro_inicio'
-OTHER_CONT = 'outro_cont'
+INTERRUPTIONS = (VOICES_ASIDE, MP_ASIDE, PM_ASIDE, MINISTER_ASIDE, APPLAUSE, PROTEST, LAUGHTER, PAUSE, VOTE, TIME, NOTE, SILENCE, ANTHEM)
 
-PRESIDENT_ASIDE = 'presidente_aparte'
-PRESIDENT_NEWSPEAKER = 'presidente_temapalavra'
-PRESIDENT_ROLLCALL = 'presidente_chamada'
-PRESIDENT_OPEN = 'presidente_aberta'
-PRESIDENT_CLOSE = 'presidente_encerrada'
-PRESIDENT_SUSPEND = 'presidente_suspensa'
-PRESIDENT_REOPEN = 'presidente_reaberta'
-PRESIDENT_SWITCH = 'presidente_troca'
+ASIDES = (MP_ASIDE, PRESIDENT_ASIDE, VOICES_ASIDE, PM_ASIDE, MINISTER_ASIDE, STATE_SECRETARY_ASIDE)
 
-ORPHAN = 'orfao'
+MP_STATEMENTS = (MP_STATEMENT, MP_CONT)
+PM_STATEMENTS = (PM_STATEMENT, PM_CONT)
+MINISTER_STATEMENTS = (MINISTER_STATEMENT, MINISTER_CONT)
+PR_STATEMENTS = (PR_STATEMENT, PR_CONT)
+STATE_SECRETARY_STATEMENTS = (STATE_SECRETARY_STATEMENT, STATE_SECRETARY_CONT)
+PRESIDENT_STATEMENTS = (PRESIDENT_STATEMENT, PRESIDENT_ASIDE, PRESIDENT_NEWSPEAKER, PRESIDENT_OPEN, PRESIDENT_CLOSE, PRESIDENT_SUSPEND, PRESIDENT_REOPEN, PRESIDENT_CONT)
 
-REAL_STATEMENTS = (MP_STATEMENT, GOV_STATEMENT, PRESIDENT_STATEMENT, VOICES_ASIDE, SECRETARY_STATEMENT, MP_CONT, PM_STATEMENT, MINISTER_STATEMENT, STATE_SECRETARY_STATEMENT, STATEMENT, MP_ASIDE, PRESIDENT_ASIDE, PRESIDENT_NEWSPEAKER, PRESIDENT_OPEN)
+STATEMENTS = MP_STATEMENTS + PM_STATEMENTS + MINISTER_STATEMENTS + STATE_SECRETARY_STATEMENTS + PR_STATEMENTS + PRESIDENT_STATEMENTS + (SECRETARY_STATEMENT,)

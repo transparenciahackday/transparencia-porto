@@ -192,7 +192,6 @@ if __name__ == "__main__":
         s.entries.append(e)
 
     # segunda passagem: determinar tipos de cada entrada e detectar continuações
-    entries_to_remove = []
     for e in s.entries:
         entry_index = s.entries.index(e)
         lines = e.text.split('\n')
@@ -208,7 +207,6 @@ if __name__ == "__main__":
             e.text = '\n'.join(lines[1:])
 
         # não encontra tipo? ver se é quebra de linha errada, ou continuação, ou documento
-        # TODO: Fazer uma função para poder ver recursivamente no caso de várias null seguidas
         if not e.type:
             prev_e = e.get_previous()
             
@@ -235,59 +233,149 @@ if __name__ == "__main__":
                 # continuação da intervenção/continuação anterior! Vamos juntá-las mais à frente,
                 # para já marcamos como continuação
                 e.type = CONT
-            elif prev_e.type in INTERRUPTIONS and prev_e.get_previous().type in (STATEMENT, CONT):
-                e.speaker = prev_e.get_previous().speaker
-                e.party = prev_e.get_previous().party
-                e.type = CONT
-            # duas interrupções seguidas
+            elif prev_e.type in INTERRUPTIONS+ASIDES:
+                # interrupções seguidas?
+                while prev_e.type in INTERRUPTIONS+ASIDES:
+                    prev_e = prev_e.get_previous()
+                if prev_e.type in (STATEMENT, CONT):
+                    e.speaker = prev_e.speaker
+                    e.party = prev_e.party
+                    e.type = CONT
+                else:
+                    print 'Continuação não identificada:'
+                    print '  - ' + str(e.get_previous(3).type)
+                    print '  - ' + str(e.get_previous(2).type)
+                    print '  - ' + str(e.get_previous().type)
+                    print '  - ' + str(e.type)
+                    print e.text.encode('utf-8')
+                    print
             elif prev_e.type in INTERRUPTIONS and prev_e.get_previous().type in INTERRUPTIONS and prev_e.get_previous(steps=2).type in (STATEMENT, CONT):
                 e.type = CONT
             else:
                 print 'Continuação não identificada:'
-                print '  - ' + str(prev_e.get_previous().get_previous().type)
-                print '  - ' + str(prev_e.get_previous().type)
-                print '  - ' + str(prev_e.type)
+                print '  - ' + str(e.get_previous(3).type)
+                print '  - ' + str(e.get_previous(2).type)
+                print '  - ' + str(e.get_previous().type)
                 print '  - ' + str(e.type)
                 print e.text.encode('utf-8')
                 print
 
-    # mais uma passagem para remover restos da verificação dos órfãos
-    entries_to_remove.reverse()
-    for e in entries_to_remove:
-        s.entries.pop(e)
-
-    # third pass: tipos especificos de intervencao
+    # third pass: tipos especificos de intervencao e remover entradas que nao precisamos
     entries_to_remove = []
     for e in s.entries:
-        if not e.type == STATEMENT:
-            continue
-        parse_statement(e)
-        if e.type == PRESIDENT_STATEMENT:
-            parse_president_statement(e)
-        # colar continuações da mesma intervenção
-        # FIXME este passo é destrutivo e pode ser perigoso, precisamos de unit tests aqui
-        elif e.type == CONT: 
+        if e.type in (DATE, SUMMARY, PRESIDENT_NAME, SECRETARY_NAME):
+            entries_to_remove.append(s.entries.index(e))
+        # intervenção
+        elif e.type == STATEMENT:
+            parse_statement(e)
+            if e.type == PRESIDENT_STATEMENT:
+                parse_president_statement(e)
+    # colar continuações da mesma intervenção
+    # FIXME este passo é destrutivo e pode ser perigoso, precisamos de unit tests aqui
+    for e in s.entries:
+        if e.type == CONT: 
             prev_e = e.get_previous()
-            if not e.speaker and not e.party and prev_e().type == MP_STATEMENT:
-                # parágrafo solto!
-                if prev_e().text.strip().endswith(('.','?','!', ':')):
-                    prev_e().text += '\n' + e.text
-                else:
-                    prev_e().text += ' ' + e.text
-                entries_to_remove.append(s.entries.index(e))
-                e.type = MP_STATEMENT
-            # elif e.type in PRESIDENT_STATEMENTS
-            # TODO: elif prev_e.type in INTERRUPTIONS:
-
-
+            if not e.speaker and not e.party:
+                if prev_e.type in STATEMENTS:
+                    # parágrafo solto!
+                    # assegurar que não é uma das que marcámos para apagar
+                    while prev_e.type in INTERRUPTIONS+ASIDES or prev_e in entries_to_remove:
+                        prev_e = prev_e.get_previous()
+                    # distinguir entre quebras de linha e de parágrafo
+                    if prev_e.text.strip().endswith(('.','?','!', ':')):
+                        prev_e.text += '\n' + e.text
+                    else:
+                        prev_e.text += ' ' + e.text
+                    entries_to_remove.append(s.entries.index(e))
+                    e.type = STATEMENT
     entries_to_remove.reverse()
     for e in entries_to_remove:
         s.entries.pop(e)
-    # fourth pass: mp_id, identidades de ministros, secs. estado, pm
 
-    
-    # verificar que entradas unicas nao estao repetidas (data, nomes pres e secretarios)
-    # apagar separadores, sumário
+
+    # nova passagem: catalogar continuações
+    # fazemos duas passagens aqui
+    for n in range(2):
+        for e in s.entries:
+            if e.type == CONT:
+                if not e.party and not e.speaker:
+                    prev_e = e.get_previous()
+                    if prev_e.type in INTERRUPTIONS+ASIDES:
+                        # interrupções seguidas?
+                        while prev_e.type in INTERRUPTIONS+ASIDES:
+                            prev_e = prev_e.get_previous()
+
+                    if prev_e.type in MP_STATEMENTS:
+                        e.type = MP_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    elif prev_e.type in PRESIDENT_STATEMENTS:
+                        e.type = PRESIDENT_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    elif prev_e.type in PM_STATEMENTS:
+                        e.type = PM_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    elif prev_e.type in MINISTER_STATEMENTS:
+                        e.type = MINISTER_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    elif prev_e.type in STATE_SECRETARY_STATEMENTS:
+                        e.type = STATE_SECRETARY_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    elif prev_e.type in PR_STATEMENTS:
+                        e.type = PR_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    else:
+                        print prev_e.type
+                else:
+                    prev_e = e.get_previous()
+                    if prev_e.type in INTERRUPTIONS+ASIDES:
+                        # interrupções seguidas?
+                        while prev_e.type in INTERRUPTIONS+ASIDES:
+                            prev_e = prev_e.get_previous()
+                    if prev_e.type in MP_STATEMENTS:
+                        e.type = MP_CONT
+                    elif prev_e.type in PRESIDENT_STATEMENTS:
+                        e.type = PRESIDENT_CONT
+                    elif prev_e.type in PM_STATEMENTS:
+                        e.type = PM_CONT
+                    elif prev_e.type in MINISTER_STATEMENTS:
+                        e.type = MINISTER_CONT
+                    elif prev_e.type in STATE_SECRETARY_STATEMENTS:
+                        e.type = STATE_SECRETARY_CONT
+                    elif prev_e.type in PR_STATEMENTS:
+                        e.type = PR_CONT
+                    else:
+                        print prev_e.type
+
+    # encontrar apartes
+    for e in s.entries:
+        if e.type in STATEMENTS:
+            prev_e = e.get_previous()
+            # FIXME: preguiça -- consideramos intervenções curtas como apartes
+            while prev_e.type in INTERRUPTIONS+ASIDES:
+                prev_e = prev_e.get_previous()
+            if (e.type == MP_STATEMENT and prev_e.type in MP_STATEMENTS and 
+                e.speaker and not e.speaker == prev_e.speaker and
+                len(e.text) < 100):
+                e.type = MP_ASIDE
+            
+            elif prev_e.type in MP_STATEMENTS and prev_e.speaker == e.speaker:
+                e.type = MP_CONT
+            elif prev_e.type in PRESIDENT_STATEMENTS and prev_e.speaker == e.speaker:
+                e.type = PRESIDENT_CONT
+            elif prev_e.type in MINISTER_STATEMENTS and prev_e.speaker == e.speaker:
+                e.type = MINISTER_CONT
+            elif prev_e.type in PM_STATEMENTS and prev_e.speaker == e.speaker:
+                e.type = PM_CONT
+            elif prev_e.type in STATE_SECRETARY_STATEMENTS and prev_e.speaker == e.speaker:
+                e.type = STATE_SECRETARY_CONT
+            elif prev_e.type in PR_STATEMENTS and prev_e.speaker == e.speaker:
+                e.type = PR_CONT
 
     # final pass: look for unidentified tags
     # raw_input para confirmar se é continuação?
@@ -305,7 +393,17 @@ if __name__ == "__main__":
             if e.party: print '  ' + e.party.encode('utf-8')
             print '  ' + e.text.encode('utf-8')
             print
-    
+        if e.type == UNKNOWN_NOTE:
+            e.type = NOTE
+        if e.type == CONT:
+            pass
+            print 'Continuação não identificada (última passagem):'
+            print '  - ' + str(e.get_previous(3).type)
+            print '  - ' + str(e.get_previous(2).type)
+            print '  - ' + str(e.get_previous().type)
+            print '  - ' + str(e.type)
+            print e.text.encode('utf-8')
+            print
     import codecs
     outfile = codecs.open(sys.argv[2], 'w', 'utf-8')
     outfile.write(s.get_json())
