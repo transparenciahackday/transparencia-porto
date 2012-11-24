@@ -1,5 +1,10 @@
 #!/usr/bin/python
+"""
 
+aparentemente inutil
+apagar assim que se confirme ser inutil
+
+"""
 
 from urllib import urlopen
 from csv import reader

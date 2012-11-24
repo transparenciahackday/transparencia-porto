@@ -1,13 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+"""
+
+- obtem lista de deputados em funções
+- extrai informações básicas de cada deputado
+- ver:
+- interessesscrap.py
+- pic_scrapper.py
+
+
+"""
+
+
+
 import urllib
 from BeautifulSoup import BeautifulSoup
-#from BeautifulSoup import BeautifulStoneSoup
 from datetime import datetime as dt
 from json import dumps
 from utils import *
-#import sys
 
 
 DEFAULT_MAX = 4230
@@ -45,7 +56,7 @@ def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
             soup = BeautifulSoup(deps_activos_list)
         except: # há muitos erros http ou parse que podem ocorrer
             soup = None
-            print 'Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX 
+            print 'Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX
         
         if soup:
             max = 0
