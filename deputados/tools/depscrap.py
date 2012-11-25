@@ -8,6 +8,7 @@ from datetime import datetime as dt
 from json import dumps
 from utils import *
 #import sys
+from replaces_depscrap import SHORTNAME_REPLACES
 
 
 DEFAULT_MAX = 4600
@@ -88,7 +89,12 @@ def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
                          'url': url,
                          'scrape_date': dt.utcnow().isoformat()}
             if short:
-                deprows[i]['shortname'] = short.text
+                # replace by canonical shortnames if appropriate
+                if short.text in SHORTNAME_REPLACES:
+                    t = SHORTNAME_REPLACES[short.text]
+                else:
+                    t = short.text
+                deprows[i]['shortname'] = t
             if birthdate:
                 deprows[i]['birthdate'] = birthdate.text
             if party:
