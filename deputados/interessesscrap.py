@@ -1,8 +1,15 @@
-# http://www.parlamento.pt/DeputadoGP/Paginas/RegistoInteresses.aspx?BID=3
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+
+"""
+
+# http://www.parlamento.pt/DeputadoGP/Paginas/RegistoInteresses.aspx?BID=3
+
+- extende informações de cada deputado
+- ver: depscrap.py
+
+"""
 
 from BeautifulSoup import BeautifulSoup
 from json import dumps

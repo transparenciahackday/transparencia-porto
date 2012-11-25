@@ -1,5 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+depscrap
+========
+
+Descarrega a página de um deputado do Parlamento.pt e extrai uma parte da informação, convertendo para JSON.
+Também obtém a lista de deputados em funções caso não seja indicado um intervalo de ID's.
+
+Como usar
+---------
+
+Gravar o resultado num ficheiro:
+    python depscrap -o deputados.json
+
+Gravar o resultado num ficheiro com uma indentação de 4 espaços:
+    python depscrap -o deputados.json -i 4
+
+Para mostrar o resultado na linha de comandos:
+    python depscrap
+
+Para ver todas as opções possíveis:
+    python depscrap -h
+
+Ver também
+----------
+* interessesscrap.py
+* pic_scrapper.py
+
+"""
 #
 import urllib
 from BeautifulSoup import BeautifulSoup
@@ -39,7 +67,7 @@ def parse_legislature(s):
         start = start.replace(' a', '')
     return number, start, end
 
-def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
+def scrape(start=1, end=None, verbose=False, outfile='', indent=1):
     if not end:
         try:
             deps_activos_list = getpage(URL_DEPS_ACTIVOS)
@@ -162,18 +190,16 @@ def scrape(start=0, end=None, verbose=False, outfile='', indent=1):
 
 
 if __name__ == '__main__':
-    import sys
+    import sys 
     import optparse
     parser = optparse.OptionParser()
     # TODO: Add an option to overwrite cache, in order to get up-to-date records
     parser.add_option('-s', '--start', 
                       dest="start", 
-                      default="1",
                       help='Begin parsing from this ID (int required)'
                       )
     parser.add_option('-e', '--end', 
-                      dest="end", 
-                      default=DEFAULT_MAX,
+                      dest="end ", 
                       help='Stop parsing on this ID (int required)'
                       )
     parser.add_option('-v', '--verbose',
@@ -183,7 +209,7 @@ if __name__ == '__main__':
                       help='Print verbose information',
                       )
     parser.add_option('-o', '--outfile', 
-                      dest="outfile", 
+                      dest=" outfile", 
                       default="",
                       help='Output JSON to this file'
                       )
@@ -192,20 +218,7 @@ if __name__ == '__main__':
                       default="1",
                       help='Number of spaces for indentation (default is 1)'
                       )
-    '''
-    parser.add_option('-p', '--picky',
-                      dest="picky",
-                      default=False,
-                      action="store_true",
-                      help='Stop batch processing in case an error is found',
-                      )
-    parser.add_option('-f', '--force',
-                      dest="force",
-                      default=False,
-                      action="store_true",
-                      help='Process file even if the output file already exists',
-                      )
-    '''
+
     options, remainder = parser.parse_args()
     start = int(options.start)
     end = int(options.end)
@@ -213,7 +226,7 @@ if __name__ == '__main__':
     outfile = options.outfile
     indent = options.indent
 
-    scrape(start, end, verbose, outfile)
+    scrape(start, end, verbose, outfile, indent)
 
 
 

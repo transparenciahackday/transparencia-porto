@@ -4,8 +4,6 @@ import urllib
 
 #USE: from utils import *
 
-
-
 def hash(str):
     hash = sha1()
     hash.update(str)
