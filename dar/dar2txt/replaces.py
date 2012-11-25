@@ -13,6 +13,8 @@ REPLACES = (
         (u'Bourgiba', 'Bourguiba'),
         (u'Merkl', 'Merkel'),
 
+        (u'Seurfert', 'Seufert'),
+
         (u'tróica', 'troica'),
         (u'troika', 'troica'),
 

@@ -102,7 +102,7 @@ def get_note_type(e):
         elif e.text.endswith(('2009', '2010', '2011', '2012')):
             parse_session_date(e)
             return DATE
-        elif e.text.endswith((u' seguinte:', u'seguintes:')) or e.text.startswith('Ata') or e.text.startswith('Propostas apresentadas'):
+        elif e.text.endswith((u' seguinte:', u'seguintes:', u'seguinte teor:')) or e.text.startswith('Ata') or e.text.startswith('Propostas apresentadas'):
             return DOCUMENT_START
         elif e.text.startswith(u'Declaraç'):
             return VOTE_STATEMENT_START
@@ -153,13 +153,78 @@ def parse_statement(e):
     elif (e.party and e.party.startswith(u'Secretári')) or e.speaker.startswith(u'Secretári'):
         e.type = STATE_SECRETARY_STATEMENT
     elif e.speaker == u'Presidente da República' or e.party == u'Presidente da República':
-        e.party = u'Presidente da República'
         e.type = PR_STATEMENT
-
-    elif e.party in PARTIES:
-        e.type = MP_STATEMENT
     elif e.speaker.startswith(('Vozes', 'Uma voz d')):
         e.type = VOICES_ASIDE
+    elif e.party in PARTIES:
+        e.type = MP_STATEMENT
+    elif e.speaker.endswith(('seguinte', 'seguintes', 'seguinte teor')) or e.speaker.startswith('Ata') or e.text.startswith('Propostas apresentadas'):
+        e.type = DOCUMENT_START
+    else:
+        # primeira linha nao identificada, marcamos como continuação para na passagem seguinte
+        # ele tentar identificar
+        e.type = CONT
+
+people = {}
+def parse_non_mp_statement(e):
+    # membros de governo e outros
+        if e.type in PM_STATEMENTS + (PM_ASIDE,):
+            if e.party:
+                if e.party.startswith('Primeiro'):
+                    # nome mencionado, vamos adicionar à lista de pessoas
+                    people[e.party] = e.speaker 
+                else:
+                    print 'ei!'
+                    print e.speaker
+                    print e.party
+            elif e.speaker.startswith('Primeiro'):
+                # apenas mencionado o cargo, vamos adicionar o nome
+                e.party = e.speaker
+                e.speaker = people[e.speaker]
+            else:
+                print 'Intervenção de primeiro-ministro não identificada!'
+        elif e.type in MINISTER_STATEMENTS + (MINISTER_ASIDE,):
+            if e.party and e.party.startswith('Ministr'):
+                # nome mencionado, vamos adicionar à lista de pessoas
+                people[e.party] = e.speaker 
+            elif e.speaker.startswith('Ministr'):
+                # apenas mencionado o cargo, vamos adicionar o nome
+                e.party = e.speaker
+                e.speaker = people[e.speaker]
+            else:
+                print 'Intervenção de ministro não identificada!'
+        elif e.type in STATE_SECRETARY_STATEMENTS + (STATE_SECRETARY_ASIDE,):
+            if e.party:
+                if e.party.startswith(u'Secretári'):
+                    # nome mencionado, vamos adicionar à lista de pessoas
+                    people[e.party] = e.speaker 
+                elif e.speaker.startswith(u'Secretári'):
+                    if e.party:
+                        # às vezes nome e cargo estão trocados...
+                        people[e.speaker] = e.party
+                else:
+                    print 'Intervenção de sec. estado não identificada!'
+                    print '- %s (%s)' % (e.speaker, str(e.party))
+            else:
+                # apenas mencionado o cargo, vamos adicionar o nome
+                e.speaker = people[e.speaker]
+                e.party = e.speaker
+        elif e.type in PR_STATEMENTS + (PR_ASIDE,):
+            if e.party:
+                if e.party.startswith(u'Presidente'):
+                    # nome mencionado, vamos adicionar à lista de pessoas
+                    people[e.party] = e.speaker 
+                elif e.speaker.startswith(u'Presidente'):
+                    if e.party:
+                        # às vezes nome e cargo estão trocados...
+                        people[e.speaker] = e.party
+                    else:
+                        print 'Intervenção de PR não identificada!'
+                        print '- %s (%s)' % (e.speaker, str(e.party))
+            else:
+                # apenas mencionado o cargo, vamos adicionar o nome
+                e.party = e.speaker
+                e.speaker = people[e.speaker]
 
 def parse_session_date(entry):
     parts = entry.text.strip().split(' ')
@@ -202,7 +267,7 @@ if __name__ == "__main__":
         # é um orador? Limitamos o tamanho da linha para evitar falsos 
         # positivos onde vai ser lido um documento e que por isso acabam com ':'
         # e também checamos certas expressões que dão positivo erradamente nalguns casos
-        elif lines[0].endswith(':') and len(lines[0]) < 100 and not lines[0].startswith(('Relativa', 'A acta', 'O artigo', 'Agora,', 'Por fim,', 'Segue-se',)):
+        elif lines[0].endswith(':') and len(lines[0]) < 150 and not lines[0].startswith(('Relativa', 'A acta', 'A ata', 'Acta', 'Ata', 'O artigo', 'Agora,', 'Por fim,', 'Segue-se',)) and not lines[0].endswith(('seguinte', 'seguinte teor', 'ropostas apresentadas')):
             e.speaker, e.party, e.type = get_speaker(lines[0])
             e.text = '\n'.join(lines[1:])
 
@@ -292,7 +357,6 @@ if __name__ == "__main__":
     for e in entries_to_remove:
         s.entries.pop(e)
 
-
     # nova passagem: catalogar continuações
     # fazemos duas passagens aqui
     for n in range(2):
@@ -329,6 +393,21 @@ if __name__ == "__main__":
                         e.type = PR_CONT
                         e.speaker = prev_e.speaker
                         e.party = prev_e.party
+                    elif prev_e.type in SECRETARY_STATEMENTS:
+                        e.type = SECRETARY_CONT
+                        e.speaker = prev_e.speaker
+                        e.party = prev_e.party
+                    elif prev_e.type == DOCUMENT_START:
+                        e.type = DOCUMENT
+                    elif prev_e.type == DOCUMENT:
+                        e.type = DOCUMENT
+                    # conteúdos de uma declaração de voto?
+                    elif prev_e.type == VOTE_STATEMENT_START:
+                        e.type = VOTE_STATEMENT
+                    elif prev_e.type == VOTE_STATEMENT:
+                        e.type = VOTE_STATEMENT
+                    elif prev_e.type == SEPARATOR and (prev_e.get_previous().type == VOTE_STATEMENT or e.text.startswith('Relativ')):
+                        e.type = VOTE_STATEMENT
                     else:
                         print prev_e.type
                 else:
@@ -349,6 +428,19 @@ if __name__ == "__main__":
                         e.type = STATE_SECRETARY_CONT
                     elif prev_e.type in PR_STATEMENTS:
                         e.type = PR_CONT
+                    elif prev_e.type in SECRETARY_STATEMENTS:
+                        e.type = SECRETARY_CONT
+                    elif prev_e.type == DOCUMENT_START:
+                        e.type = DOCUMENT
+                    elif prev_e.type == DOCUMENT:
+                        e.type = DOCUMENT
+                    # conteúdos de uma declaração de voto?
+                    elif prev_e.type == VOTE_STATEMENT_START:
+                        e.type = VOTE_STATEMENT
+                    elif prev_e.type == VOTE_STATEMENT:
+                        e.type = VOTE_STATEMENT
+                    elif prev_e.type == SEPARATOR and (prev_e.get_previous().type == VOTE_STATEMENT or e.text.startswith('Relativ')):
+                        e.type = VOTE_STATEMENT
                     else:
                         print prev_e.type
 
@@ -377,6 +469,25 @@ if __name__ == "__main__":
             elif prev_e.type in PR_STATEMENTS and prev_e.speaker == e.speaker:
                 e.type = PR_CONT
 
+    # identificar ministros e outros membros do governo
+    for e in s.entries:
+        if e.type in (MINISTER_STATEMENTS + PM_STATEMENTS + STATE_SECRETARY_STATEMENTS + PR_STATEMENTS + 
+                     (MINISTER_ASIDE, PM_ASIDE, STATE_SECRETARY_ASIDE, PR_ASIDE)):
+            parse_non_mp_statement(e)
+
+    # concatenar declarações de voto e documentos
+    entries_to_remove = []
+    for e in s.entries:
+        if e.type == VOTE_STATEMENT:
+            prev_e = e.get_previous()
+            while prev_e.type == VOTE_STATEMENT or prev_e in entries_to_remove:
+                prev_e = prev_e.get_previous()
+            prev_e.text += '\n' + e.text
+            entries_to_remove.append(s.entries.index(e))
+    entries_to_remove.reverse()
+    for e in entries_to_remove:
+        s.entries.pop(e)
+
     # final pass: look for unidentified tags
     # raw_input para confirmar se é continuação?
     for e in s.entries:
@@ -396,7 +507,6 @@ if __name__ == "__main__":
         if e.type == UNKNOWN_NOTE:
             e.type = NOTE
         if e.type == CONT:
-            pass
             print 'Continuação não identificada (última passagem):'
             print '  - ' + str(e.get_previous(3).type)
             print '  - ' + str(e.get_previous(2).type)
@@ -404,6 +514,13 @@ if __name__ == "__main__":
             print '  - ' + str(e.type)
             print e.text.encode('utf-8')
             print
+        if not e.type:
+            print "Entrada sem tipo!"
+            print e.speaker
+            print e.party
+            print e.text
+            print e.type
+
     import codecs
     outfile = codecs.open(sys.argv[2], 'w', 'utf-8')
     outfile.write(s.get_json())
