@@ -1,4 +1,15 @@
 
+Passos para automatizar o Demo.cratica:
+1. Ir buscar novas sessões
+* Determinar dia de hoje
+* Ir buscar transcrições até hoje
+* Verificar se já temos
+2. Parse das novas sessões
+3. Colocação no repo datasets
+4. Import Demo.cratica
+
+Objectivo: Fab file
+
 
 
 em dar/dar2txt:
@@ -21,6 +32,14 @@ python import_mp_photos.py
 python import_legislatures.py
 python determine_mp_gender.py
 for f in ~/Projects/Transparência/repo/dar/dar2txt/txtsprocessados/*.json; do python import_json_transcripts.py -i ${f} -f; done
+
+Para actualizar:
+pm migrate --all
+cd scripts
+python import_mps.py
+python import_mp_photos.py # TODO: Actualizar apenas os que nao tem
+for f in ~/Projects/Transparência/repo/dar/dar2txt/txtsprocessados/*.json; do python import_json_transcripts.py -i ${f} -f; done
+# TODO: Reconhecer se ja tem, o flag -f chega?
 
 O que falta agora:
 - juntar documentos e declarações de voto numa entrada só (ler separadores)
