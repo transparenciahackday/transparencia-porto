@@ -1,6 +1,6 @@
 Para o parse do DAR:
 
-    for f in ~/dar/pdf/*.pdf; do echo ${f}; python darjson.py ${f} ${f/%pdf/json}; done
+    python darjson.py <dir_dos_pdfs> <dir_para_jsons>
 
 Para o scrape dos deputados:
 python depscrap > deputados-20121120.json
