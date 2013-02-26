@@ -192,7 +192,11 @@ def parse_non_mp_statement(e):
                 e.party = e.speaker
                 e.speaker = people[e.speaker]
             else:
-                print 'Intervenção de ministro não identificada!'
+                print '  Intervenção de ministro não identificada!'
+                print '    speaker:' + e.speaker
+                print '    party:  ' + e.party
+                print '    text:   ' + e.text[:80]
+                print
         elif e.type in STATE_SECRETARY_STATEMENTS + (STATE_SECRETARY_ASIDE,):
             if e.party:
                 if e.party.startswith(u'Secretári'):

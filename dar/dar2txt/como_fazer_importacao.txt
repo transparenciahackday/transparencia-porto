@@ -1,9 +1,6 @@
+Para o parse do DAR:
 
-
-
-em dar/dar2txt:
-
-for f in txtsprocessados/*.txt; do echo ${f}; python txt2json.py ${f} ${f/%txt/json}; done
+    for f in ~/dar/pdf/*.pdf; do echo ${f}; python darjson.py ${f} ${f/%pdf/json}; done
 
 Para o scrape dos deputados:
 python depscrap > deputados-20121120.json
@@ -39,7 +36,6 @@ O que falta agora:
   - api call para importar, delegando ao celery
 
   - comando para re-formar o json dos deputados (ver acima!)
-
 
 Notas:
 - Parece haver confusão frequente entre "Soares" e "Santos"

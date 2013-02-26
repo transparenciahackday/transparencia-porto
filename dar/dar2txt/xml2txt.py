@@ -88,4 +88,3 @@ outfile = codecs.open(sys.argv[2], 'w', 'utf-8')
 outfile.write(txt)
 outfile.close()
 
-
