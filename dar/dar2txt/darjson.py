@@ -52,10 +52,15 @@ def run_parse_pipeline(filename, outfilename, keep=False, verbose=False):
         print 'Unsupported extension!'
         sys.exit()
     if verbose: print "%s: Copying JSON file into file %s" % (filename, outfilename)
+    from shutil import copyfile
+    copyfile(filename, outfilename)
     # cleanup
     if not keep:
         for f in files_to_delete:
-            os.remove(f)
+            try:
+                os.remove(f)
+            except OSError:
+                print 'Error removing temp file %s!'
 
 if __name__ == "__main__":
     import argparse
