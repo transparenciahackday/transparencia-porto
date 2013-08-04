@@ -1,15 +1,8 @@
+/cache/
 .DS_Store
-./dptd/settings.py
-/dptd/deputados.dot
-/dptd/deputados.png
 *.pyc
 *.zip
-darscraper/csv
-darscraper/txt
-darscraper/txt-1
 *.swp
 *.swo
-darscraper/scraped
-darscraper/testfiles/*out*
 tools/*.db
 scripts/tools/cache
