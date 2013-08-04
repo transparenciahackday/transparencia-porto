@@ -1,0 +1,47 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="css/grid.css" rel="stylesheet" media="screen">
+
+  <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/respond.js"></script>
+
+  <script type="text/javascript">
+   window.onload = function()
+   {
+     var dataset;
+
+     d3.json("darsample.json", function(data) {
+       dataset = data;
+       console.log(dataset);
+
+       var entry = d3.select("div.container").selectAll("div")
+                      .data(dataset.entries)
+                      .enter()
+                      .append("div").attr("class", "row");
+
+       entry.append("div").attr("class", "col-lg-3 entry-speaker")
+              .text(function (d) { return d.speaker; })
+       entry.append("div").attr("class", "col-lg-6 entry-text")
+              .text(function (d) { return d.text; })
+              .style("font-size", "7px");
+       entry.append("div").attr("class", "col-lg-3 entry-type")
+              .text(function (d) { return d.type; })
+
+     });
+
+   }
+  </script>
+</head>
+ 
+<body>
+  <div class="container"> 
+  </div>
+</body>
+ 
+</html>
