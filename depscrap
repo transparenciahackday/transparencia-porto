@@ -49,7 +49,7 @@ ROMAN_NUMERALS = {
     'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
     }
 
-DATASETS = '../../datasets/'
+DATASETS = '../thd-datasets/'
 URL_DEPS_ACTIVOS='http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
 FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
 
@@ -196,11 +196,13 @@ if __name__ == '__main__':
     # TODO: Add an option to overwrite cache, in order to get up-to-date records
     parser.add_option('-s', '--start', 
                       dest="start", 
-                      help='Begin parsing from this ID (int required)'
+                      default=0,
+                      help='Begin parsing from this ID (int required, default 0)'
                       )
     parser.add_option('-e', '--end', 
-                      dest="end ", 
-                      help='Stop parsing on this ID (int required)'
+                      dest="end",
+                      default=5000,
+                      help='Stop parsing on this ID (int required, default 5000)'
                       )
     parser.add_option('-v', '--verbose',
                       dest="verbose",
@@ -209,14 +211,14 @@ if __name__ == '__main__':
                       help='Print verbose information',
                       )
     parser.add_option('-o', '--outfile', 
-                      dest=" outfile", 
+                      dest="outfile", 
                       default="",
                       help='Output JSON to this file'
                       )
     parser.add_option('-i', '--indent', 
                       dest="indent", 
-                      default="1",
-                      help='Number of spaces for indentation (default is 1)'
+                      default="2",
+                      help='Number of spaces for indentation (default is 2)'
                       )
 
     options, remainder = parser.parse_args()
