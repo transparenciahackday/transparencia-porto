@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from csv import writer
 from clint import args
 
-input_file, output_file = args.files
+input_file, output_file = args.all
 
 w = writer(open(output_file, "wb"))
 soup = BeautifulSoup(open(input_file, "rb"))
