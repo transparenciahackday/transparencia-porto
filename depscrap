@@ -32,6 +32,7 @@ Ver também
 from hashlib import sha1
 import os
 import urllib
+import shutil
 from bs4 import BeautifulSoup
 from datetime import datetime as dt
 from json import dumps
@@ -228,7 +229,6 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
             writer.writerow(row)
 
 
-# TODO: Add an option to overwrite cache, in order to get up-to-date records
 @click.command()
 @click.option("-f", "--format", help="Output file format, can be json (default) or csv", default="json")
 @click.option("-s", "--start", type=int, help="Begin scrape from this ID (int required, default 0)", default=0)
@@ -236,11 +236,16 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
 @click.option("-v", "--verbose", is_flag=True, help="Print some helpful information when running")
 @click.option("-o", "--outfile", type=click.Path(), help="Output file (default is deputados.json)")
 @click.option("-i", "--indent", type=int, help="Spaces for JSON indentation (default is 2)", default=2)
-def main(format, start, end, verbose, outfile, indent):
+@click.option("-c", "--clear-cache", help="Spaces for JSON indentation (default is 2)", is_flag=True)
+def main(format, start, end, verbose, outfile, indent, clear_cache):
     if not outfile and format == "csv":
         outfile = "deputados.csv"
     elif not outfile and format == "json":
         outfile = "deputados.json"
+    if clear_cache:
+        print "Clearing old cache..."
+        shutil.rmtree("cache/")
+
     scrape(format, start, end, verbose, outfile, indent)
 
 if __name__ == "__main__":
