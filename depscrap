@@ -35,6 +35,7 @@ from datetime import datetime as dt
 from json import dumps
 from utils import *
 from replaces_depscrap import SHORTNAME_REPLACES
+import click
 
 
 DEFAULT_MAX = 5000
@@ -187,46 +188,16 @@ def scrape(start=1, end=None, verbose=False, outfile='', indent=1):
         print dumps(deprows, encoding='utf-8', indent=indent, sort_keys=True)
 
 
-if __name__ == '__main__':
-    import sys 
-    import optparse
-    parser = optparse.OptionParser()
-    # TODO: Add an option to overwrite cache, in order to get up-to-date records
-    parser.add_option('-s', '--start', 
-                      dest="start", 
-                      default=0,
-                      help='Begin parsing from this ID (int required, default 0)'
-                      )
-    parser.add_option('-e', '--end', 
-                      dest="end",
-                      default=5000,
-                      help='Stop parsing on this ID (int required, default 5000)'
-                      )
-    parser.add_option('-v', '--verbose',
-                      dest="verbose",
-                      default=False,
-                      action="store_true",
-                      help='Print verbose information',
-                      )
-    parser.add_option('-o', '--outfile', 
-                      dest="outfile", 
-                      default="",
-                      help='Output JSON to this file'
-                      )
-    parser.add_option('-i', '--indent', 
-                      dest="indent", 
-                      default="2",
-                      help='Number of spaces for indentation (default is 2)'
-                      )
-
-    options, remainder = parser.parse_args()
-    start = int(options.start)
-    end = int(options.end)
-    verbose = options.verbose
-    outfile = options.outfile
-    indent = options.indent
-
+# TODO: Add an option to overwrite cache, in order to get up-to-date records
+@click.command()
+@click.option("-s", "--start", type=int, help="Begin scrape from this ID (int required, default 0)", default=0)
+@click.option("-e", "--end", type=int, help="End scrape at this ID (int required, default 5000)", default=5000)
+@click.option("-v", "--verbose", is_flag=True, help="Print some helpful information when running")
+@click.option("-o", "--outfile", type=click.Path(), help="Output file (default is deputados.json)", default="deputados.json")
+@click.option("-i", "--indent", type=int, help="Spaces for JSON indentation (default is 2)", default=2)
+def main(start, end, verbose, outfile, indent):
     scrape(start, end, verbose, outfile, indent)
 
-
+if __name__ == "__main__":
+    main()
 
