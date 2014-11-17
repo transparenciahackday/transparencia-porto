@@ -77,8 +77,10 @@ def getpage(url):
     cache_file = 'cache/' + url_hash
 
     if os.path.exists(cache_file):
+        #print "Cache hit for %s"  % url
         page = file_get_contents(cache_file)
     else:
+        #print "Cache miss for %s"  % url
         page = urllib.urlopen(url).read()
         file_put_contents(cache_file, page)
     return page
@@ -142,6 +144,7 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
         coms = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
         mandates = soup.find('table',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
         if name:
+            if verbose: print name.text
             deprows[i]= {'id': i,
                          'name': name.text,
                          'url': url,
@@ -208,10 +211,9 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
 
                     deprows[i]['mandates'].append({'legislature': number, 'start_date': start, 'end_date': end, 'constituency': leg[3].text, 'party': leg[4].text})
 
-            if verbose:
-                print name
 
     depsfp = open(outfile, 'w+')
+    if verbose: "Writing %s" % outfile
     if format == "json":
         depsfp.write(dumps(deprows, encoding='utf-8', indent=indent, sort_keys=True))
         depsfp.close()
@@ -227,6 +229,8 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
                     # convert lists to ;-separated strings
                     row[key] = "; ".join(row[key])
             writer.writerow(row)
+
+    if verbose: "Done."
 
 
 @click.command()
