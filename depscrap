@@ -28,8 +28,12 @@ Ver também
 * pic_scrapper.py
 
 """
+#
+from hashlib import sha1
+import os
 import urllib
-from BeautifulSoup import BeautifulSoup
+import shutil
+from bs4 import BeautifulSoup
 from datetime import datetime as dt
 from json import dumps
 from utils import *
@@ -39,21 +43,51 @@ from zenlog import log
 
 
 fieldnames = ['id', 'shortname', 'name', 'party', 'education', 'birthdate', 'occupation', 'current_jobs',
-'jobs', 'commissions', 'mandates', 'awards', 'url', 'scrape_date']
+              'jobs', 'commissions', 'mandates', 'awards', 'url', 'scrape_date']
 
 DEFAULT_MAX = 5000
 
-ROMAN_NUMERALS = {
-    'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
-    'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
-    'XI': 11, 'XII': 12, 'XIII': 13, 'XIV': 14, 'XV': 15,
-    'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
-    'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25,
-    }
+ROMAN_NUMERALS = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
+                  'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
+                  'XI': 11, 'XII': 12, 'XIII': 13, 'XIV': 14, 'XV': 15,
+                  'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
+                  'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25}
 
 DATASETS = '../thd-datasets/'
-URL_DEPS_ACTIVOS='http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
-FORMATTER_URL_BIO_DEP='http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
+URL_DEPS_ACTIVOS = 'http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
+FORMATTER_URL_BIO_DEP = 'http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
+
+
+def hash(str):
+    hash = sha1()
+    hash.update(str)
+    return hash.hexdigest()
+
+
+def file_get_contents(file):
+    return open(file).read()
+
+
+def file_put_contents(file, contents):
+    open(file, 'w+').write(contents)
+
+
+def getpage(url):
+    if not os.path.exists('cache'):
+        log.info( 'Creating new cache/ folder.')
+        os.mkdir('cache')
+    url_hash = hash(url)
+    cache_file = 'cache/' + url_hash
+
+    if os.path.exists(cache_file):
+        # log.debug("Cache hit for %s"  % url)
+        page = file_get_contents(cache_file)
+    else:
+        # log.debug("Cache miss for %s"  % url)
+        page = urllib.urlopen(url).read()
+        file_put_contents(cache_file, page)
+    return page
+
 
 def parse_legislature(s):
     s = s.replace('&nbsp;', '')
@@ -69,12 +103,13 @@ def parse_legislature(s):
         start = start.replace(' a', '')
     return number, start, end
 
+
 def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
     if not end:
         try:
             deps_activos_list = getpage(URL_DEPS_ACTIVOS)
-            soup = BeautifulSoup(deps_activos_list)
-        except: # há muitos erros http ou parse que podem ocorrer
+            soup = BeautifulSoup(deps_activos_list, "lxml")
+        except:  # há muitos erros http ou parse que podem ocorrer
             soup = None
             log.warning( 'Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX)
 
@@ -85,7 +120,7 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
             deps += table_deps.findAll('tr', 'ARTabResultadosLinhaImpar')
             for dep in deps:
                 depurl = dep.td.a['href']
-                dep_bid = int(depurl[depurl.find('BID=')+4:])
+                dep_bid = int(depurl[depurl.find('BID=') + 4:])
                 if dep_bid > max:
                     max = dep_bid
             max = int(max * 1.05)
@@ -101,24 +136,25 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
     for i in range(start, max):
         if verbose:
             log.debug("Trying ID %d..." % i)
+
         url = FORMATTER_URL_BIO_DEP % i
-        soup = BeautifulSoup(getpage(url))
-        name = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText'))
-        short = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
-        birthdate = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
-        party = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblPartido'))
-        occupation = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf'))
-        education = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes'))
-        current_jobs = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosDesempenha')) # ;)
-        jobs = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos')) # ;)
-        awards = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCondecoracoes'))
-        coms = soup.find('div',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
-        mandates = soup.find('table',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
+        soup = BeautifulSoup(getpage(url), "lxml")
+        name = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText'))
+        short = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
+        birthdate = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
+        party = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblPartido'))
+        occupation = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf'))
+        education = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes'))
+        current_jobs = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosDesempenha'))  # ;)
+        jobs = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos'))  # ;)
+        awards = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCondecoracoes'))
+        coms = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
+        mandates = soup.find('table', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
         if name:
-            deprows[i]= {'id': i,
-                         'name': name.text,
-                         'url': url,
-                         'scrape_date': dt.utcnow().isoformat()}
+            deprows[i] = {'id': i,
+                          'name': name.text,
+                          'url': url,
+                          'scrape_date': dt.utcnow().isoformat()}
             if short:
                 # replace by canonical shortnames if appropriate
                 if short.text in SHORTNAME_REPLACES:
@@ -131,8 +167,8 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
             if party:
                 deprows[i]['party'] = party.text
             if education:
-                #TODO: break educations string into multiple entries, ';' is the separator
-                #TODO: these blocks are repeated and should be made into functions
+                # TODO: break educations string into multiple entries, ';' is the separator
+                # TODO: these blocks are repeated and should be made into functions
                 deprows[i]['education'] = []
                 for each in education.findAll('tr')[1:]:
                     text = each.find('span').text
@@ -178,7 +214,6 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
                     leg = each.findAll('td')
                     l = leg[0].text
                     number, start, end = parse_legislature(l)
-
                     deprows[i]['mandates'].append({'legislature': number, 'start_date': start, 'end_date': end, 'constituency': leg[3].text, 'party': leg[4].text})
 
             if verbose:
@@ -202,8 +237,9 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
                     row[key] = "; ".join(row[key])
             writer.writerow(row)
 
+    log.info("Done.")
 
-# TODO: Add an option to overwrite cache, in order to get up-to-date records
+
 @click.command()
 @click.option("-f", "--format", help="Output file format, can be json (default) or csv", default="json")
 @click.option("-s", "--start", type=int, help="Begin scrape from this ID (int required, default 0)", default=0)
@@ -211,13 +247,17 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
 @click.option("-v", "--verbose", is_flag=True, help="Print some helpful information when running")
 @click.option("-o", "--outfile", type=click.Path(), help="Output file (default is deputados.json)")
 @click.option("-i", "--indent", type=int, help="Spaces for JSON indentation (default is 2)", default=2)
-def main(format, start, end, verbose, outfile, indent):
+@click.option("-c", "--clear-cache", help="Spaces for JSON indentation (default is 2)", is_flag=True)
+def main(format, start, end, verbose, outfile, indent, clear_cache):
     if not outfile and format == "csv":
         outfile = "deputados.csv"
     elif not outfile and format == "json":
         outfile = "deputados.json"
+    if clear_cache:
+        log.info("Clearing old cache...")
+        shutil.rmtree("cache/")
+
     scrape(format, start, end, verbose, outfile, indent)
 
 if __name__ == "__main__":
     main()
-
