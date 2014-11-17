@@ -30,7 +30,7 @@ Ver também
 """
 #
 import urllib
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from datetime import datetime as dt
 from json import dumps
 from utils import *
@@ -70,7 +70,7 @@ def scrape(start=1, end=None, verbose=False, outfile='', indent=1):
     if not end:
         try:
             deps_activos_list = getpage(URL_DEPS_ACTIVOS)
-            soup = BeautifulSoup(deps_activos_list)
+            soup = BeautifulSoup(deps_activos_list, "lxml")
         except: # há muitos erros http ou parse que podem ocorrer
             soup = None
             print 'Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX
@@ -98,7 +98,7 @@ def scrape(start=1, end=None, verbose=False, outfile='', indent=1):
     for i in range(start, max):
         if verbose: print i
         url = FORMATTER_URL_BIO_DEP % i
-        soup = BeautifulSoup(getpage(url))
+        soup = BeautifulSoup(getpage(url), "lxml")
         name = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText'))
         short = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
         birthdate = soup.find('span',dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
