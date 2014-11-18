@@ -35,6 +35,7 @@ import urllib
 import shutil
 from bs4 import BeautifulSoup
 import re
+from itertools import chain
 from datetime import datetime as dt
 from json import dumps
 from utils import *
@@ -63,11 +64,11 @@ RE_BIRTHDATE = re.compile('DOB_rptContent')
 RE_PARTY = re.compile('Partido')
 RE_OCCUPATION = re.compile('Prof')
 RE_EDUCATION = re.compile('Habilitacoes')
-RE_CURRENT_JOBS=re.compile('CargosDesempenha')
-RE_JOBS=re.compile('CargosExercidos')
-RE_AWARDS=re.compile('Condecoracoes')
-RE_COMS=re.compile('Comissoes')
-RE_MANDATES=re.compile('TabLegs')
+RE_CURRENT_JOBS = re.compile('CargosDesempenha')
+RE_JOBS = re.compile('CargosExercidos')
+RE_AWARDS = re.compile('Condecoracoes')
+RE_COMS = re.compile('Comissoes')
+RE_MANDATES = re.compile('TabLegs')
 
 
 def hash(str):
@@ -92,10 +93,10 @@ def getpage(url):
     cache_file = 'cache/' + url_hash
 
     if os.path.exists(cache_file):
-        log.debug("Cache hit for %s"  % url)
+        log.debug("Cache hit for %s" % url)
         page = file_get_contents(cache_file)
     else:
-        log.debug("Cache miss for %s"  % url)
+        log.debug("Cache miss for %s" % url)
         page = urllib.urlopen(url).read()
         file_put_contents(cache_file, page)
     return page
@@ -114,6 +115,14 @@ def parse_legislature(s):
     if start.endswith(' a'):
         start = start.replace(' a', '')
     return number, start, end
+
+
+def extract_details(block):
+    return [item.text.strip() for item in block.find_all('tr')[1:]]
+
+
+def extract_multiline_details(block):
+    return  [item for item in chain.from_iterable(tr.text.split('\n') for tr in block.find_all('tr')[1:]) if item]
 
 
 def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
@@ -180,47 +189,19 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
                 deprows[i]['party'] = party.text
             if education:
                 # TODO: break educations string into multiple entries, ';' is the separator
-                # TODO: these blocks are repeated and should be made into functions
-                deprows[i]['education'] = []
-                for each in education.findAll('tr')[1:]:
-                    text = each.find('span').text
-                    deprows[i]['education'].append(text)
+                deprows[i]['education'] = extract_details(education)
             if occupation:
-                deprows[i]['occupation'] = []
-                for each in occupation.findAll('tr')[1:]:
-                    deprows[i]['occupation'].append(each.text)
+                deprows[i]['occupation'] = extract_details(occupation)
             if jobs:
-                deprows[i]['jobs'] = []
-                for each in jobs.findAll('tr')[1:]:
-                    if '\n' in each.text:
-                        for j in each.text.split('\n'):
-                            if j:
-                                deprows[i]['jobs'].append(j.rstrip(' .;'))
-                    else:
-                        deprows[i]['jobs'].append(each.text)
+                deprows[i]['jobs'] = extract_multiline_details(jobs)
             if current_jobs:
-                deprows[i]['current_jobs'] = []
-                for each in current_jobs.findAll('tr')[1:]:
-                    if '\n' in each.text:
-                        for j in each.text.split('\n'):
-                            if j:
-                                deprows[i]['current_jobs'].append(j.rstrip(' .;'))
-                    else:
-                        deprows[i]['current_jobs'].append(each.text.rstrip(' ;.'))
+                deprows[i]['current_jobs'] = extract_multiline_details(current_jobs)
             if coms:
-                deprows[i]['commissions'] = []
-                for each in coms.findAll('tr')[1:]:
-                    deprows[i]['commissions'].append(each.text)
+                deprows[i]['commissions'] = extract_details(coms)
             if awards:
-                deprows[i]['awards'] = []
-                for each in awards.findAll('tr')[1:]:
-                    if '\n' in each.text:
-                        for j in each.text.split('\n'):
-                            if j:
-                                deprows[i]['awards'].append(j.rstrip(' .;'))
-                    else:
-                        deprows[i]['awards'].append(each.text.rstrip(' ;.'))
+                deprows[i]['awards'] = extract_multiline_details(awards)
             if mandates:
+                # TODO: this block may take advantage of the new functions
                 deprows[i]['mandates'] = []
                 for each in mandates.findAll('tr')[1:]:
                     leg = each.findAll('td')
