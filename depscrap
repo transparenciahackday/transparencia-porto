@@ -42,7 +42,7 @@ import click
 from zenlog import log
 
 
-fieldnames = ['id', 'shortname', 'name', 'party', 'education', 'birthdate', 'occupation', 'current_jobs',
+fieldnames = ['id', 'shortname', 'name', 'party', 'active', 'education', 'birthdate', 'occupation', 'current_jobs',
               'jobs', 'commissions', 'mandates', 'awards', 'url', 'scrape_date']
 
 DEFAULT_MAX = 5000
@@ -54,7 +54,7 @@ ROMAN_NUMERALS = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
                   'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25}
 
 DATASETS = '../thd-datasets/'
-URL_DEPS_ACTIVOS = 'http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
+URL_DEPS_ACTIVOS = 'http://www.parlamento.pt/DeputadoGP/Paginas/Deputadoslista.aspx'
 FORMATTER_URL_BIO_DEP = 'http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
 
 
@@ -103,35 +103,34 @@ def parse_legislature(s):
         start = start.replace(' a', '')
     return number, start, end
 
+def get_active_deps():
+    # returns list of BIDs
+    ids = []
+    try:
+        log.info("Fetching active MP list...")
+        deps_activos_list = getpage(URL_DEPS_ACTIVOS)
+        soup = BeautifulSoup(deps_activos_list, "lxml")
+    except:  # há muitos erros http ou parse que podem ocorrer
+        soup = None
+        log.warning('Active MP page could not be fetched.')
+        raise
+
+    table_deps = soup.find('table', 'ARTabResultados')
+    deps = table_deps.findAll('tr', 'ARTabResultadosLinhaPar')
+    deps += table_deps.findAll('tr', 'ARTabResultadosLinhaImpar')
+    for dep in deps:
+        depurl = dep.td.a['href']
+        dep_bid = int(depurl[depurl.find('BID=') + 4:])
+        ids.append(dep_bid)
+
+    log.info('Active MP list created.')
+    return ids
+
 
 def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
-    if not end:
-        try:
-            deps_activos_list = getpage(URL_DEPS_ACTIVOS)
-            soup = BeautifulSoup(deps_activos_list, "lxml")
-        except:  # há muitos erros http ou parse que podem ocorrer
-            soup = None
-            log.warning( 'Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX)
-
-        if soup:
-            max = 0
-            table_deps = soup.find('table', 'ARTabResultados')
-            deps = table_deps.findAll('tr', 'ARTabResultadosLinhaPar')
-            deps += table_deps.findAll('tr', 'ARTabResultadosLinhaImpar')
-            for dep in deps:
-                depurl = dep.td.a['href']
-                dep_bid = int(depurl[depurl.find('BID=') + 4:])
-                if dep_bid > max:
-                    max = dep_bid
-            max = int(max * 1.05)
-        else:
-            max = int(DEFAULT_MAX * 1.05)
-
-        log.info('Scraping until ID %d.' % max)
-    else:
-        max = end
-
+    max = end
     deprows = {}
+    active_ids = get_active_deps()
 
     for i in range(start, max):
         if verbose:
@@ -198,7 +197,7 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
             if coms:
                 deprows[i]['commissions'] = []
                 for each in coms.findAll('tr')[1:]:
-                    deprows[i]['commissions'].append(each.text)
+                    deprows[i]['commissions'].append(each.text.strip())
             if awards:
                 deprows[i]['awards'] = []
                 for each in awards.findAll('tr')[1:]:
@@ -216,8 +215,13 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
                     number, start, end = parse_legislature(l)
                     deprows[i]['mandates'].append({'legislature': number, 'start_date': start, 'end_date': end, 'constituency': leg[3].text, 'party': leg[4].text})
 
+            if i in active_ids:
+                deprows[i]['active'] = True
+            else:
+                deprows[i]['active'] = False
+
             if verbose:
-                log.info("Found MP: %s" % short.text)
+                log.info("Scraped MP: %s" % short.text)
 
     log.info("Saving to file %s..." % outfile)
     depsfp = open(outfile, 'w+')
