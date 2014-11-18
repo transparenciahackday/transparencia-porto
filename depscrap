@@ -159,17 +159,17 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
         url = FORMATTER_URL_BIO_DEP % i
         soup = BeautifulSoup(getpage(url), "lxml")
         name = soup.find('span', id=RE_NAME)
-        short = soup.find('span', id=RE_SHORT)
-        birthdate = soup.find('span', id=RE_BIRTHDATE)
-        party = soup.find('span', id=RE_PARTY)
-        occupation = soup.find('div', id=RE_OCCUPATION)
-        education = soup.find('div', id=RE_EDUCATION)
-        current_jobs = soup.find('div', id=RE_CURRENT_JOBS)  # ;)
-        jobs = soup.find('div', id=RE_JOBS)  # ;)
-        awards = soup.find('div', id=RE_AWARDS)
-        coms = soup.find('div', id=RE_COMS)
-        mandates = soup.find('table', id=RE_MANDATES)
         if name:
+            short = soup.find('span', id=RE_SHORT)
+            birthdate = soup.find('span', id=RE_BIRTHDATE)
+            party = soup.find('span', id=RE_PARTY)
+            occupation = soup.find('div', id=RE_OCCUPATION)
+            education = soup.find('div', id=RE_EDUCATION)
+            current_jobs = soup.find('div', id=RE_CURRENT_JOBS)  # ;)
+            jobs = soup.find('div', id=RE_JOBS)  # ;)
+            awards = soup.find('div', id=RE_AWARDS)
+            coms = soup.find('div', id=RE_COMS)
+            mandates = soup.find('table', id=RE_MANDATES)
             deprows[i] = {'id': i,
                           'name': name.text,
                           'url': url,
