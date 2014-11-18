@@ -28,12 +28,13 @@ Ver também
 * pic_scrapper.py
 
 """
-#
+
 from hashlib import sha1
 import os
 import urllib
 import shutil
 from bs4 import BeautifulSoup
+import re
 from datetime import datetime as dt
 from json import dumps
 from utils import *
@@ -53,9 +54,20 @@ ROMAN_NUMERALS = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
                   'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
                   'XXI': 21, 'XXII': 22, 'XXIII': 23, 'XXIV': 24, 'XXV': 25}
 
-DATASETS = '../thd-datasets/'
 URL_DEPS_ACTIVOS = 'http://www.parlamento.pt/DeputadoGP/Paginas/DeputadosemFuncoes.aspx'
 FORMATTER_URL_BIO_DEP = 'http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
+
+RE_NAME = re.compile('Nome_rptContent')
+RE_SHORT = re.compile('NomeDeputado')
+RE_BIRTHDATE = re.compile('DOB_rptContent')
+RE_PARTY = re.compile('Partido')
+RE_OCCUPATION = re.compile('Prof')
+RE_EDUCATION = re.compile('Habilitacoes')
+RE_CURRENT_JOBS=re.compile('CargosDesempenha')
+RE_JOBS=re.compile('CargosExercidos')
+RE_AWARDS=re.compile('Condecoracoes')
+RE_COMS=re.compile('Comissoes')
+RE_MANDATES=re.compile('TabLegs')
 
 
 def hash(str):
@@ -74,16 +86,16 @@ def file_put_contents(file, contents):
 
 def getpage(url):
     if not os.path.exists('cache'):
-        log.info( 'Creating new cache/ folder.')
+        log.info('Creating new cache/ folder.')
         os.mkdir('cache')
     url_hash = hash(url)
     cache_file = 'cache/' + url_hash
 
     if os.path.exists(cache_file):
-        # log.debug("Cache hit for %s"  % url)
+        log.debug("Cache hit for %s"  % url)
         page = file_get_contents(cache_file)
     else:
-        # log.debug("Cache miss for %s"  % url)
+        log.debug("Cache miss for %s"  % url)
         page = urllib.urlopen(url).read()
         file_put_contents(cache_file, page)
     return page
@@ -111,7 +123,7 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
             soup = BeautifulSoup(deps_activos_list, "lxml")
         except:  # há muitos erros http ou parse que podem ocorrer
             soup = None
-            log.warning( 'Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX)
+            log.warning('Active MP page could not be fetched. Using a max ID value of %d.' % DEFAULT_MAX)
 
         if soup:
             max = 0
@@ -139,17 +151,17 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
 
         url = FORMATTER_URL_BIO_DEP % i
         soup = BeautifulSoup(getpage(url), "lxml")
-        name = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucNome_rptContent_ctl01_lblText'))
-        short = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblNomeDeputado'))
-        birthdate = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_ucDOB_rptContent_ctl01_lblText'))
-        party = soup.find('span', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_lblPartido'))
-        occupation = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlProf'))
-        education = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlHabilitacoes'))
-        current_jobs = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosDesempenha'))  # ;)
-        jobs = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCargosExercidos'))  # ;)
-        awards = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlCondecoracoes'))
-        coms = soup.find('div', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_pnlComissoes'))
-        mandates = soup.find('table', dict(id='ctl00_ctl13_g_8035397e_bdf3_4dc3_b9fb_8732bb699c12_ctl00_gvTabLegs'))
+        name = soup.find('span', id=RE_NAME)
+        short = soup.find('span', id=RE_SHORT)
+        birthdate = soup.find('span', id=RE_BIRTHDATE)
+        party = soup.find('span', id=RE_PARTY)
+        occupation = soup.find('div', id=RE_OCCUPATION)
+        education = soup.find('div', id=RE_EDUCATION)
+        current_jobs = soup.find('div', id=RE_CURRENT_JOBS)  # ;)
+        jobs = soup.find('div', id=RE_JOBS)  # ;)
+        awards = soup.find('div', id=RE_AWARDS)
+        coms = soup.find('div', id=RE_COMS)
+        mandates = soup.find('table', id=RE_MANDATES)
         if name:
             deprows[i] = {'id': i,
                           'name': name.text,
