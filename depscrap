@@ -38,6 +38,7 @@ import re
 from itertools import chain
 from datetime import datetime as dt
 from json import dumps
+import unicodecsv as csv
 from utils import *
 from replaces_depscrap import SHORTNAME_REPLACES
 import click
@@ -227,7 +228,6 @@ def scrape(format, start=1, end=None, verbose=False, outfile='', indent=1):
         depsfp.write(dumps(deprows, encoding='utf-8', indent=indent, sort_keys=True))
         depsfp.close()
     elif format == "csv":
-        import unicodecsv as csv
         writer = csv.DictWriter(depsfp, delimiter=",", quoting=csv.QUOTE_NONNUMERIC, quotechar='"', fieldnames=fieldnames)
         writer.writeheader()
         for rownumber in deprows:
