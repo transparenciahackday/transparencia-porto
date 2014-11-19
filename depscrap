@@ -58,9 +58,9 @@ ROMAN_NUMERALS = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
 URL_DEPS_ACTIVOS = 'http://www.parlamento.pt/DeputadoGP/Paginas/Deputadoslista.aspx'
 FORMATTER_URL_BIO_DEP = 'http://www.parlamento.pt/DeputadoGP/Paginas/Biografia.aspx?BID=%d'
 
-RE_NAME = re.compile('Nome_rptContent')
+RE_NAME = re.compile('Nome.*Text')
 RE_SHORT = re.compile('NomeDeputado')
-RE_BIRTHDATE = re.compile('DOB_rptContent')
+RE_BIRTHDATE = re.compile('DOB.*Text')
 RE_PARTY = re.compile('Partido')
 RE_OCCUPATION = re.compile('Prof')
 RE_EDUCATION = re.compile('Habilitacoes')
